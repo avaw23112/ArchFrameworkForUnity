@@ -4,7 +4,6 @@ using Tools;
 
 namespace Assets.Scripts.Test
 {
-	[Forget]
 	[UnitySystem]
 	public class EntitasSystemTest_1_System : IAwake
 	{
@@ -14,7 +13,6 @@ namespace Assets.Scripts.Test
 		}
 	}
 
-	[Forget]
 	[UnitySystem]
 	public class EntitasSystemTest_2_System : IUpdate
 	{
@@ -24,7 +22,6 @@ namespace Assets.Scripts.Test
 		}
 	}
 
-	[Forget]
 	[UnitySystem]
 	public class EntitasSystemTest_3_System : ILateUpdate
 	{
@@ -34,7 +31,6 @@ namespace Assets.Scripts.Test
 		}
 	}
 
-	[Forget]
 	[UnitySystem]
 	public class EntitasSystemTest_4_System : IDestroy
 	{

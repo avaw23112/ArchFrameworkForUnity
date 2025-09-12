@@ -103,6 +103,7 @@ namespace Arch
 				viewModleSyncSysmte.BuildIn(namedWorld);
 				viewModleSyncSysmte.SubcribeEntityDestroy();
 			}
+
 		}
 
 		/// <summary>
@@ -114,13 +115,9 @@ namespace Arch
 
 			var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
 
-			// 插入 Start 系统到 Initialization 阶段
-			playerLoop.InsertSystemAfter<Initialization>(
-				new PlayerLoopSystem()
-				{
-					type = typeof(ArchSystems),
-					updateDelegate = () => { this.Start(); }
-				});
+			this.SubcribeEntityStart();
+			this.Start();
+			this.SubcribeEntityDestroy();
 
 			// 插入 Update 系统到 Update 阶段
 			playerLoop.InsertSystemAfter<Update>(
@@ -139,12 +136,12 @@ namespace Arch
 				});
 
 			// 插入 Destroy 系统到 PostLateUpdate 阶段
-			playerLoop.InsertSystemWhenDestroy(
-				new PlayerLoopSystem()
-				{
-					type = typeof(ArchSystems),
-					updateDelegate = () => { this.Destroy(); }
-				});
+			//playerLoop.InsertSystemWhenDestroy(
+			//	new PlayerLoopSystem()
+			//	{
+			//		type = typeof(ArchSystems),
+			//		updateDelegate = () => { this.Destroy(); }
+			//	});
 
 			PlayerLoop.SetPlayerLoop(playerLoop);
 		}

@@ -148,31 +148,30 @@ namespace Attributes
 			Assemblys.LoadAssemblys();
 
 			// 收集所有BaseAttribute
-			if (!Attributes.HasBaseMapping())
+			if (Attributes.HasBaseMapping()) return;
+
+			// 收集所有属性标记了的类型
+			foreach (var assembly in Assemblys.AllAssemblies)
 			{
-				// 收集所有属性标记了的类型
-				foreach (var assembly in Assemblys.AllAssemblies)
+				Type[] types = assembly.GetTypes();
+				foreach (var type in types)
 				{
-					Type[] types = assembly.GetTypes();
-					foreach (var type in types)
+					if (!type.IsClass || type.IsEnum)
 					{
-						if (!type.IsClass || type.IsEnum)
-						{
-							continue;
-						}
-						if (isForget(type))
-						{
-							continue;
-						}
-						object[] attributeTypes = type.GetCustomAttributes(typeof(BaseAttribute), false);
-						if (attributeTypes.Length <= 0)
-						{
-							continue;
-						}
-						foreach (var attribute in attributeTypes)
-						{
-							Attributes.AddMapping(attribute.GetType(), attribute, type);
-						}
+						continue;
+					}
+					if (isForget(type))
+					{
+						continue;
+					}
+					object[] attributeTypes = type.GetCustomAttributes(typeof(BaseAttribute), false);
+					if (attributeTypes.Length <= 0)
+					{
+						continue;
+					}
+					foreach (var attribute in attributeTypes)
+					{
+						Attributes.AddMapping(attribute.GetType(), attribute, type);
 					}
 				}
 			}
@@ -297,7 +296,7 @@ namespace Attributes
 			Assemblys.LoadAssemblys();
 
 			// 收集所有BaseAttribute
-			CollectBaseAttributes();
+			CollectBaseAttributesParallel();
 
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes;
@@ -352,7 +351,7 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
 
-			CollectBaseAttributes();
+			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
@@ -422,7 +421,7 @@ namespace Attributes
 			{
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
-			CollectBaseAttributes();
+			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
@@ -495,7 +494,7 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			CollectBaseAttributes();
+			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
@@ -535,7 +534,7 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			CollectBaseAttributes();
+			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes_T1;
 			Dictionary<Type, List<object>> dictAttributes_T2;
@@ -582,7 +581,7 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			CollectBaseAttributes();
+			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes_T1;
 			Dictionary<Type, List<object>> dictAttributes_T2;

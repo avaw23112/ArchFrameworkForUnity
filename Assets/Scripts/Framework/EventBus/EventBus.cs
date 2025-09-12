@@ -75,7 +75,7 @@ namespace Events
 				return;
 			}
 			List<Type> aEvents = ListPool<Type>.Get();
-			Collector.CollectTypes<IEvent>(aEvents);
+			Collector.CollectTypesParallel<IEvent>(aEvents);
 			try
 			{
 				foreach (var aEvent in aEvents)

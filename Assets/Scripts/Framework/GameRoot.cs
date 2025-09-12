@@ -21,7 +21,7 @@ namespace Assets.Scripts
 			GameRoot.Instance.Init();
 			await UniTask.Yield();
 
-			EventBus.PublishAsync(new GameStarted());
+			EventBus.Publish(new GameStarted());
 		}
 
 		protected override void OnStart()
