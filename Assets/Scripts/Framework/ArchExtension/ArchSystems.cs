@@ -1,4 +1,5 @@
 ﻿using Arch.Core;
+using Schedulers;
 using System;
 using System.Collections.Generic;
 using Tools;
@@ -19,6 +20,8 @@ namespace Arch
 		protected readonly List<IReactiveLateUpdate> m_listReactiveLateUpdateSystems = new List<IReactiveLateUpdate>();
 		protected readonly List<IReactiveDestroy> m_listReactiveDestroySystems = new List<IReactiveDestroy>();
 
+		protected JobScheduler jobScheduler;
+
 		public static void RegisterEntitasSystems()
 		{
 			//获取所有标记了SystemAttribute的类
@@ -29,6 +32,15 @@ namespace Arch
 
 			//创建默认世界
 			NamedWorld.CreateNamed("Default");
+			//设置并行线程配置
+			Instance.jobScheduler = new JobScheduler(new JobScheduler.Config
+			{
+				ThreadPrefixName = "Arch.Extensions",
+				ThreadCount = 0,
+				MaxExpectedConcurrentJobs = 64,
+				StrictAllocationMode = false,
+			});
+			World.SharedJobScheduler = Instance.jobScheduler;
 
 			if (dicSystems == null || dicSystems.Count == 0)
 			{
@@ -86,6 +98,7 @@ namespace Arch
 			//创建视图绑定
 			foreach (var namedWorld in NamedWorld.Instance.NamedWorlds)
 			{
+
 				ViewModleSyncSysmte viewModleSyncSysmte = new ViewModleSyncSysmte();
 				viewModleSyncSysmte.BuildIn(namedWorld);
 				viewModleSyncSysmte.SubcribeEntityDestroy();
@@ -245,6 +258,10 @@ namespace Arch
 			{
 				Logger.Error($"Destroy System: {e.Message}");
 				throw;
+			}
+			finally
+			{
+				jobScheduler.Dispose();
 			}
 		}
 

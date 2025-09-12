@@ -5,8 +5,8 @@ using Attributes;
 using Events;
 using UnityEngine;
 
-
-public class ArchSystemTest_2_ReactiveSystem : AEvent<ArchSystemTest_1_Event>
+[Forget]
+public class ArchSystemTest_2_ReactiveSystem : Event<ArchSystemTest_1_Event>
 {
 	public override void Run(ArchSystemTest_1_Event value)
 	{
