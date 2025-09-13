@@ -11,7 +11,7 @@ namespace Assets.Scripts.Test
 		private void Start()
 		{
 			EventBus.RegisterEvents();
-			EventBus.PublishAsync<AEventTest_1Event>(new AEventTest_1Event() { num = 10 });
+			EventBus.Publish<AEventTest_1Event>(new AEventTest_1Event() { num = 10 });
 		}
 
 		// Update is called once per frame
@@ -25,9 +25,9 @@ namespace Assets.Scripts.Test
 		public int num;
 	}
 
-	public class AEventTest_2Listener : AsyncEvent<AEventTest_1Event>
+	public class AEventTest_2Listener : Event<AEventTest_1Event>
 	{
-		public override async UniTask Run(AEventTest_1Event value)
+		public override async void Run(AEventTest_1Event value)
 		{
 			Tools.Logger.Debug("AEventTest_1Listener: " + value.num);
 			await UniTask.CompletedTask;

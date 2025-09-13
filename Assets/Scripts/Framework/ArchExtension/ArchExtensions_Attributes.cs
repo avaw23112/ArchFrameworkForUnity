@@ -16,19 +16,16 @@ namespace Arch
 			worldName = "Default";
 		}
 	}
-
+	[AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
+	public class UniqueAttribute : BaseAttribute
+	{
+		//封装Create方法，禁止通过Create创建标记为Unique的组件
+		//开设UniqueComponentSetter<>,UniqueComponentGetter<>，GetUniqueComponent,SetUniqueComponent。操作单例组件
+	}
 	public class UnitySystemAttribute : BaseAttribute
 	{
-		public string GroupName;
-
-		public UnitySystemAttribute(string groupName)
-		{
-			GroupName = groupName;
-		}
-
 		public UnitySystemAttribute()
 		{
-			GroupName = "Default";
 		}
 	}
 

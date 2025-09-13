@@ -103,48 +103,65 @@ namespace Arch
 				viewModleSyncSysmte.BuildIn(namedWorld);
 				viewModleSyncSysmte.SubcribeEntityDestroy();
 			}
-
 		}
 
-		/// <summary>
-		/// 暂时弃用，技术力还不够
-		/// </summary>
-		public void ApplyToPlayerLoop()
+		static PlayerLoopSystem playerOriginLoop;
+
+		public static void ResetPlayerLoop()
 		{
-			PlayerLoop.SetPlayerLoop(PlayerLoop.GetDefaultPlayerLoop());
+			PlayerLoop.SetPlayerLoop(playerOriginLoop);
+		}
 
+		public static void ApplyToPlayerLoop()
+		{
+			// 确保使用有效默认循环
 			var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
+			playerOriginLoop = PlayerLoop.GetCurrentPlayerLoop();
 
-			this.SubcribeEntityStart();
-			this.Start();
-			this.SubcribeEntityDestroy();
+			Instance.SubcribeEntityStart();
+			Instance.SubcribeEntityDestroy();
 
-			// 插入 Update 系统到 Update 阶段
-			playerLoop.InsertSystemAfter<Update>(
-				new PlayerLoopSystem()
+			// 创建精确的系统节点
+			var updateSystem = new PlayerLoopSystem()
+			{
+				type = typeof(ArchSystems),
+				updateDelegate = Instance.Update,
+			};
+
+			var lateUpdateSystem = new PlayerLoopSystem()
+			{
+				type = typeof(ArchSystems),
+				updateDelegate = Instance.LateUpdate,
+			};
+			// 修改后的插入逻辑
+			PlayerLoopSystem[] currentSystems = playerLoop.subSystemList;
+
+			// 第一次插入：Update 阶段后
+			for (int i = 0; i < currentSystems.Length; i++)
+			{
+				if (currentSystems[i].type == typeof(Update))
 				{
-					type = typeof(ArchSystems),
-					updateDelegate = () => { this.Update(); }
-				});
+					currentSystems = currentSystems.InsertAfter(i, updateSystem);
+					break; // 找到第一个后退出
+				}
+			}
 
-			// 插入 LateUpdate 系统到 PreLateUpdate 阶段
-			playerLoop.InsertSystemAfter<PreLateUpdate>(
-				new PlayerLoopSystem()
+			// 第二次插入：PreLateUpdate 阶段后 
+			for (int i = 0; i < currentSystems.Length; i++)
+			{
+				if (currentSystems[i].type == typeof(PreLateUpdate))
 				{
-					type = typeof(ArchSystems),
-					updateDelegate = () => { this.LateUpdate(); }
-				});
+					currentSystems = currentSystems.InsertAfter(i, lateUpdateSystem);
+					break;
+				}
+			}
 
-			// 插入 Destroy 系统到 PostLateUpdate 阶段
-			//playerLoop.InsertSystemWhenDestroy(
-			//	new PlayerLoopSystem()
-			//	{
-			//		type = typeof(ArchSystems),
-			//		updateDelegate = () => { this.Destroy(); }
-			//	});
+			playerLoop.subSystemList = currentSystems;
 
+			// 设置并验证
 			PlayerLoop.SetPlayerLoop(playerLoop);
 		}
+
 
 		private static void AddSystem(ISystem system)
 		{

@@ -1,7 +1,11 @@
 ﻿
 using Arch.Buffer;
 using Arch.Core;
+using Arch.Core.Extensions;
+using inEvent;
+using RefEvent;
 using System;
+using Tools;
 
 namespace Arch
 {
@@ -204,7 +208,7 @@ namespace Arch
 			world.Destroy(entity);
 		}
 
-		public void DestroyCommend(Entity entity)
+		public void DestroyEntityCommend(Entity entity)
 		{
 			if (world == null)
 			{
@@ -215,6 +219,24 @@ namespace Arch
 				throw new System.ArgumentNullException("commandBuffer is null");
 			}
 			commandBuffer.Destroy(entity);
+		}
+
+		public T GetUniqueComponent<T>() where T : struct, IComponent
+		{
+			if (world == null)
+			{
+				throw new System.ArgumentNullException("world is null");
+			}
+			return SingletonComponent.GetSingle<T>(world);
+		}
+
+		public void SetUniqueComponent<T>(T component) where T : struct, IComponent
+		{
+			if (world == null)
+			{
+				throw new System.ArgumentNullException("world is null");
+			}
+			SingletonComponent.SetSingle<T>(world, component);
 		}
 
 		#endregion

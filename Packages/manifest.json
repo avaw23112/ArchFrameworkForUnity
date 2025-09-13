@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "com.unity.collab-proxy": "2.9.3",
-    "com.unity.collections": "1.2.4",
     "com.unity.feature.development": "1.0.2",
     "com.unity.timeline": "1.8.6",
     "com.unity.ugui": "2.0.0",
