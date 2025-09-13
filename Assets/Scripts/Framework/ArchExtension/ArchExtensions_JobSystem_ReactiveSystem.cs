@@ -94,10 +94,10 @@ namespace Arch
 		{
 			QueryDescription vQueryDescription = Filter();
 			world.ParallelQuery(in vQueryDescription,
-				async (Entity entity) =>
+				 (Entity entity) =>
 				{
 					if (GetTrigger(entity))
-						Run(entity);
+						Run(entity).Forget();
 				});
 			commandBuffer.Playback(world);
 		}
@@ -113,7 +113,7 @@ namespace Arch
 				 (Entity entity, ref T component) =>
 				{
 					if (GetTrigger(entity))
-						Run(entity, ref component);
+						Run(entity, ref component).Forget();
 				});
 			commandBuffer.Playback(world);
 		}
@@ -131,7 +131,7 @@ namespace Arch
 				(Entity entity, ref T1 c1, ref T2 c2) =>
 				{
 					if (GetTrigger(entity))
-						Run(entity, ref c1, ref c2);
+						Run(entity, ref c1, ref c2).Forget();
 				});
 			commandBuffer.Playback(world);
 		}
@@ -150,7 +150,7 @@ namespace Arch
 				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3) =>
 				{
 					if (GetTrigger(entity))
-						Run(entity, ref c1, ref c2, ref c3);
+						Run(entity, ref c1, ref c2, ref c3).Forget();
 				});
 			commandBuffer.Playback(world);
 		}
@@ -170,7 +170,7 @@ namespace Arch
 				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3, ref T4 c4) =>
 				{
 					if (GetTrigger(entity))
-						Run(entity, ref c1, ref c2, ref c3, ref c4);
+						Run(entity, ref c1, ref c2, ref c3, ref c4).Forget();
 				});
 			commandBuffer.Playback(world);
 		}
@@ -191,7 +191,7 @@ namespace Arch
 				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3, ref T4 c4, ref T5 c5) =>
 				{
 					if (GetTrigger(entity))
-						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5);
+						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5).Forget();
 				});
 			commandBuffer.Playback(world);
 		}
@@ -213,7 +213,7 @@ namespace Arch
 				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3, ref T4 c4, ref T5 c5, ref T6 c6) =>
 				{
 					if (GetTrigger(entity))
-						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6);
+						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6).Forget();
 				});
 			commandBuffer.Playback(world);
 		}
