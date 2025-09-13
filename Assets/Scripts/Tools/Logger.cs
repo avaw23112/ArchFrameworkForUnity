@@ -1,58 +1,68 @@
-using Serilog;
-using Serilog.Context;
-using Serilog.Core;
-using Serilog.Events;
-using Serilog.Formatting;
-using System.Diagnostics;
+using System;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
 using UnityEngine;
 
 namespace Tools
 {
 	public static class Logger
 	{
-		private static Serilog.ILogger _logger;
 		private static bool _isInitialized = false;
-		private static readonly string LoggerNamespace = typeof(Logger).Namespace;
+		private static StreamWriter _logFileWriter;
+		private static readonly string LogDirectory = Path.Combine(Application.dataPath, "..", "Logs");
 
-#if UNITY_EDITOR
-		[UnityEditor.InitializeOnLoadMethod]
-#else
-        [RuntimeInitializeOnLoadMethod]
-#endif
+		// 日志级别枚举
+		public enum LogLevel
+		{
+			Debug = 0,
+			Info = 1,
+			Warning = 2,
+			Error = 3,
+			Exception = 4
+		}
+
+		public static LogLevel CurrentLogLevel = LogLevel.Debug;
+
+
+		[RuntimeInitializeOnLoadMethod]
 		public static void Initialize()
 		{
 			if (_isInitialized) return;
 
 			try
 			{
-				// 禁用Unity默认的日志堆栈跟踪
-				Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
-				Application.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
-				Application.SetStackTraceLogType(LogType.Error, StackTraceLogType.None);
+				// 创建日志目录
+				if (!Directory.Exists(LogDirectory))
+				{
+					Directory.CreateDirectory(LogDirectory);
+				}
 
-				// 配置 Serilog，使用自定义的Unity控制台输出
-				_logger = new LoggerConfiguration()
-					.MinimumLevel.Debug()
-					.Enrich.FromLogContext()
-					.WriteTo.Sink(new UnityConsoleSink())
-					.WriteTo.File("Logs/log-.txt",
-								 rollingInterval: RollingInterval.Day,
-								 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj} [at {Caller}]{NewLine}{Exception}")
-					.CreateLogger();
+				// 创建日志文件
+				string logFilePath = Path.Combine(LogDirectory, $"log-{DateTime.Now:yyyyMMdd-HHmmss}.txt");
+				_logFileWriter = new StreamWriter(logFilePath, true)
+				{
+					AutoFlush = true
+				};
 
-				Log.Logger = _logger;
+				// 写入日志文件头
+				_logFileWriter.WriteLine($"Log started at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+				_logFileWriter.WriteLine("==========================================");
 
 				Application.quitting += () =>
 				{
-					Log.CloseAndFlush();
+					if (_logFileWriter != null)
+					{
+						_logFileWriter.WriteLine("==========================================");
+						_logFileWriter.WriteLine($"Log ended at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+						_logFileWriter.Close();
+						_logFileWriter = null;
+					}
 				};
 
 				_isInitialized = true;
+				UnityEngine.Debug.Log("Logger initialized successfully");
 			}
-			catch (System.Exception ex)
+			catch (Exception ex)
 			{
 				UnityEngine.Debug.LogError($"Failed to initialize logger: {ex.Message}");
 			}
@@ -60,197 +70,68 @@ namespace Tools
 
 		public static void Debug(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
-			EnsureInitialized();
-			LogWithCallerInfo(message, LogLevel.Debug, filePath, lineNumber);
+			if (CurrentLogLevel > LogLevel.Debug) return;
+			LogInternal(message, UnityEngine.LogType.Log, filePath, lineNumber);
 		}
 
 		public static void Info(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
-			EnsureInitialized();
-			LogWithCallerInfo(message, LogLevel.Info, filePath, lineNumber);
+			if (CurrentLogLevel > LogLevel.Info) return;
+			LogInternal(message, UnityEngine.LogType.Log, filePath, lineNumber);
 		}
 
 		public static void Warning(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
-			EnsureInitialized();
-			LogWithCallerInfo(message, LogLevel.Warning, filePath, lineNumber);
+			if (CurrentLogLevel > LogLevel.Warning) return;
+			LogInternal(message, UnityEngine.LogType.Warning, filePath, lineNumber);
 		}
 
 		public static void Error(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
-			EnsureInitialized();
-			LogWithCallerInfo(message, LogLevel.Error, filePath, lineNumber);
+			if (CurrentLogLevel > LogLevel.Error) return;
+			LogInternal(message, UnityEngine.LogType.Error, filePath, lineNumber);
 		}
 
-		public static void Exception(System.Exception ex, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+		public static void Exception(Exception ex, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
-			EnsureInitialized();
-			LogWithCallerInfo(ex.ToString(), LogLevel.Exception, filePath, lineNumber, ex);
+			LogInternal(ex.ToString(), UnityEngine.LogType.Exception, filePath, lineNumber, ex);
 		}
 
-		private static void EnsureInitialized()
+		// 核心日志方法 - 堆栈深度最小化
+		private static void LogInternal(string message, UnityEngine.LogType logType, string filePath, int lineNumber, Exception ex = null)
 		{
-			if (!_isInitialized)
-			{
-				Initialize();
-			}
-		}
-
-		private static void LogWithCallerInfo(string message, LogLevel level, string filePath, int lineNumber, System.Exception ex = null)
-		{
-			if (_logger == null) return;
+			if (!_isInitialized) Initialize();
 
 			// 获取简化文件名
-			string fileName = System.IO.Path.GetFileName(filePath);
-			string callerInfo = $"{fileName}:{lineNumber}";
+			//string fileName = Path.GetFileName(filePath);
+			string fileName = filePath.Substring(filePath.IndexOf("Assets"));
 
-			using (LogContext.PushProperty("Caller", callerInfo))
+			// 写入文件日志 - 包含调用者信息
+			if (_logFileWriter != null)
 			{
-				switch (level)
+				_logFileWriter.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} [{logType}] {message}\n at {fileName}:{lineNumber}\n");
+
+				if (ex != null)
 				{
-					case LogLevel.Debug:
-						_logger.Debug(message);
-						break;
-					case LogLevel.Info:
-						_logger.Information(message);
-						break;
-					case LogLevel.Warning:
-						_logger.Warning(message);
-						break;
-					case LogLevel.Error:
-						_logger.Error(message);
-						break;
-					case LogLevel.Exception:
-						_logger.Error(ex, message);
-						break;
+					_logFileWriter.WriteLine($"Exception: {ex}");
 				}
 			}
-		}
 
-		// 自定义Unity控制台输出Sink
-		private class UnityConsoleSink : ILogEventSink
-		{
-			private readonly ITextFormatter _formatter;
-
-			public UnityConsoleSink()
+			// 输出到Unity控制台 - 使用原生方法保持双击跳转功能
+			// 这里我们直接调用Unity的Debug方法，堆栈深度最小
+			switch (logType)
 			{
-				_formatter = new UnityConsoleFormatter();
+				case UnityEngine.LogType.Warning:
+					UnityEngine.Debug.LogWarning(message);
+					break;
+				case UnityEngine.LogType.Error:
+				case UnityEngine.LogType.Exception:
+					UnityEngine.Debug.LogError(message);
+					break;
+				default:
+					UnityEngine.Debug.Log(message);
+					break;
 			}
-
-			public void Emit(LogEvent logEvent)
-			{
-				var writer = new StringWriter();
-				_formatter.Format(logEvent, writer);
-				string formattedLog = writer.ToString();
-
-				// 根据日志级别选择不同的Unity输出方法
-				switch (logEvent.Level)
-				{
-					case LogEventLevel.Warning:
-						UnityEngine.Debug.LogWarning(formattedLog);
-						break;
-					case LogEventLevel.Error:
-					case LogEventLevel.Fatal:
-						UnityEngine.Debug.LogError(formattedLog);
-						break;
-					default:
-						UnityEngine.Debug.Log(formattedLog);
-						break;
-				}
-			}
-		}
-
-		// 自定义格式化器，用于控制Unity控制台的输出格式
-		private class UnityConsoleFormatter : ITextFormatter
-		{
-			public void Format(LogEvent logEvent, TextWriter output)
-			{
-				// 输出基本日志信息
-				output.Write($"{logEvent.Timestamp:HH:mm:ss} [{logEvent.Level.ToString().Substring(0, 3).ToUpper()}] {logEvent.RenderMessage()}");
-
-				// 添加过滤后的堆栈跟踪
-				string filteredStackTrace = GetFilteredStackTrace();
-				if (!string.IsNullOrEmpty(filteredStackTrace))
-				{
-					output.Write("\n" + filteredStackTrace);
-				}
-
-				// 如果有异常，添加异常信息
-				if (logEvent.Exception != null)
-				{
-					output.Write($"\nException: {logEvent.Exception}");
-				}
-
-				output.WriteLine();
-			}
-
-			// 获取过滤后的堆栈跟踪，移除Logger框架本身的调用
-			private string GetFilteredStackTrace()
-			{
-				try
-				{
-					var stackTrace = new StackTrace(4, true); // 跳过4帧（当前方法、格式化器、Sink和Logger方法）
-					var frames = stackTrace.GetFrames();
-					if (frames == null || frames.Length == 0) return null;
-
-					var sb = new StringBuilder();
-					bool foundFirstValidFrame = false;
-
-					foreach (var frame in frames)
-					{
-						var method = frame.GetMethod();
-						var declaringType = method?.DeclaringType;
-
-						if (declaringType == null) continue;
-
-						// 跳过Logger类和Serilog相关的调用
-						if (declaringType == typeof(Logger) ||
-							declaringType.Namespace == LoggerNamespace ||
-							declaringType.Namespace?.StartsWith("Serilog") == true)
-						{
-							continue;
-						}
-
-						// 找到第一个有效帧后开始记录
-						if (!foundFirstValidFrame)
-						{
-							foundFirstValidFrame = true;
-							sb.AppendLine("Stack Trace:");
-						}
-
-						// 获取文件名和行号
-						string fileName = frame.GetFileName();
-						int fileLine = frame.GetFileLineNumber();
-
-						// 简化文件路径（只显示文件名，不显示完整路径）
-						if (!string.IsNullOrEmpty(fileName))
-						{
-							fileName = System.IO.Path.GetFileName(fileName);
-						}
-						else
-						{
-							fileName = "Unknown";
-						}
-
-						sb.AppendLine($"  at {declaringType.Name}.{method.Name} (in {fileName}:{fileLine})");
-					}
-
-					return sb.Length > 0 ? sb.ToString() : null;
-				}
-				catch
-				{
-					return null;
-				}
-			}
-		}
-
-		private enum LogLevel
-		{
-			Debug,
-			Info,
-			Warning,
-			Error,
-			Exception
 		}
 	}
 }

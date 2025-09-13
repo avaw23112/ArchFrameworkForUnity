@@ -18,7 +18,7 @@ namespace Assets.Scripts.Test
 	{
 		public void Update()
 		{
-			Logger.Debug("EntitasSystemTest_2_System.Execute()");
+			Logger.Error("EntitasSystemTest_2_System.Execute()");
 		}
 	}
 
