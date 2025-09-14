@@ -195,14 +195,7 @@ namespace Attributes
 				Type[] types = assembly.GetTypes();
 				foreach (var type in types)
 				{
-					if (!type.IsClass || type.IsEnum)
-					{
-						continue;
-					}
-					if (isForget(type))
-					{
-						continue;
-					}
+					if (isForget(type)) return;
 					if (typeof(T).IsAssignableFrom(type))
 					{
 						listTypes.Add(type);
@@ -225,24 +218,19 @@ namespace Attributes
 			{
 				Type[] types = assembly.GetTypes();
 
-				// 第一层并行：程序集级别
 				var localAttributes = new List<(Type, BaseAttribute, Type)>();
 
-				// 第二层并行：类型级别
 				Parallel.ForEach(types, type =>
 				{
-					if (!type.IsClass || type.IsEnum || isForget(type)) return;
-
+					if (type.IsAbstract || type.IsInterface || type.IsEnum || isForget(type)) return;
 					var attrs = type.GetCustomAttributes(typeof(BaseAttribute), false);
 					if (attrs.Length == 0) return;
-
 					foreach (BaseAttribute attr in attrs)
 					{
 						localAttributes.Add((attr.GetType(), attr, type));
 					}
 				});
 
-				// 合并结果时加锁
 				if (localAttributes.Count > 0)
 				{
 					lock (_attributeLock)
@@ -272,8 +260,7 @@ namespace Attributes
 
 				Parallel.ForEach(types, type =>
 				{
-					if (!type.IsClass || type.IsEnum || isForget(type)) return;
-
+					if (isForget(type)) return;
 					if (targetType.IsAssignableFrom(type) || type.IsSubclassOf(targetType))
 					{
 						concurrentTypes.Add(type);
@@ -311,15 +298,8 @@ namespace Attributes
 				{
 					Type pDerectType = item.Key;
 					List<object> listDerectAttribute = item.Value;
-					if (pDerectType.IsAbstract || pDerectType.IsInterface)
-					{
-						continue;
-					}
-					if (isForget(pDerectType))
-					{
-						continue;
-					}
-					if (isCollectable<T>(pDerectType))
+					if (pDerectType.IsAbstract || pDerectType.IsInterface
+						|| isForget(pDerectType) || isCollectable<T>(pDerectType))
 					{
 						continue;
 					}

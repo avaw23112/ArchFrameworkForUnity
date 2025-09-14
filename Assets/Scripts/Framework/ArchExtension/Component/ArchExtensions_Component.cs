@@ -6,17 +6,19 @@ namespace Arch
 {
 	public struct ViewComponent : IViewComponent
 	{
-		private GameObject m_gameObject;
-		public GameObject gameObject
-		{
-			get { return m_gameObject; }
-			set { m_gameObject = value; }
-		}
+		public GameObject gameObject;
 	}
+
 
 	[Unique]
 	public struct EntityBindingComponent : IModelComponent
 	{
-		public Dictionary<Entity, List<Entity>> dicEntitiesBinding;
+		public Dictionary<Entity, List<Entity>> dicEntitiesBindings;
+	}
+
+	public struct EntityTransform : IModelComponent
+	{
+		public Entity parent;
+		public List<Entity> entities;
 	}
 }

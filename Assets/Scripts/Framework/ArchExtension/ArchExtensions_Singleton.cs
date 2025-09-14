@@ -1,5 +1,8 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
+using inEvent;
+using RefEvent;
+using System;
 using System.Collections.Generic;
 
 
@@ -69,59 +72,39 @@ namespace Arch
 				entity.Set(value);
 			}
 		}
-		public static T GetSingle<T>() where T : struct, IComponent
+		public static T GetOrAdd<T>() where T : struct, IComponent
 		{
-			Entity entity;
 			World self = WorldSingleton;
-			if (!m_dicSingleEntity.TryGetValue(self, out entity))
+			if (!m_dicSingleEntity.TryGetValue(self, out m_entitySingleton))
 			{
-				entity = self.Create<T>();
-				m_dicSingleEntity.Add(self, entity);
+				m_entitySingleton = self.Create<T>();
+				m_dicSingleEntity.Add(self, m_entitySingleton);
 			}
-			if (!entity.Has<T>())
+			if (!m_entitySingleton.Has<T>())
 			{
 				throw new System.Exception($"Component {typeof(T)} is not singleton component");
 			}
-			return entity.Get<T>();
+			return m_entitySingleton.Get<T>();
 		}
-		public static T GetOrAddSingle<T>() where T : struct, IComponent
+		public static void Set<T>(T value) where T : struct, IComponent
 		{
-			Entity entity;
 			World self = WorldSingleton;
-			if (!m_dicSingleEntity.TryGetValue(self, out entity))
+			if (!m_dicSingleEntity.TryGetValue(self, out m_entitySingleton))
 			{
-				entity = self.Create<T>();
-				m_dicSingleEntity.Add(self, entity);
+				m_entitySingleton = self.Create<T>();
+				m_dicSingleEntity.Add(self, m_entitySingleton);
 			}
-			if (entity.Has<T>())
+			if (m_entitySingleton.Has<T>())
 			{
-				return entity.Get<T>();
+				m_entitySingleton.Set(value);
 			}
 			else
 			{
-				entity.Add<T>();
-				return entity.Get<T>();
+				m_entitySingleton.Add<T>();
+				m_entitySingleton.Set(value);
 			}
 		}
-		public static void SetSingle<T>(T value) where T : struct, IComponent
-		{
-			Entity entity;
-			World self = WorldSingleton;
-			if (!m_dicSingleEntity.TryGetValue(self, out entity))
-			{
-				entity = self.Create<T>();
-				m_dicSingleEntity.Add(self, entity);
-			}
-			if (entity.Has<T>())
-			{
-				entity.Set(value);
-			}
-			else
-			{
-				entity.Add<T>();
-				entity.Set(value);
-			}
-		}
+
 		public static bool RemoveSingle<T>(this World self) where T : struct, IComponent
 		{
 			Entity entity;
@@ -134,6 +117,29 @@ namespace Arch
 				}
 			}
 			return false;
+		}
+		public static void Getter<T>(InAction<T> action) where T : struct, IComponent
+		{
+			var entity = EntitySingleton;
+			if (!entity.Has<T>())
+			{
+				Tools.Logger.Error($"{entity} not has the required components");
+				throw new NullReferenceException($"{entity} not has the component of {typeof(T)}");
+			}
+			T sComponent = entity.Get<T>();
+			action(in sComponent);
+		}
+		public static void Setter<T>(RefAction<T> action) where T : struct, IComponent
+		{
+			var entity = EntitySingleton;
+			if (!entity.Has<T>())
+			{
+				Tools.Logger.Error($"{entity} not has the required components");
+				throw new NullReferenceException($"{entity} not has the component of {typeof(T)}");
+			}
+			T sComponent = entity.Get<T>();
+			action(ref sComponent);
+			entity.Set<T>(in sComponent);
 		}
 	}
 }

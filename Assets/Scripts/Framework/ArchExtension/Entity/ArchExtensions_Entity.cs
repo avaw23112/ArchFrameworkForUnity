@@ -1,5 +1,7 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
+using Cysharp.Threading.Tasks;
+using Events;
 using inEvent;
 using RefEvent;
 using System;
@@ -9,6 +11,7 @@ namespace Arch
 {
 	internal static class ArchExtensions_Entity
 	{
+		#region Setter And Getter
 		public static void Setter<T>(this Entity entity, RefAction<T> action) where T : struct, IComponent
 		{
 			if (!entity.Has<T>())
@@ -187,6 +190,78 @@ namespace Arch
 			action(in sComponent.t0.Value, in sComponent.t1.Value, in sComponent.t2.Value, in sComponent.t3.Value, in sComponent.t4.Value, in sComponent.t5.Value);
 		}
 
+
+		#endregion
+		public static bool isVaild(this Entity entity)
+		{
+			return entity != default(Entity);
+		}
+
+		public static T GetOrAdd<T>(this Entity entity) where T : struct, IComponent
+		{
+			T component;
+			if (!entity.TryGet<T>(out component))
+			{
+				entity.Add<T>();
+				component = entity.Get<T>();
+			}
+			return component;
+		}
+
+		/// <summary>
+		/// 如果已经存在组件返回失败，否则添加组件并返回成功
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="entity"></param>
+		/// <returns></returns>
+		public static bool TryAdd<T>(this Entity entity)
+		{
+			if (!entity.Has<T>())
+			{
+				entity.Add<T>();
+				return true;
+			}
+			return false;
+		}
+
+		#region 父子实体管理
+
+		public static void SetParent(this Entity entity, Entity parent)
+		{
+			if (!entity.Has<EntityTransform>())
+			{
+				entity.Add<EntityTransform>();
+			}
+			if (!parent.Has<EntityTransform>())
+			{
+				parent.Add<EntityTransform>();
+			}
+			entity.Setter((ref EntityTransform entityTransform) =>
+			{
+				entityTransform.parent = parent;
+			});
+			parent.Setter(((ref EntityTransform entityTransform) =>
+			{
+				entityTransform.entities.Add(entity);
+			}));
+		}
+
+		public static Entity GetParent(this Entity entity)
+		{
+			if (!entity.TryGet<EntityTransform>(out EntityTransform component))
+			{
+				Tools.Logger.Error($"{entity} 没有挂载父子管理组件");
+				return default(Entity);
+			}
+			if (component.parent.isVaild())
+			{
+				Tools.Logger.Error($"{entity}的父实体不是有效实体");
+				return default(Entity);
+			}
+			return component.parent;
+		}
+
+		#endregion
 
 	}
 }

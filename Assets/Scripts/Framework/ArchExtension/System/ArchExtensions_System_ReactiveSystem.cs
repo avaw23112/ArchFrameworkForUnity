@@ -7,7 +7,7 @@ namespace Arch
 	public abstract class BaseReactiveSystem : IReactiveSystem
 	{
 		protected World world;
-		protected CommandBuffer commandBuffer;
+		public CommandBuffer commandBuffer;
 		public void BuildIn(World world)
 		{
 			if (world == null)
@@ -17,7 +17,7 @@ namespace Arch
 			this.world = world;
 			this.commandBuffer = new CommandBuffer();
 		}
-		public abstract QueryDescription Filter();
+		public virtual QueryDescription Filter() => new QueryDescription();
 		public virtual bool GetTrigger(Entity entity) => true;
 
 		#region 常用方法
@@ -216,13 +216,26 @@ namespace Arch
 			commandBuffer.Destroy(entity);
 		}
 
+		public void CommendPlayBack()
+		{
+			if (world == null)
+			{
+				throw new System.ArgumentNullException("world is null");
+			}
+			if (commandBuffer == null)
+			{
+				throw new System.ArgumentNullException("commandBuffer is null");
+			}
+			commandBuffer.Playback(world);
+		}
+
 		public T GetUniqueComponent<T>() where T : struct, IComponent
 		{
 			if (world == null)
 			{
 				throw new System.ArgumentNullException("world is null");
 			}
-			return SingletonComponent.GetSingle<T>();
+			return SingletonComponent.GetOrAdd<T>();
 		}
 
 		public void SetUniqueComponent<T>(T component) where T : struct, IComponent
@@ -231,7 +244,7 @@ namespace Arch
 			{
 				throw new System.ArgumentNullException("world is null");
 			}
-			SingletonComponent.SetSingle<T>(component);
+			SingletonComponent.Set<T>(component);
 		}
 
 		#endregion

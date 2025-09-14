@@ -1,14 +1,16 @@
 ﻿using Arch;
+using Attributes;
 using Events;
 
 
 namespace Assets.Scripts.Test.FrameworkTest
 {
-	internal class ArcheExtensionsTest_1_Unique : Event<ArchSystem_Unique_Test>
+	[Forget]
+	internal class ArcheExtensionsTest_1_Unique : Event<ArchSystem_Test>
 	{
-		public override void Run(ArchSystem_Unique_Test value)
+		public override void Run(ArchSystem_Test value)
 		{
-			EntityBindingComponent component = SingletonComponent.GetSingle<EntityBindingComponent>();
+			EntityBindingComponent component = SingletonComponent.GetOrAdd<EntityBindingComponent>();
 			Tools.Logger.Debug($"{component}");
 		}
 	}

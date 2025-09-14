@@ -9,18 +9,15 @@ namespace Assets.Scripts
 	public class GameRoot
 	{
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-		private static async void OnGameStart()
+		private static void OnGameStart()
 		{
 			Tools.Logger.Initialize();
-			await UniTask.Yield();
-
 			EventBus.RegisterEvents();
-			await UniTask.Yield();
-
 			Attributes.Attributes.RegisterAttributeSystems();
-			await UniTask.Yield();
-
 			ArchSystems.RegisterEntitasSystems();
+			ArchSystems.Instance.Start();
+			ArchSystems.Instance.SubcribeEntityStart();
+			ArchSystems.Instance.SubcribeEntityDestroy();
 			ArchSystems.ApplyToPlayerLoop();
 
 #if UNITY_EDITOR
@@ -28,16 +25,18 @@ namespace Assets.Scripts
 				(state) =>
 				{
 					if (state == PlayModeStateChange.ExitingPlayMode)
+					{
+						ArchSystems.Instance.Destroy();
 						ArchSystems.ResetPlayerLoop();
+					}
 				};
 #else
-						Application.quitting += () =>
-						{
-							ArchSystems.ResetPlayerLoop();
-						};
+			Application.quitting += () =>
+			{
+				ArchSystems.Instance.Destroy();
+				ArchSystems.ResetPlayerLoop();
+			};
 #endif
-
-			await UniTask.Yield();
 
 			EventBus.Publish(new GameStarted());
 		}

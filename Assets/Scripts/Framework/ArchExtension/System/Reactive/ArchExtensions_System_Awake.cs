@@ -15,7 +15,6 @@ namespace Arch
 				if (GetTrigger(entity))
 					Run(entity);
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -27,15 +26,11 @@ namespace Arch
 	{
 		public void SubcribeEntityAwake()
 		{
-			world.SubscribeEntityCreated((in Entity entity) =>
+			world.SubscribeComponentAdded<T>((in Entity entity, ref T component) =>
 			{
-				if (entity.TryGet<T>(out T component))
-				{
-					if (GetTrigger(entity))
-						Run(entity, ref component);
-				}
+				if (GetTrigger(entity))
+					Run(entity, ref component);
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 	public abstract class AwakeSystem<T1, T2> : ReactiveSystem<T1, T2>, IReactiveAwake
@@ -53,7 +48,6 @@ namespace Arch
 						Run(entity, ref component1, ref component2);
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -76,7 +70,6 @@ namespace Arch
 						Run(entity, ref component1, ref component2, ref component3);
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -100,7 +93,6 @@ namespace Arch
 						Run(entity, ref component1, ref component2, ref component3, ref component4);
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -127,7 +119,6 @@ namespace Arch
 						Run(entity, ref component1, ref component2, ref component3, ref component4, ref component5);
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -154,7 +145,6 @@ namespace Arch
 						Run(entity, ref component1, ref component2, ref component3, ref component4, ref component5, ref component6);
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 

@@ -94,15 +94,6 @@ namespace Arch
 
 			listPureSystems.Clear();
 			listReactiveSystems.Clear();
-
-			//创建视图绑定
-			foreach (var namedWorld in NamedWorld.Instance.NamedWorlds)
-			{
-
-				ViewModleSyncSysmte viewModleSyncSysmte = new ViewModleSyncSysmte();
-				viewModleSyncSysmte.BuildIn(namedWorld);
-				viewModleSyncSysmte.SubcribeEntityDestroy();
-			}
 		}
 
 		static PlayerLoopSystem playerOriginLoop;
@@ -118,8 +109,6 @@ namespace Arch
 			var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
 			playerOriginLoop = PlayerLoop.GetCurrentPlayerLoop();
 
-			Instance.SubcribeEntityStart();
-			Instance.SubcribeEntityDestroy();
 
 			// 创建精确的系统节点
 			var updateSystem = new PlayerLoopSystem()

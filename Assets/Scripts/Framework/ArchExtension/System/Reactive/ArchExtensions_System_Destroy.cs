@@ -16,7 +16,6 @@ namespace Arch
 				if (GetTrigger(entity))
 					Run(entity);
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 	/// <summary>
@@ -27,15 +26,12 @@ namespace Arch
 	{
 		public void SubcribeEntityDestroy()
 		{
-			world.SubscribeEntityDestroyed((in Entity entity) =>
+			world.SubscribeComponentRemoved((in Entity entity, ref T component) =>
 			{
-				if (entity.TryGet<T>(out T component))
-				{
-					if (GetTrigger(entity))
-						Run(entity, ref component);
-				}
+				if (GetTrigger(entity))
+					Run(entity, ref component);
+
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -50,9 +46,9 @@ namespace Arch
 				{
 					if (GetTrigger(entity))
 						Run(entity, ref component1, ref component2);
+
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -69,9 +65,9 @@ namespace Arch
 				{
 					if (GetTrigger(entity))
 						Run(entity, ref component1, ref component2, ref component3);
+
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 	public abstract class DestroySystem<T1, T2, T3, T4> : ReactiveSystem<T1, T2, T3, T4>, IReactiveDestroy
@@ -92,9 +88,9 @@ namespace Arch
 				{
 					if (GetTrigger(entity))
 						Run(entity, ref component1, ref component2, ref component3, ref component4);
+
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -117,9 +113,9 @@ namespace Arch
 				{
 					if (GetTrigger(entity))
 						Run(entity, ref component1, ref component2, ref component3, ref component4, ref component5);
+
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -144,9 +140,9 @@ namespace Arch
 				{
 					if (GetTrigger(entity))
 						Run(entity, ref component1, ref component2, ref component3, ref component4, ref component5, ref component6);
+
 				}
 			});
-			commandBuffer.Playback(world);
 		}
 	}
 

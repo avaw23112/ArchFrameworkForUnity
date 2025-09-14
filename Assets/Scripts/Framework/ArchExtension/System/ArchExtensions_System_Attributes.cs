@@ -17,21 +17,29 @@ namespace Arch
 
 	internal class UniqueAttributeSystem : AttributeSystem<UniqueAttribute>
 	{
-		public override void Process(UniqueAttribute attribute, Type derectType)
+		public override void Process(UniqueAttribute attribute, Type directType)
 		{
-			if (derectType.IsClass || derectType.IsAbstract)
+			if (directType.IsClass || directType.IsAbstract)
 			{
-				Logger.Error($"{derectType} is not struct");
-				throw new Exception($"{derectType} is not struct");
+				Logger.Error($"{directType} is not struct");
+				throw new Exception($"{directType} is not struct");
 			}
-			if (derectType.GetInterface(nameof(IComponent)) == null)
+			if (directType.GetInterface(nameof(IComponent)) == null)
 			{
-				Logger.Error($"{derectType} is not component");
-				throw new Exception($"{derectType} is not component");
+				Logger.Error($"{directType} is not component");
+				throw new Exception($"{directType} is not component");
 			}
-			MethodInfo setSingleMethod = typeof(SingletonComponent).GetMethod("SetSingle");
-			MethodInfo genericMethod = setSingleMethod.MakeGenericMethod(derectType);
-			genericMethod.Invoke(null, new object[] { Activator.CreateInstance(derectType) });
+			// 通过反射调用泛型方法
+			MethodInfo setSingleMethod = typeof(SingletonComponent)
+				.GetMethod("Set", BindingFlags.Static | BindingFlags.Public);
+
+			MethodInfo genericMethod = setSingleMethod.MakeGenericMethod(directType);
+
+			// 通过反射创建参数实例（要求值类型有无参构造）
+			object component = Activator.CreateInstance(directType);
+
+			// 调用 SetSingle<T>(T value)
+			genericMethod.Invoke(null, new[] { component });
 		}
 	}
 
@@ -43,6 +51,21 @@ namespace Arch
 	{
 		public override void Process(WorldAttribute attribute, Type derectType)
 		{
+			if (typeof(IGlobalSystem).IsAssignableFrom(derectType))
+			{
+				Logger.Error($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
+				throw new Exception($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
+			}
+			if (typeof(ISystem).IsAssignableFrom(derectType))
+			{
+				Logger.Error($"类型：{derectType} 非可设置世界的系统，请检查实现！");
+				return;
+			}
+			if (!typeof(IReactiveSystem).IsAssignableFrom(derectType))
+			{
+				Logger.Error($"类型：{derectType} 非系统，请检查实现！");
+				throw new Exception($"类型：{derectType} 非系统，请检查实现！");
+			}
 			NamedWorld.CreateNamed(attribute.worldName);
 		}
 	}

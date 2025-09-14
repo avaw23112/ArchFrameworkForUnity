@@ -11,32 +11,23 @@ namespace Events
 	/// <summary>
 	/// 消息管道的发布者
 	/// </summary>
-	public class EventBus : Singleton<EventBus>
+	public partial class EventBus : Singleton<EventBus>
 	{
-		// 每个事件类型独立存储处理器
-		// 修改Handlers类（需补充到原有结构中）
+		private const int MAX_DEPTH = 0;
+
 		private static class Handlers<T> where T : struct
 		{
 			public static readonly List<Action<T>> actions = new List<Action<T>>();
-			public static readonly List<Func<T, UniTask>> asyncActions = new List<Func<T, UniTask>>();
-			public static int publishDepth; // 新增发布深度计数器
+			public static int publishDepth;
 		}
 
-		private const int MAX_DEPTH = 0;
 
+		//保持引用防GC
 		private List<IEvent> Events = new List<IEvent>();
 
 		public static void Subscribe<T>(Action<T> handler) where T : struct
 		{
 			Handlers<T>.actions.Add(handler);
-		}
-		public static void SubscribeAsync<T>(Func<T, UniTask> handler) where T : struct
-		{
-			Handlers<T>.asyncActions.Add(handler);
-		}
-		public static void UnsubscribeAsync<T>(Func<T, UniTask> handler) where T : struct
-		{
-			Handlers<T>.asyncActions.Remove(handler);
 		}
 		public static void Unsubscribe<T>(Action<T> handler) where T : struct
 		{
@@ -56,28 +47,6 @@ namespace Events
 				for (int i = 0; i < actions.Count; i++)
 				{
 					actions[i](eventData);
-				}
-			}
-			finally
-			{
-				Handlers<T>.publishDepth--;
-			}
-		}
-
-		public static async UniTask PublishAsync<T>(T eventData) where T : struct
-		{
-			await UniTask.SwitchToMainThread();
-
-			if (Handlers<T>.publishDepth++ > 0)
-			{
-				throw new InvalidOperationException($"递归触发事件 {typeof(T).Name} 被禁止");
-			}
-			try
-			{
-				var actions = Handlers<T>.asyncActions;
-				for (int i = 0; i < actions.Count; i++)
-				{
-					await actions[i](eventData);
 				}
 			}
 			finally
