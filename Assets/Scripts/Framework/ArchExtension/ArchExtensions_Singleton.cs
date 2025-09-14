@@ -31,30 +31,6 @@ namespace Arch
 				return m_entitySingleton;
 			}
 		}
-		public static T Instance<T>() where T : class, IComponent
-		{
-			if (EntitySingleton.Has<T>())
-			{
-				return EntitySingleton.Get<T>();
-			}
-			else
-			{
-				EntitySingleton.Add<T>();
-				return EntitySingleton.Get<T>();
-			}
-		}
-		public static void SetInstance<T>(T value) where T : class, IComponent
-		{
-			if (EntitySingleton.Has<T>())
-			{
-				EntitySingleton.Set(value);
-			}
-			else
-			{
-				EntitySingleton.Add<T>();
-				EntitySingleton.Set(value);
-			}
-		}
 
 		private static Dictionary<World, Entity> m_dicSingleEntity = new Dictionary<World, Entity>();
 		public static T GetSingle<T>(this World self) where T : struct, IComponent
@@ -78,6 +54,59 @@ namespace Arch
 		public static void SetSingle<T>(this World self, T value) where T : struct, IComponent
 		{
 			Entity entity;
+			if (!m_dicSingleEntity.TryGetValue(self, out entity))
+			{
+				entity = self.Create<T>();
+				m_dicSingleEntity.Add(self, entity);
+			}
+			if (entity.Has<T>())
+			{
+				entity.Set(value);
+			}
+			else
+			{
+				entity.Add<T>();
+				entity.Set(value);
+			}
+		}
+		public static T GetSingle<T>() where T : struct, IComponent
+		{
+			Entity entity;
+			World self = WorldSingleton;
+			if (!m_dicSingleEntity.TryGetValue(self, out entity))
+			{
+				entity = self.Create<T>();
+				m_dicSingleEntity.Add(self, entity);
+			}
+			if (!entity.Has<T>())
+			{
+				throw new System.Exception($"Component {typeof(T)} is not singleton component");
+			}
+			return entity.Get<T>();
+		}
+		public static T GetOrAddSingle<T>() where T : struct, IComponent
+		{
+			Entity entity;
+			World self = WorldSingleton;
+			if (!m_dicSingleEntity.TryGetValue(self, out entity))
+			{
+				entity = self.Create<T>();
+				m_dicSingleEntity.Add(self, entity);
+			}
+			if (entity.Has<T>())
+			{
+				return entity.Get<T>();
+			}
+			else
+			{
+				entity.Add<T>();
+				return entity.Get<T>();
+			}
+		}
+		public static void SetSingle<T>(T value) where T : struct, IComponent
+		{
+			Entity entity;
+			World self = WorldSingleton;
 			if (!m_dicSingleEntity.TryGetValue(self, out entity))
 			{
 				entity = self.Create<T>();

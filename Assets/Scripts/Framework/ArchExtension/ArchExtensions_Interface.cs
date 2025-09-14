@@ -1,16 +1,34 @@
 ﻿using Arch.Core;
+using UnityEngine;
 
 namespace Arch
 {
+
+	#region Component
+
 	public interface IComponent
 	{
 
 	}
 
+	public interface IModelComponent : IComponent
+	{
+
+	}
+
+	public interface IViewComponent : IComponent
+	{
+		public GameObject gameObject { get; set; }
+	}
+
+	#endregion
+
+	#region System
 	public interface ISystem
 	{
 
 	}
+
 	public interface IReactiveSystem
 	{
 		public void BuildIn(World world);
@@ -54,5 +72,5 @@ namespace Arch
 	{
 		public void Destroy();
 	}
-
+	#endregion
 }

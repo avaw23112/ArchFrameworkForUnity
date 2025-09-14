@@ -1,5 +1,4 @@
 ﻿using Arch;
-using Assets.Scripts.Framework.Tools;
 using Cysharp.Threading.Tasks;
 using Events;
 using UnityEditor;
@@ -12,6 +11,9 @@ namespace Assets.Scripts
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
 		private static async void OnGameStart()
 		{
+			Tools.Logger.Initialize();
+			await UniTask.Yield();
+
 			EventBus.RegisterEvents();
 			await UniTask.Yield();
 
@@ -29,10 +31,10 @@ namespace Assets.Scripts
 						ArchSystems.ResetPlayerLoop();
 				};
 #else
-			Application.quitting += () =>
-			{
-				ArchSystems.ResetPlayerLoop();
-			};
+						Application.quitting += () =>
+						{
+							ArchSystems.ResetPlayerLoop();
+						};
 #endif
 
 			await UniTask.Yield();

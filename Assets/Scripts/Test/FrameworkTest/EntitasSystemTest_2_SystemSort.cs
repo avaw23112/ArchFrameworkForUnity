@@ -17,7 +17,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 
 	//3 , 1, 2正确顺序
 	[Forget]
-	[UnitySystem, Before(typeof(EntitasSystemTest_2_SystemSort_2))]
+	[System, Before(typeof(EntitasSystemTest_2_SystemSort_2))]
 	public class EntitasSystemTest_2_SystemSort_1 : IAwake
 	{
 		public void Awake()
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	}
 
 	[Forget]
-	[UnitySystem]
+	[System]
 	public class EntitasSystemTest_2_SystemSort_2 : IAwake
 	{
 		public void Awake()
@@ -37,7 +37,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	}
 
 	[Forget]
-	[UnitySystem, Before(typeof(EntitasSystemTest_2_SystemSort_1))]
+	[System, Before(typeof(EntitasSystemTest_2_SystemSort_1))]
 	public class EntitasSystemTest_2_SystemSort_3 : IAwake
 	{
 		public void Awake()

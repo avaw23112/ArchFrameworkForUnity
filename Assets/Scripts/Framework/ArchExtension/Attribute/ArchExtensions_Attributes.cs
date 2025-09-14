@@ -1,9 +1,11 @@
-﻿using Arch.Core;
-using Attributes;
+﻿using Attributes;
 using System;
 
 namespace Arch
 {
+	/// <summary>
+	/// 标记System运转在哪个World
+	/// </summary>
 	public class WorldAttribute : BaseAttribute
 	{
 		public string worldName;
@@ -16,15 +18,19 @@ namespace Arch
 			worldName = "Default";
 		}
 	}
+
+	/// <summary>
+	/// 在开局时自动注册被标记的组件到单例世界中，且维护它的Get
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
 	public class UniqueAttribute : BaseAttribute
 	{
-		//封装Create方法，禁止通过Create创建标记为Unique的组件
-		//开设UniqueComponentSetter<>,UniqueComponentGetter<>，GetUniqueComponent,SetUniqueComponent。操作单例组件
+
 	}
-	public class UnitySystemAttribute : BaseAttribute
+
+	public class SystemAttribute : BaseAttribute
 	{
-		public UnitySystemAttribute()
+		public SystemAttribute()
 		{
 		}
 	}

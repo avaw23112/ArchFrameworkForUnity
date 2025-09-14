@@ -1,5 +1,6 @@
 ﻿using Attributes;
 using System;
+using System.Reflection;
 using Tools;
 
 namespace Arch
@@ -8,9 +9,34 @@ namespace Arch
 	{
 		public static bool isMarkedSystem(Type derectType)
 		{
-			return derectType.GetCustomAttributes(typeof(UnitySystemAttribute), false).Length > 0;
+			return derectType.GetCustomAttributes(typeof(SystemAttribute), false).Length > 0;
 		}
 	}
+
+	#region 单例组件初始化
+
+	internal class UniqueAttributeSystem : AttributeSystem<UniqueAttribute>
+	{
+		public override void Process(UniqueAttribute attribute, Type derectType)
+		{
+			if (derectType.IsClass || derectType.IsAbstract)
+			{
+				Logger.Error($"{derectType} is not struct");
+				throw new Exception($"{derectType} is not struct");
+			}
+			if (derectType.GetInterface(nameof(IComponent)) == null)
+			{
+				Logger.Error($"{derectType} is not component");
+				throw new Exception($"{derectType} is not component");
+			}
+			MethodInfo setSingleMethod = typeof(SingletonComponent).GetMethod("SetSingle");
+			MethodInfo genericMethod = setSingleMethod.MakeGenericMethod(derectType);
+			genericMethod.Invoke(null, new object[] { Activator.CreateInstance(derectType) });
+		}
+	}
+
+	#endregion
+
 	#region 初始化World
 
 	internal class WorldAttributeSystem : AttributeSystem<WorldAttribute>

@@ -17,7 +17,7 @@ public class ArchSystemTest_2_ReactiveSystem : Event<ArchSystemTest_1_Event>
 }
 
 [Forget]
-[UnitySystem]
+[System]
 [World("ReactiveSystem")]
 public class ArchSystemTest_2_ReactiveSystem_Awake : AwakeSystem<TestComponent>
 {

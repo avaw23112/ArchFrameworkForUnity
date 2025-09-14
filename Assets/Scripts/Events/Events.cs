@@ -7,4 +7,9 @@
 	{
 
 	}
+	public struct ArchSystem_Unique_Test
+	{
+
+	}
+
 }

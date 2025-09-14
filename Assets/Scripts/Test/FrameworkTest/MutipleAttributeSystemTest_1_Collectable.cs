@@ -51,33 +51,33 @@ namespace Assets.Scripts.Test
     //{
     //}
     [Forget]
-    public class MutipleAttributeSystemTest_3_CollectableAttribute : AttributeSystem<UnitySystemAttribute, AfterAttribute, BeforeAttribute>
+    public class MutipleAttributeSystemTest_3_CollectableAttribute : AttributeSystem<SystemAttribute, AfterAttribute, BeforeAttribute>
     {
         private int renferCount = 0;
 
-        public override void Process(UnitySystemAttribute attribute_T1, AfterAttribute attribute_T2, BeforeAttribute beforeAtAttribute, Type derectType)
+        public override void Process(SystemAttribute attribute_T1, AfterAttribute attribute_T2, BeforeAttribute beforeAtAttribute, Type derectType)
         {
             Debug.Log($"MutipleAttributeSystemTest_3_CollectableAttribute : ref count: {renferCount++}");
         }
     }
 
     [Forget]
-    public class MutipleAttributeSystemTest_2_CollectableAttribute : AttributeSystem<UnitySystemAttribute, AfterAttribute>
+    public class MutipleAttributeSystemTest_2_CollectableAttribute : AttributeSystem<SystemAttribute, AfterAttribute>
     {
         private int renferCount = 0;
 
-        public override void Process(UnitySystemAttribute attribute_T1, AfterAttribute attribute_T2, Type derectType)
+        public override void Process(SystemAttribute attribute_T1, AfterAttribute attribute_T2, Type derectType)
         {
             Debug.Log($" MutipleAttributeSystemTest_2_CollectableAttribute : ref count: {renferCount++}");
         }
     }
 
     [Forget]
-    public class MutipleAttributeSystemTest_1_CollectableAttribute : AttributeSystem<UnitySystemAttribute, BeforeAttribute>
+    public class MutipleAttributeSystemTest_1_CollectableAttribute : AttributeSystem<SystemAttribute, BeforeAttribute>
     {
         private int renferCount = 0;
 
-        public override void Process(UnitySystemAttribute attribute_T1, BeforeAttribute attribute_T2, Type derectType)
+        public override void Process(SystemAttribute attribute_T1, BeforeAttribute attribute_T2, Type derectType)
         {
             Debug.Log($"MutipleAttributeSystemTest_1_CollectableAttribute :ref count: {renferCount++}");
         }

@@ -26,7 +26,7 @@ namespace Arch
 		{
 			//获取所有标记了SystemAttribute的类
 			Dictionary<Type, List<object>> dicSystems;
-			Attributes.Attributes.TryGetDecrectType(typeof(UnitySystemAttribute), out dicSystems);
+			Attributes.Attributes.TryGetDecrectType(typeof(SystemAttribute), out dicSystems);
 			List<ISystem> listPureSystems = new List<ISystem>();
 			List<IReactiveSystem> listReactiveSystems = new List<IReactiveSystem>();
 

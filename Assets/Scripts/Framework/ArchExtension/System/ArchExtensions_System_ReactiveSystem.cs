@@ -1,11 +1,6 @@
-﻿
-using Arch.Buffer;
+﻿using Arch.Buffer;
 using Arch.Core;
-using Arch.Core.Extensions;
-using inEvent;
-using RefEvent;
-using System;
-using Tools;
+
 
 namespace Arch
 {
@@ -227,7 +222,7 @@ namespace Arch
 			{
 				throw new System.ArgumentNullException("world is null");
 			}
-			return SingletonComponent.GetSingle<T>(world);
+			return SingletonComponent.GetSingle<T>();
 		}
 
 		public void SetUniqueComponent<T>(T component) where T : struct, IComponent
@@ -236,7 +231,7 @@ namespace Arch
 			{
 				throw new System.ArgumentNullException("world is null");
 			}
-			SingletonComponent.SetSingle<T>(world, component);
+			SingletonComponent.SetSingle<T>(component);
 		}
 
 		#endregion

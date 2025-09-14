@@ -4,7 +4,8 @@ using Tools;
 
 namespace Assets.Scripts.Test
 {
-	[UnitySystem]
+	[Forget]
+	[System]
 	public class EntitasSystemTest_1_System : IAwake
 	{
 		public void Awake()
@@ -12,8 +13,8 @@ namespace Assets.Scripts.Test
 			Logger.Debug("EntitasSystemTest_1_System.Execute()");
 		}
 	}
-
-	[UnitySystem]
+	[Forget]
+	[System]
 	public class EntitasSystemTest_2_System : IUpdate
 	{
 		public void Update()
@@ -21,8 +22,8 @@ namespace Assets.Scripts.Test
 			Logger.Error("EntitasSystemTest_2_System.Execute()");
 		}
 	}
-
-	[UnitySystem]
+	[Forget]
+	[System]
 	public class EntitasSystemTest_3_System : ILateUpdate
 	{
 		public void LateUpdate()
@@ -30,8 +31,8 @@ namespace Assets.Scripts.Test
 			Logger.Debug("EntitasSystemTest_3_System.Cleanup()");
 		}
 	}
-
-	[UnitySystem]
+	[Forget]
+	[System]
 	public class EntitasSystemTest_4_System : IDestroy
 	{
 		public void Destroy()

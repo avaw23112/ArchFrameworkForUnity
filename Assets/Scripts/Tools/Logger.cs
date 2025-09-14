@@ -9,11 +9,13 @@ namespace Tools
 {
 	public static class Logger
 	{
-		private static bool _isInitialized = false;
-		private static StreamWriter _logFileWriter;
-		private static readonly string LogDirectory = Path.Combine(Application.dataPath, "..", "Logs");
-		private static readonly string LoggerNamespace = typeof(Logger).Namespace;
+#if !UNITY_EDITOR
 
+		private static StreamWriter _logFileWriter;
+		private static readonly string LogDirectory = Path.Combine(Application.dataPath, "..", "Logs
+#endif
+
+		private static readonly string LoggerNamespace = typeof(Logger).Namespace;
 		// 日志级别枚举
 		public enum LogLevel
 		{
@@ -26,11 +28,8 @@ namespace Tools
 
 		public static LogLevel CurrentLogLevel = LogLevel.Debug;
 
-		[RuntimeInitializeOnLoadMethod]
 		public static void Initialize()
 		{
-			if (_isInitialized) return;
-
 			try
 			{
 				// 在编辑器中不初始化文件日志
@@ -64,7 +63,6 @@ namespace Tools
                 };
 #endif
 
-				_isInitialized = true;
 				UnityEngine.Debug.Log("Logger initialized successfully");
 			}
 			catch (Exception ex)
@@ -105,13 +103,12 @@ namespace Tools
 		// 核心日志方法 - 堆栈深度最小化
 		private static void LogInternal(string message, UnityEngine.LogType logType, string filePath, int lineNumber, bool includeStackTrace = false, Exception ex = null)
 		{
-			if (!_isInitialized) Initialize();
-
 			// 写入文件日志 - 包含调用者信息（只在非编辑器环境下）
-#if !UNITY_EDITOR
-			// 获取简化文件名
-			string fileName = filePath.Substring(filePath.IndexOf("Assets"));
 
+
+#if !UNITY_EDITOR
+	// 获取简化文件名
+			string fileName = filePath.Substring(filePath.IndexOf("Assets"));
             if (_logFileWriter != null)
             {
                 _logFileWriter.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} [{logType}]");
