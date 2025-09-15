@@ -8,14 +8,6 @@ namespace Arch
     {
     }
 
-    public interface IModelComponent : IComponent
-    {
-    }
-
-    public interface IViewComponent : IComponent
-    {
-    }
-
     #endregion Component
 
     #region System

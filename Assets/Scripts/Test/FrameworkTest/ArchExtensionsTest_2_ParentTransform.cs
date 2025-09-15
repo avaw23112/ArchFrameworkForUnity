@@ -1,18 +1,19 @@
 ﻿using Arch;
 using Arch.Core;
+using Attributes;
 using Events;
 using Tools;
 
 namespace Assets.Scripts.Test.FrameworkTest
 {
-    internal class ArchExtensionsTest_2_ParentTransform : Event<ArchSystem_Test>
+    internal class ArchExtensionsTest_2_ParentTransform : Event<Events.ArchSystem_1_Test>
     {
-        public override void Run(ArchSystem_Test value)
+        public override void Run(Events.ArchSystem_1_Test value)
         {
-            Entity entityParent = NamedWorld.Instance.DefaultWord.Create(new TestParentComponent { id = 0 });
-            Entity subEntity = NamedWorld.Instance.DefaultWord.Create(new TestParentComponent { id = 1 });
+            Entity entityParent = NamedWorld.DefaultWord.Create(new TestParentComponent { id = 0 });
+            Entity subEntity = NamedWorld.DefaultWord.Create(new TestParentComponent { id = 1 });
             subEntity.SetParent(entityParent);
-            NamedWorld.Instance.DefaultWord.Destroy(entityParent);
+            NamedWorld.DefaultWord.Destroy(entityParent);
         }
     }
 
@@ -21,7 +22,7 @@ namespace Assets.Scripts.Test.FrameworkTest
         public int id;
     }
 
-    [System]
+    [System, Forget]
     public class TestParentAwakeSystem : AwakeSystem<TestParentComponent>
     {
         protected override void Run(Entity entity, ref TestParentComponent component_T1)
@@ -30,7 +31,7 @@ namespace Assets.Scripts.Test.FrameworkTest
         }
     }
 
-    [System]
+    [System, Forget]
     public class TestParentDestroySystem : DestroySystem<TestParentComponent>
     {
         protected override void Run(Entity entity, ref TestParentComponent component_T1)

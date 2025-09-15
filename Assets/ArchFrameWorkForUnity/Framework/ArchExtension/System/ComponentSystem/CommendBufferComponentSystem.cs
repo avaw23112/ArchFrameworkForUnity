@@ -38,6 +38,7 @@ namespace Arch
     }
 
     [System]
+    [Last]
     public class CommendBufferComponentLateUpdateSystem : ILateUpdate
     {
         public void LateUpdate()

@@ -212,13 +212,13 @@ namespace Arch
         {
             try
             {
-                for (var i = 0; i < m_listReactiveUpdateSystems.Count; i++)
-                {
-                    m_listReactiveUpdateSystems[i].Update();
-                }
                 for (var i = 0; i < m_listUpdateSystems.Count; i++)
                 {
                     m_listUpdateSystems[i].Update();
+                }
+                for (var i = 0; i < m_listReactiveUpdateSystems.Count; i++)
+                {
+                    m_listReactiveUpdateSystems[i].Update();
                 }
             }
             catch (Exception e)
