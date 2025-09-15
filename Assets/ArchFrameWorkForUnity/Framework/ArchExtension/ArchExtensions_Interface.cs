@@ -1,79 +1,81 @@
 ﻿using Arch.Core;
-using UnityEngine;
 
 namespace Arch
 {
+    #region Component
 
-	#region Component
+    public interface IComponent
+    {
+    }
 
-	public interface IComponent
-	{
+    public interface IModelComponent : IComponent
+    {
+    }
 
-	}
+    public interface IViewComponent : IComponent
+    {
+    }
 
-	public interface IModelComponent : IComponent
-	{
+    #endregion Component
 
-	}
+    #region System
 
-	public interface IViewComponent : IComponent
-	{
-	}
+    public interface ISystem
+    {
+    }
 
-	#endregion
+    public interface IGlobalSystem
+    {
+    }
 
-	#region System
-	public interface ISystem
-	{
+    public interface IReactiveSystem
+    {
+        public void BuildIn(World world);
 
-	}
-	public interface IGlobalSystem
-	{
+        public QueryDescription Filter();
 
-	}
+        public bool GetTrigger(Entity entity);
+    }
 
-	public interface IReactiveSystem
-	{
-		public void BuildIn(World world);
-		public QueryDescription Filter();
-		public bool GetTrigger(Entity entity);
-	}
+    public interface IReactiveAwake : IReactiveSystem
+    {
+        public void SubcribeEntityAwake();
+    }
 
-	public interface IReactiveAwake : IReactiveSystem
-	{
-		public void SubcribeEntityAwake();
-	}
-	public interface IReactiveUpdate : IReactiveSystem
-	{
-		public void Update();
-	}
-	public interface IReactiveLateUpdate : IReactiveSystem
-	{
-		public void LateUpdate();
-	}
-	public interface IReactiveDestroy : IReactiveSystem
-	{
-		public void SubcribeEntityDestroy();
-	}
+    public interface IReactiveUpdate : IReactiveSystem
+    {
+        public void Update();
+    }
 
-	public interface IAwake : ISystem
-	{
-		public void Awake();
-	}
+    public interface IReactiveLateUpdate : IReactiveSystem
+    {
+        public void LateUpdate();
+    }
 
-	public interface IUpdate : ISystem
-	{
-		public void Update();
-	}
+    public interface IReactiveDestroy : IReactiveSystem
+    {
+        public void SubcribeEntityDestroy();
+    }
 
-	public interface ILateUpdate : ISystem
-	{
-		public void LateUpdate();
-	}
+    public interface IAwake : ISystem
+    {
+        public void Awake();
+    }
 
-	public interface IDestroy : ISystem
-	{
-		public void Destroy();
-	}
-	#endregion
+    public interface IUpdate : ISystem
+    {
+        public void Update();
+    }
+
+    public interface ILateUpdate : ISystem
+    {
+        public void LateUpdate();
+    }
+
+    public interface IDestroy : ISystem
+    {
+        public void Destroy();
+    }
+
+    #endregion System
 }

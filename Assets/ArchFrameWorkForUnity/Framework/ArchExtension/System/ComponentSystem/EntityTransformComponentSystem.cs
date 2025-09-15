@@ -63,7 +63,7 @@ namespace Arch
             }
             foreach (var subEntity in entityTransform.entities)
             {
-                DestroyEntity(subEntity);
+                DestroyEntityCommend(subEntity);
             }
 
             EntityBindingComponent sEntityBindingComponent = SingletonComponent.GetOrAdd<EntityBindingComponent>();

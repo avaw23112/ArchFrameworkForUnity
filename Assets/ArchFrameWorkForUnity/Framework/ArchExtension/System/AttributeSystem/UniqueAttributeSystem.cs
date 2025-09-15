@@ -5,8 +5,6 @@ using Tools;
 
 namespace Arch
 {
-    #region 单例组件初始化
-
     internal class UniqueAttributeSystem : AttributeSystem<UniqueAttribute>
     {
         public override void Process(UniqueAttribute attribute, Type directType)
@@ -34,6 +32,4 @@ namespace Arch
             genericMethod.Invoke(null, new[] { component });
         }
     }
-
-    #endregion 单例组件初始化
 }

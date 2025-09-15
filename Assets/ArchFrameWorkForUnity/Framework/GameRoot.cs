@@ -1,35 +1,34 @@
 ﻿using Arch;
-using Cysharp.Threading.Tasks;
 using Events;
 using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-	public class GameRoot
-	{
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-		private static void OnGameStart()
-		{
-			Tools.Logger.Initialize();
-			EventBus.RegisterEvents();
-			Attributes.Attributes.RegisterAttributeSystems();
-			ArchSystems.RegisterEntitasSystems();
-			ArchSystems.Instance.Start();
-			ArchSystems.Instance.SubcribeEntityStart();
-			ArchSystems.Instance.SubcribeEntityDestroy();
-			ArchSystems.ApplyToPlayerLoop();
+    public class GameRoot
+    {
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void OnGameStart()
+        {
+            Tools.Logger.Initialize();
+            EventBus.RegisterEvents();
+            Attributes.Attributes.RegisterAttributeSystems();
+            ArchSystems.RegisterEntitasSystems();
+            ArchSystems.Instance.Start();
+            ArchSystems.Instance.SubcribeEntityStart();
+            ArchSystems.Instance.SubcribeEntityDestroy();
+            ArchSystems.ApplyToPlayerLoop();
 
 #if UNITY_EDITOR
-			EditorApplication.playModeStateChanged +=
-				(state) =>
-				{
-					if (state == PlayModeStateChange.ExitingPlayMode)
-					{
-						ArchSystems.Instance.Destroy();
-						ArchSystems.ResetPlayerLoop();
-					}
-				};
+            EditorApplication.playModeStateChanged +=
+                (state) =>
+                {
+                    if (state == PlayModeStateChange.ExitingPlayMode)
+                    {
+                        ArchSystems.Instance.Destroy();
+                        ArchSystems.ResetPlayerLoop();
+                    }
+                };
 #else
 			Application.quitting += () =>
 			{
@@ -38,8 +37,7 @@ namespace Assets.Scripts
 			};
 #endif
 
-			EventBus.Publish(new GameStarted());
-		}
-
-	}
+            EventBus.Publish(new GameStarted());
+        }
+    }
 }
