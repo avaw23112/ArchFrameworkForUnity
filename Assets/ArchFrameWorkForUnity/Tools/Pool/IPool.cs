@@ -1,4 +1,4 @@
-﻿namespace Tools.Pool
+﻿namespace Arch.Tools.Pool
 {
     internal interface IPool<T>
     {

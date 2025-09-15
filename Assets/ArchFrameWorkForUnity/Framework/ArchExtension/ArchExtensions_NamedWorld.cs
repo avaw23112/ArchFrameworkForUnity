@@ -1,7 +1,7 @@
 ﻿using Arch.Core;
+using Arch.Tools;
 using System;
 using System.Collections.Generic;
-using Tools;
 
 namespace Arch
 {
@@ -20,7 +20,7 @@ namespace Arch
                 {
                     if (!m_dicWorlds.TryGetValue("Default", out Instance.m_defaultWorld))
                     {
-                        Tools.Logger.Error("not found the default word!");
+                        Tools.ArchLog.Error("not found the default word!");
                         throw new Exception("not found the default word!");
                     }
                 }

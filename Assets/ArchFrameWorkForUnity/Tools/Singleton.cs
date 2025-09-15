@@ -1,4 +1,4 @@
-namespace Tools
+namespace Arch.Tools
 {
     public class Singleton<T> where T : new()
     {

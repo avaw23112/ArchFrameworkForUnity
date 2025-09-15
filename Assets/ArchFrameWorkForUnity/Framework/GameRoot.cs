@@ -10,7 +10,7 @@ namespace Assets.Scripts
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnGameStart()
         {
-            Tools.Logger.Initialize();
+            Arch.Tools.ArchLog.Initialize();
             EventBus.RegisterEvents();
             Attributes.Attributes.RegisterAttributeSystems();
             ArchSystems.RegisterEntitasSystems();

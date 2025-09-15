@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tools.Pool
+namespace Arch.Tools.Pool
 {
     public class ListPool<T>
     {
@@ -21,10 +21,12 @@ namespace Tools.Pool
         {
             if (List == null)
             {
+                ArchLog.Error("List is null.");
                 throw new System.NullReferenceException("List is null.");
             }
             if (!m_SetUsed.Contains(List))
             {
+                ArchLog.Error("List is not in used set.");
                 throw new System.Exception("List is not in used set.");
             }
             m_SetUsed.Remove(List);

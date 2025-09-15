@@ -1,8 +1,8 @@
 ﻿using Arch;
 using Arch.Core;
+using Arch.Tools;
 using Attributes;
 using Events;
-using Tools;
 
 namespace Assets.Scripts.Test.FrameworkTest
 {
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         protected override void Run(Entity entity, ref TestParentComponent component_T1)
         {
-            Logger.Debug($"Awake : {entity} is awake,ID :{component_T1.id}");
+            ArchLog.Debug($"Awake : {entity} is awake,ID :{component_T1.id}");
         }
     }
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         protected override void Run(Entity entity, ref TestParentComponent component_T1)
         {
-            Logger.Debug($"Destroy : {entity} is awake,ID :{component_T1.id}");
+            ArchLog.Debug($"Destroy : {entity} is awake,ID :{component_T1.id}");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Arch;
+using Arch.Tools;
 using Attributes;
-using Tools;
 
 namespace Assets.Scripts.Test
 {
@@ -10,7 +10,7 @@ namespace Assets.Scripts.Test
     {
         public void Awake()
         {
-            Logger.Debug("EntitasSystemTest_1_System.Execute()");
+            ArchLog.Debug("EntitasSystemTest_1_System.Execute()");
         }
     }
 
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Test
     {
         public void Update()
         {
-            Logger.Error("EntitasSystemTest_2_System.Execute()");
+            ArchLog.Error("EntitasSystemTest_2_System.Execute()");
         }
     }
 
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Test
     {
         public void LateUpdate()
         {
-            Logger.Debug("EntitasSystemTest_3_System.Cleanup()");
+            ArchLog.Debug("EntitasSystemTest_3_System.Cleanup()");
         }
     }
 
@@ -40,7 +40,7 @@ namespace Assets.Scripts.Test
     {
         public void Destroy()
         {
-            Logger.Debug("EntitasSystemTest_4_System.TearDown()");
+            ArchLog.Debug("EntitasSystemTest_4_System.TearDown()");
         }
     }
 }

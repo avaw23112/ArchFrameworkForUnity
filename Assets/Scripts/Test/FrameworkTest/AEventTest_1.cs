@@ -1,5 +1,4 @@
-﻿using Attributes;
-using Events;
+﻿using Events;
 using UnityEngine;
 
 namespace Assets.Scripts.Test
@@ -28,7 +27,7 @@ namespace Assets.Scripts.Test
     {
         public override void Run(AEventTest_1Event value)
         {
-            Tools.Logger.Debug("AEventTest_1Listener: " + value.num);
+            Arch.Tools.ArchLog.Debug("AEventTest_1Listener: " + value.num);
         }
     }
 }

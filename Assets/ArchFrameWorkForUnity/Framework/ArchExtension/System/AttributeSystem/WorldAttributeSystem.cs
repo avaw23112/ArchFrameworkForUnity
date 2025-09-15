@@ -1,6 +1,6 @@
-﻿using Attributes;
+﻿using Arch.Tools;
+using Attributes;
 using System;
-using Tools;
 
 namespace Arch
 {
@@ -10,17 +10,17 @@ namespace Arch
         {
             if (typeof(IGlobalSystem).IsAssignableFrom(derectType))
             {
-                Logger.Error($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
+                ArchLog.Error($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
                 throw new Exception($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
             }
             if (typeof(ISystem).IsAssignableFrom(derectType))
             {
-                Logger.Error($"类型：{derectType} 非可设置世界的系统，请检查实现！");
+                ArchLog.Error($"类型：{derectType} 非可设置世界的系统，请检查实现！");
                 return;
             }
             if (!typeof(IReactiveSystem).IsAssignableFrom(derectType))
             {
-                Logger.Error($"类型：{derectType} 非系统，请检查实现！");
+                ArchLog.Error($"类型：{derectType} 非系统，请检查实现！");
                 throw new Exception($"类型：{derectType} 非系统，请检查实现！");
             }
             NamedWorld.CreateNamed(attribute.worldName);

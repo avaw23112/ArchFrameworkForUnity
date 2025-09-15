@@ -1,8 +1,8 @@
 ﻿using Arch.Core;
+using Arch.Tools;
 using Schedulers;
 using System;
 using System.Collections.Generic;
-using Tools;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
 
@@ -44,7 +44,7 @@ namespace Arch
 
             if (dicSystems == null || dicSystems.Count == 0)
             {
-                Logger.Debug("系统中暂无System可创建");
+                ArchLog.Debug("系统中暂无System可创建");
                 return;
             }
 
@@ -75,7 +75,7 @@ namespace Arch
                 }
                 else
                 {
-                    Logger.Error($"系统中存在非系统类型: {systemType}");
+                    ArchLog.Error($"系统中存在非系统类型: {systemType}");
                     throw new Exception($"系统中存在非系统类型: {systemType}");
                 }
             }
@@ -187,7 +187,7 @@ namespace Arch
             }
             catch (Exception e)
             {
-                Logger.Error($"Start System: {e.Message}");
+                ArchLog.Error($"Start System: {e.Message}");
                 throw;
             }
         }
@@ -203,7 +203,7 @@ namespace Arch
             }
             catch (Exception e)
             {
-                Logger.Error($"Start System: {e.Message}");
+                ArchLog.Error($"Start System: {e.Message}");
                 throw;
             }
         }
@@ -223,7 +223,7 @@ namespace Arch
             }
             catch (Exception e)
             {
-                Logger.Error($"Update System: {e.Message}");
+                ArchLog.Error($"Update System: {e.Message}");
                 throw;
             }
         }
@@ -243,7 +243,7 @@ namespace Arch
             }
             catch (Exception e)
             {
-                Logger.Error($"LateUpdate System: {e.Message}");
+                ArchLog.Error($"LateUpdate System: {e.Message}");
                 throw;
             }
         }
@@ -259,7 +259,7 @@ namespace Arch
             }
             catch (Exception e)
             {
-                Logger.Error($"Destroy System: {e.Message}");
+                ArchLog.Error($"Destroy System: {e.Message}");
                 throw;
             }
             finally
@@ -279,7 +279,7 @@ namespace Arch
             }
             catch (Exception e)
             {
-                Logger.Error($"Destroy System: {e.Message}");
+                ArchLog.Error($"Destroy System: {e.Message}");
                 throw;
             }
         }

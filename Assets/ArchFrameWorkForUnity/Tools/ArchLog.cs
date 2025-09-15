@@ -4,9 +4,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Tools
+namespace Arch.Tools
 {
-    public static class Logger
+    public static class ArchLog
     {
 #if !UNITY_EDITOR
 
@@ -14,7 +14,7 @@ namespace Tools
 		private static readonly string LogDirectory = Path.Combine(Application.dataPath, "..", "Logs
 #endif
 
-        private static readonly string LoggerNamespace = typeof(Logger).Namespace;
+        private static readonly string LoggerNamespace = typeof(ArchLog).Namespace;
 
         // 日志级别枚举
         public enum LogLevel
@@ -179,7 +179,7 @@ namespace Tools
                     if (declaringType == null) continue;
 
                     // 跳过Logger类和相关的调用
-                    if (declaringType == typeof(Logger) ||
+                    if (declaringType == typeof(ArchLog) ||
                         declaringType.Namespace == LoggerNamespace)
                     {
                         continue;

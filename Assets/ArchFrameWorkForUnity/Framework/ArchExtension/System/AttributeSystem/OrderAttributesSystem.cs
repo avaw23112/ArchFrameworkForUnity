@@ -1,6 +1,6 @@
-﻿using Attributes;
+﻿using Arch.Tools;
+using Attributes;
 using System;
-using Tools;
 
 namespace Arch
 {
@@ -10,12 +10,12 @@ namespace Arch
         {
             if (!AttributeSystemHelper.isMarkedSystem(derectType))
             {
-                Logger.Error($"在{derectType.Name}中，First属性必须和System属性一起使用！ ");
+                ArchLog.Error($"在{derectType.Name}中，First属性必须和System属性一起使用！ ");
             }
 
             if ((derectType.GetCustomAttributes(typeof(AfterAttribute), false).Length > 0) || derectType.GetCustomAttributes(typeof(BeforeAttribute), false).Length > 0)
             {
-                Logger.Error($"在{derectType.Name}中，First属性不能和After和Before属性一起使用！ ");
+                ArchLog.Error($"在{derectType.Name}中，First属性不能和After和Before属性一起使用！ ");
             }
         }
 
@@ -25,11 +25,11 @@ namespace Arch
             {
                 if (!AttributeSystemHelper.isMarkedSystem(derectType))
                 {
-                    Logger.Error($"在{derectType.Name}中，Last属性必须和System属性一起使用！ ");
+                    ArchLog.Error($"在{derectType.Name}中，Last属性必须和System属性一起使用！ ");
                 }
                 if ((derectType.GetCustomAttributes(typeof(AfterAttribute), false).Length > 0) || derectType.GetCustomAttributes(typeof(BeforeAttribute), false).Length > 0)
                 {
-                    Logger.Error($"在{derectType.Name}中，Last属性不能和After和Before属性一起使用！ ");
+                    ArchLog.Error($"在{derectType.Name}中，Last属性不能和After和Before属性一起使用！ ");
                 }
             }
         }
@@ -40,7 +40,7 @@ namespace Arch
             {
                 if (!AttributeSystemHelper.isMarkedSystem(derectType))
                 {
-                    Logger.Error($"在{derectType.Name}中，After属性必须和System属性一起使用！ ");
+                    ArchLog.Error($"在{derectType.Name}中，After属性必须和System属性一起使用！ ");
                     throw new Exception($"在{derectType.Name}中，After属性必须和System属性一起使用！");
                 }
             }
@@ -52,7 +52,7 @@ namespace Arch
             {
                 if (!AttributeSystemHelper.isMarkedSystem(derectType))
                 {
-                    Logger.Error($"在{derectType.Name}中，Before属性必须和System属性一起使用！ ");
+                    ArchLog.Error($"在{derectType.Name}中，Before属性必须和System属性一起使用！ ");
                     throw new Exception($"在{derectType.Name}中，Before属性必须和System属性一起使用！");
                 }
             }
@@ -64,7 +64,7 @@ namespace Arch
             {
                 if (!AttributeSystemHelper.isMarkedSystem(derectType))
                 {
-                    Logger.Error($"在{derectType.Name}中，After和Before属性必须和System属性一起使用！ ");
+                    ArchLog.Error($"在{derectType.Name}中，After和Before属性必须和System属性一起使用！ ");
                     throw new Exception($"在{derectType.Name}中，After和Before属性必须和System属性一起使用！");
                 }
             }

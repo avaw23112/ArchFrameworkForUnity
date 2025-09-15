@@ -1,6 +1,6 @@
 ﻿using Arch.Core;
+using Arch.Tools.Pool;
 using System.Collections.Generic;
-using Tools.Pool;
 
 namespace Arch
 {
@@ -38,13 +38,13 @@ namespace Arch
                 entityTransform.entities = ListPool<Entity>.Get();
             else
             {
-                Tools.Logger.Error($"{entity} 重复创建组件{typeof(EntityTransform)}！");
+                Tools.ArchLog.Error($"{entity} 重复创建组件{typeof(EntityTransform)}！");
                 throw new System.Exception($"{entity} 重复创建组件{typeof(EntityTransform)}！");
             }
             EntityBindingComponent sEntityBindingComponent = SingletonComponent.GetOrAdd<EntityBindingComponent>();
             if (sEntityBindingComponent.dicEntitiesBindings == null)
             {
-                Tools.Logger.Error($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
+                Tools.ArchLog.Error($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
                 throw new System.Exception($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
             }
             sEntityBindingComponent.dicEntitiesBindings.Add(entity, entityTransform.entities);
@@ -69,7 +69,7 @@ namespace Arch
             EntityBindingComponent sEntityBindingComponent = SingletonComponent.GetOrAdd<EntityBindingComponent>();
             if (sEntityBindingComponent.dicEntitiesBindings == null)
             {
-                Tools.Logger.Error($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
+                Tools.ArchLog.Error($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
                 throw new System.Exception($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
             }
 
@@ -82,7 +82,7 @@ namespace Arch
             }
             else
             {
-                Tools.Logger.Error($"{entity} 重复销毁组件{typeof(EntityTransform)}！");
+                Tools.ArchLog.Error($"{entity} 重复销毁组件{typeof(EntityTransform)}！");
                 throw new System.Exception($"{entity} 重复销毁组件{typeof(EntityTransform)}！");
             }
         }

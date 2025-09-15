@@ -1,5 +1,5 @@
-﻿using Attributes;
-using Arch;
+﻿using Arch;
+using Attributes;
 using System;
 using UnityEngine;
 

@@ -1,8 +1,8 @@
 ﻿using Arch;
 using Arch.Core;
+using Arch.Tools;
 using Attributes;
 using Events;
-using Tools;
 
 namespace Assets.Scripts.Test.FrameworkTest
 {
@@ -25,7 +25,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         protected override void Run(Entity entity, ref TestOrderComponent component_T1)
         {
-            Logger.Debug($"1");
+            ArchLog.Debug($"1");
         }
     }
 
@@ -35,7 +35,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         protected override void Run(Entity entity, ref TestOrderComponent component_T1)
         {
-            Logger.Debug($"2");
+            ArchLog.Debug($"2");
         }
     }
 
@@ -45,7 +45,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         protected override void Run(Entity entity, ref TestOrderComponent component_T1)
         {
-            Logger.Debug($"3");
+            ArchLog.Debug($"3");
         }
     }
 }
