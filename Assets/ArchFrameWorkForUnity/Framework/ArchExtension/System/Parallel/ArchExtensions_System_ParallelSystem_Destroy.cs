@@ -1,5 +1,6 @@
 ﻿using Arch.Core;
 using Arch.Tools;
+using Attributes;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Runtime.InteropServices;
@@ -98,7 +99,7 @@ namespace Arch
 	{
 		public int i;
 	}
-
+	[Forget]
 	public class parallelTest : ParallelLateUpdateSystem_Test<parallelComponent>
 	{
 		protected override void JobExecute(in Entity entity, ref parallelComponent component)

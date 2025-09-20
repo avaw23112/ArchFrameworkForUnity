@@ -20,6 +20,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	}
 
 	[System]
+	[Forget]
 	public class TestFristComponentAwakeSystem : AwakeSystem<TestOrderComponent>
 	{
 		protected override void Run(Entity entity, ref TestOrderComponent component_T1)
@@ -29,6 +30,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	}
 
 	[System]
+	[Forget]
 	[Last]
 	public class TestFristComponent_1_AwakeSystem : AwakeSystem<TestOrderComponent>
 	{
@@ -40,6 +42,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 
 	[System]
 	[First]
+	[Forget]
 	public class TestFristComponent_2_AwakeSystem : AwakeSystem<TestOrderComponent>
 	{
 		protected override void Run(Entity entity, ref TestOrderComponent component_T1)
