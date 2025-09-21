@@ -22,7 +22,7 @@ namespace Arch
 	}
 
 	public abstract class UpdateSystem<T> : ReactiveSystem<T>, IReactiveUpdate
-		where T : struct, IComponent
+		where T : IComponent
 	{
 		public void Update()
 		{
@@ -39,8 +39,8 @@ namespace Arch
 
 	// 2 参数版本
 	public abstract class UpdateSystem<T1, T2> : ReactiveSystem<T1, T2>, IReactiveUpdate
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
 	{
 		public void Update()
 		{
@@ -57,9 +57,9 @@ namespace Arch
 
 	// 3 参数版本
 	public abstract class UpdateSystem<T1, T2, T3> : ReactiveSystem<T1, T2, T3>, IReactiveUpdate
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
 	{
 		public void Update()
 		{
@@ -76,10 +76,10 @@ namespace Arch
 
 	// 4 参数版本
 	public abstract class UpdateSystem<T1, T2, T3, T4> : ReactiveSystem<T1, T2, T3, T4>, IReactiveUpdate
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
 	{
 		public void Update()
 		{
@@ -96,11 +96,11 @@ namespace Arch
 
 	// 5 参数版本
 	public abstract class UpdateSystem<T1, T2, T3, T4, T5> : ReactiveSystem<T1, T2, T3, T4, T5>, IReactiveUpdate
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
 	{
 		public void Update()
 		{
@@ -117,12 +117,12 @@ namespace Arch
 
 	// 6 参数版本
 	public abstract class UpdateSystem<T1, T2, T3, T4, T5, T6> : ReactiveSystem<T1, T2, T3, T4, T5, T6>, IReactiveUpdate
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
-		where T6 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
+		where T6 : IComponent
 	{
 		public void Update()
 		{

@@ -22,7 +22,7 @@ namespace Arch
 	/// 当带有T组件的实体销毁时，触发系统的运行
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public abstract class DestroySystem<T> : ReactiveSystem<T>, IReactiveDestroy where T : struct, IComponent
+	public abstract class DestroySystem<T> : ReactiveSystem<T>, IReactiveDestroy where T : IComponent
 	{
 		public void SubcribeEntityDestroy()
 		{
@@ -36,7 +36,7 @@ namespace Arch
 	}
 
 	public abstract class DestroySystem<T1, T2> : ReactiveSystem<T1, T2>, IReactiveDestroy
-		where T1 : struct, IComponent where T2 : struct, IComponent
+		where T1 : IComponent where T2 : IComponent
 	{
 		public void SubcribeEntityDestroy()
 		{
@@ -53,7 +53,7 @@ namespace Arch
 	}
 
 	public abstract class DestroySystem<T1, T2, T3> : ReactiveSystem<T1, T2, T3>, IReactiveDestroy
-		where T1 : struct, IComponent where T2 : struct, IComponent where T3 : struct, IComponent
+		where T1 : IComponent where T2 : IComponent where T3 : IComponent
 	{
 		public void SubcribeEntityDestroy()
 		{
@@ -71,10 +71,10 @@ namespace Arch
 		}
 	}
 	public abstract class DestroySystem<T1, T2, T3, T4> : ReactiveSystem<T1, T2, T3, T4>, IReactiveDestroy
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
 	{
 
 		public void SubcribeEntityDestroy()
@@ -95,11 +95,11 @@ namespace Arch
 	}
 
 	public abstract class DestroySystem<T1, T2, T3, T4, T5> : ReactiveSystem<T1, T2, T3, T4, T5>, IReactiveDestroy
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
 	{
 		public void SubcribeEntityDestroy()
 		{
@@ -120,12 +120,12 @@ namespace Arch
 	}
 
 	public abstract class DestroySystem<T1, T2, T3, T4, T5, T6> : ReactiveSystem<T1, T2, T3, T4, T5, T6>, IReactiveDestroy
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
-		where T6 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
+		where T6 : IComponent
 	{
 		public void SubcribeEntityDestroy()
 		{

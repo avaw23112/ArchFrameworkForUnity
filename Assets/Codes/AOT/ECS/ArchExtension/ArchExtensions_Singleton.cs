@@ -39,7 +39,7 @@ namespace Arch
 
 		private static Dictionary<World, Entity> m_dicSingleEntity = new Dictionary<World, Entity>();
 
-		public static T GetSingle<T>(this World self) where T : struct, IComponent
+		public static T GetSingle<T>(this World self) where T : IComponent
 		{
 			Entity entity;
 			if (!m_dicSingleEntity.TryGetValue(self, out entity))
@@ -58,7 +58,7 @@ namespace Arch
 			}
 		}
 
-		public static void SetSingle<T>(this World self, T value) where T : struct, IComponent
+		public static void SetSingle<T>(this World self, T value) where T : IComponent
 		{
 			Entity entity;
 			if (!m_dicSingleEntity.TryGetValue(self, out entity))
@@ -77,7 +77,7 @@ namespace Arch
 			}
 		}
 
-		public static T GetOrAdd<T>() where T : struct, IComponent
+		public static T GetOrAdd<T>() where T : IComponent
 		{
 			World self = WorldSingleton;
 			if (!m_dicSingleEntity.TryGetValue(self, out m_entitySingleton))
@@ -92,7 +92,7 @@ namespace Arch
 			return m_entitySingleton.Get<T>();
 		}
 
-		public static void Set<T>(T value) where T : struct, IComponent
+		public static void Set<T>(T value) where T : IComponent
 		{
 			World self = WorldSingleton;
 			if (!m_dicSingleEntity.TryGetValue(self, out m_entitySingleton))
@@ -111,7 +111,7 @@ namespace Arch
 			}
 		}
 
-		public static bool RemoveSingle<T>(this World self) where T : struct, IComponent
+		public static bool RemoveSingle<T>(this World self) where T : IComponent
 		{
 			Entity entity;
 			if (m_dicSingleEntity.TryGetValue(self, out entity))
@@ -145,25 +145,8 @@ namespace Arch
 				throw;
 			}
 		}
-		public static void Dispose()
-		{
-			try
-			{
-				m_worldSingleton.Dispose();
-				foreach (var world in m_dicSingleEntity.Keys)
-				{
-					world.Dispose();
-				}
-				m_dicSingleEntity.Clear();
-			}
-			catch (Exception e)
-			{
-				ArchLog.Error(e);
-				throw;
-			}
-		}
 
-		public static void Getter<T>(InAction<T> action) where T : struct, IComponent
+		public static void Getter<T>(InAction<T> action) where T : IComponent
 		{
 			var entity = EntitySingleton;
 			if (!entity.Has<T>())
@@ -175,7 +158,7 @@ namespace Arch
 			action(in sComponent);
 		}
 
-		public static void Setter<T>(RefAction<T> action) where T : struct, IComponent
+		public static void Setter<T>(RefAction<T> action) where T : IComponent
 		{
 			var entity = EntitySingleton;
 			if (!entity.Has<T>())

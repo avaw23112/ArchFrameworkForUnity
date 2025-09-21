@@ -3,7 +3,7 @@
 namespace Arch
 {
 	public abstract class UniqueComponentSystem<T> : DestroySystem<T>, IAwake
-		where T : struct, IComponent
+		where T : IComponent
 	{
 		public void Awake()
 		{

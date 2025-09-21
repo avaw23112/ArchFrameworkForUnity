@@ -17,8 +17,8 @@ namespace Arch
 		protected abstract void Run(Entity entity, ref T component_T1);
 	}
 	public abstract class GlobalReactiveSystem<T1, T2> : BaseReactiveSystem, IReactiveSystem, IGlobalSystem
-		where T1 : struct
-		where T2 : struct
+		where T1 : IComponent
+		where T2 : IComponent
 	{
 		public override QueryDescription Filter()
 		{
@@ -29,9 +29,9 @@ namespace Arch
 	}
 
 	public abstract class GlobalReactiveSystem<T1, T2, T3> : BaseReactiveSystem, IReactiveSystem, IGlobalSystem
-		where T1 : struct
-		where T2 : struct
-		where T3 : struct
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
 	{
 		public override QueryDescription Filter()
 		{
@@ -42,10 +42,10 @@ namespace Arch
 	}
 
 	public abstract class GlobalReactiveSystem<T1, T2, T3, T4> : BaseReactiveSystem, IReactiveSystem, IGlobalSystem
-		where T1 : struct
-		where T2 : struct
-		where T3 : struct
-		where T4 : struct
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
 	{
 		public override QueryDescription Filter()
 		{
@@ -55,11 +55,11 @@ namespace Arch
 	}
 
 	public abstract class GlobalReactiveSystem<T1, T2, T3, T4, T5> : BaseReactiveSystem, IReactiveSystem, IGlobalSystem
-		where T1 : struct
-		where T2 : struct
-		where T3 : struct
-		where T4 : struct
-		where T5 : struct
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
 	{
 		public override QueryDescription Filter()
 		{
@@ -70,12 +70,12 @@ namespace Arch
 	}
 
 	public abstract class GlobalReactiveSystem<T1, T2, T3, T4, T5, T6> : BaseReactiveSystem, IReactiveSystem, IGlobalSystem
-		where T1 : struct
-		where T2 : struct
-		where T3 : struct
-		where T4 : struct
-		where T5 : struct
-		where T6 : struct
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
+		where T6 : IComponent
 	{
 		public override QueryDescription Filter()
 		{

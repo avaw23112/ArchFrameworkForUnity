@@ -78,6 +78,7 @@ namespace Arch
 				// 1. 先初始化Addressables（必须第一步，否则后续操作无效）
 				if (!await InitAddressablesAsync(onError))
 					return false;
+				await UniTask.SwitchToMainThread();
 				// 2. 再加载资源映射表（依赖Addressables）
 				if (!LoadResourceNameMapAsync(onError))
 					return false;
@@ -116,7 +117,7 @@ namespace Arch
 				// 释放失败的句柄
 				Addressables.Release(initHandle);
 			}
-
+			Addressables.Release(initHandle);
 			return _isAddressablesInited;
 		}
 

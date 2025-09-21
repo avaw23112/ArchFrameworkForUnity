@@ -26,7 +26,7 @@ namespace Arch
 	/// 当带有T组件的实体创建时，触发系统的运行
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public abstract class GlobalDestroySystem<T> : GlobalReactiveSystem<T>, IReactiveDestroy where T : struct, IComponent
+	public abstract class GlobalDestroySystem<T> : GlobalReactiveSystem<T>, IReactiveDestroy where T : IComponent
 	{
 		public void SubcribeEntityDestroy()
 		{

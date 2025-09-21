@@ -1,17 +1,14 @@
-﻿using Arch;
-using Arch.Tools;
-using Assets.Scripts;
+﻿using Assets.Scripts;
 using Events;
-using UnityEngine;
 
 
 namespace Assets.HotFix
 {
+
 	internal class GameStart : Event<GameStartEvent>
 	{
 		public override void Run(GameStartEvent value)
 		{
-			EventBus.Publish<ArchSystem_1_Test>(new ArchSystem_1_Test());
 		}
 	}
 }
