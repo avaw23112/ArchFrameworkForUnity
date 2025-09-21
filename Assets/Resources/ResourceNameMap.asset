@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9177570a6a4214ea14bdd5606563ac, type: 3}
+  m_Name: ResourceNameMap
+  m_EditorClassIdentifier: 
+  _rootGroups:
+  - groupName: Code
+    subGroups:
+    - subGroupName: Assets
+      resources:
+      - resourceName: AOT.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/AOT.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\AOT.dll.bytes
+      - resourceName: Hotfix.dll
+        address: Assets/HybridCLRGenerate/HotFixDll/Hotfix.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/HotFixDll\Hotfix.dll.bytes
+      - resourceName: mscorlib.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/mscorlib.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\mscorlib.dll.bytes
+  - groupName: UI
+    subGroups:
+    - subGroupName: UI
+      resources:
+      - resourceName: Cylinder 1
+        address: Assets/Art/UI/Cylinder 1.prefab
+        assetPath: Assets/Art/UI/Cylinder 1.prefab
+      - resourceName: Cylinder 2
+        address: Assets/Art/UI/Cylinder 2.prefab
+        assetPath: Assets/Art/UI/Cylinder 2.prefab
+    - subGroupName: UI
+      resources:
+      - resourceName: Cylinder
+        address: UI/Art/Cylinder.prefab
+        assetPath: Assets/Art/UI/Cylinder.prefab

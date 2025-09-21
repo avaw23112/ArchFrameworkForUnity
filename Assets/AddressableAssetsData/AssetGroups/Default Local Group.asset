@@ -16,12 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 70c7846d0a41bf74eb54755807e328ad
-  m_SerializeEntries:
-  - m_GUID: 5849047865b1f7b44b47e8e5e362ed39
-    m_Address: Assets/Art/Sphere.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: eebe3d64c371f38498a121f12f5fdf53, type: 2}
   m_SchemaSet:

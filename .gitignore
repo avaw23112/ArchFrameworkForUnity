@@ -48,6 +48,10 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+*.c
+*.h
+*.cpp
+*.meta
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -77,3 +81,7 @@ crashlytics-build.properties
 *.meta
 *.meta
 *.xml
+
+/bin
+/HybridCLRData
+*.asset
