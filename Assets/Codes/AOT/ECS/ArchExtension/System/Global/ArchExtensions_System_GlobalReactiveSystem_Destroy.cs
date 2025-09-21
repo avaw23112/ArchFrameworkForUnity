@@ -43,8 +43,8 @@ namespace Arch
 		}
 	}
 	public abstract class GlobalDestroySystem<T1, T2> : GlobalReactiveSystem<T1, T2>, IReactiveDestroy
-	where T1 : struct, IComponent
-	where T2 : struct, IComponent
+	where T1 : IComponent
+	where T2 : IComponent
 	{
 
 		public void SubcribeEntityDestroy()
@@ -66,9 +66,9 @@ namespace Arch
 	}
 
 	public abstract class GlobalDestroySystem<T1, T2, T3> : GlobalReactiveSystem<T1, T2, T3>, IReactiveDestroy
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
 	{
 
 
@@ -93,10 +93,10 @@ namespace Arch
 	}
 
 	public abstract class GlobalDestroySystem<T1, T2, T3, T4> : GlobalReactiveSystem<T1, T2, T3, T4>, IReactiveDestroy
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
 	{
 
 		public void SubcribeEntityDestroy()
@@ -120,11 +120,11 @@ namespace Arch
 	}
 
 	public abstract class GlobalDestroySystem<T1, T2, T3, T4, T5> : GlobalReactiveSystem<T1, T2, T3, T4, T5>, IReactiveDestroy
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
 	{
 
 
@@ -150,12 +150,12 @@ namespace Arch
 	}
 
 	public abstract class GlobalDestroySystem<T1, T2, T3, T4, T5, T6> : GlobalReactiveSystem<T1, T2, T3, T4, T5, T6>, IReactiveDestroy
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
-		where T6 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
+		where T6 : IComponent
 	{
 		public void SubcribeEntityDestroy()
 		{

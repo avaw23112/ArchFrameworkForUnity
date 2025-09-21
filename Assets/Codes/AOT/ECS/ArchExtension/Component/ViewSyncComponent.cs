@@ -2,8 +2,8 @@
 
 namespace Arch
 {
-    public struct ViewComponent : IComponent
-    {
-        public GameObject gameObject;
-    }
+	public struct ViewComponent : IComponent
+	{
+		public GameObject gameObject;
+	}
 }

@@ -22,7 +22,7 @@ namespace Arch
 	/// 当带有T组件的实体创建时，触发系统的运行
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public abstract class AwakeSystem<T> : ReactiveSystem<T>, IReactiveAwake where T : struct, IComponent
+	public abstract class AwakeSystem<T> : ReactiveSystem<T>, IReactiveAwake where T : IComponent
 	{
 		public void SubcribeEntityAwake()
 		{
@@ -34,8 +34,8 @@ namespace Arch
 		}
 	}
 	public abstract class AwakeSystem<T1, T2> : ReactiveSystem<T1, T2>, IReactiveAwake
-	where T1 : struct, IComponent
-	where T2 : struct, IComponent
+	where T1 : IComponent
+	where T2 : IComponent
 	{
 
 		public void SubcribeEntityAwake()
@@ -52,9 +52,9 @@ namespace Arch
 	}
 
 	public abstract class AwakeSystem<T1, T2, T3> : ReactiveSystem<T1, T2, T3>, IReactiveAwake
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
 	{
 
 
@@ -74,10 +74,10 @@ namespace Arch
 	}
 
 	public abstract class AwakeSystem<T1, T2, T3, T4> : ReactiveSystem<T1, T2, T3, T4>, IReactiveAwake
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
 	{
 
 		public void SubcribeEntityAwake()
@@ -97,11 +97,11 @@ namespace Arch
 	}
 
 	public abstract class AwakeSystem<T1, T2, T3, T4, T5> : ReactiveSystem<T1, T2, T3, T4, T5>, IReactiveAwake
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
 	{
 
 
@@ -123,12 +123,12 @@ namespace Arch
 	}
 
 	public abstract class AwakeSystem<T1, T2, T3, T4, T5, T6> : ReactiveSystem<T1, T2, T3, T4, T5, T6>, IReactiveAwake
-		where T1 : struct, IComponent
-		where T2 : struct, IComponent
-		where T3 : struct, IComponent
-		where T4 : struct, IComponent
-		where T5 : struct, IComponent
-		where T6 : struct, IComponent
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
+		where T6 : IComponent
 	{
 		public void SubcribeEntityAwake()
 		{

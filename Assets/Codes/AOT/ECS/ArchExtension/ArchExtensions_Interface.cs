@@ -2,72 +2,76 @@
 
 namespace Arch
 {
-    #region Component
+	#region Component
 
-    public interface IComponent
-    {
-    }
+	public interface IComponent
+	{
+	}
+	public interface ITag : IComponent
+	{
 
-    #endregion Component
+	}
 
-    #region System
+	#endregion Component
 
-    public interface ISystem
-    {
-    }
+	#region System
 
-    public interface IGlobalSystem
-    {
-    }
+	public interface ISystem
+	{
+	}
 
-    public interface IReactiveSystem
-    {
-        public void BuildIn(World world);
+	public interface IGlobalSystem
+	{
+	}
 
-        public QueryDescription Filter();
+	public interface IReactiveSystem
+	{
+		public void BuildIn(World world);
 
-        public bool GetTrigger(Entity entity);
-    }
+		public QueryDescription Filter();
 
-    public interface IReactiveAwake : IReactiveSystem
-    {
-        public void SubcribeEntityAwake();
-    }
+		public bool GetTrigger(Entity entity);
+	}
 
-    public interface IReactiveUpdate : IReactiveSystem
-    {
-        public void Update();
-    }
+	public interface IReactiveAwake : IReactiveSystem
+	{
+		public void SubcribeEntityAwake();
+	}
 
-    public interface IReactiveLateUpdate : IReactiveSystem
-    {
-        public void LateUpdate();
-    }
+	public interface IReactiveUpdate : IReactiveSystem
+	{
+		public void Update();
+	}
 
-    public interface IReactiveDestroy : IReactiveSystem
-    {
-        public void SubcribeEntityDestroy();
-    }
+	public interface IReactiveLateUpdate : IReactiveSystem
+	{
+		public void LateUpdate();
+	}
 
-    public interface IAwake : ISystem
-    {
-        public void Awake();
-    }
+	public interface IReactiveDestroy : IReactiveSystem
+	{
+		public void SubcribeEntityDestroy();
+	}
 
-    public interface IUpdate : ISystem
-    {
-        public void Update();
-    }
+	public interface IAwake : ISystem
+	{
+		public void Awake();
+	}
 
-    public interface ILateUpdate : ISystem
-    {
-        public void LateUpdate();
-    }
+	public interface IUpdate : ISystem
+	{
+		public void Update();
+	}
 
-    public interface IDestroy : ISystem
-    {
-        public void Destroy();
-    }
+	public interface ILateUpdate : ISystem
+	{
+		public void LateUpdate();
+	}
 
-    #endregion System
+	public interface IDestroy : ISystem
+	{
+		public void Destroy();
+	}
+
+	#endregion System
 }
