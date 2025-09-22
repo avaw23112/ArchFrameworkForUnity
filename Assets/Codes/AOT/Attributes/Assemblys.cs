@@ -14,11 +14,11 @@ namespace Attributes
 {
 	public class Assemblys : Singleton<Assemblys>
 	{
-		private const string ASSEMBLY_NAME = "Assembly-CSharp";
-		private const string AOT_ASSEMBLY_LABEL = "AOTdll";
-		private const string HOTFIX_ASSEMBLY_LABEL = "Hotfixdll";
-		private const string AOT_ASSEMBLY = "AOT";
-		private const string HOTFIX_ASSEMBLY = "Hotfix";
+		public const string ASSEMBLY_NAME = "Assembly-CSharp";
+		public const string AOT_ASSEMBLY_LABEL = "AOTdll";
+		public const string HOTFIX_ASSEMBLY_LABEL = "Hotfixdll";
+		public const string AOT_ASSEMBLY = "AOT";
+		public const string HOTFIX_ASSEMBLY = "Hotfix";
 
 		private ConcurrentDictionary<string, Assembly> m_dicAssemblys;
 		public static IEnumerable<Assembly> AllAssemblies => Instance.m_dicAssemblys.Values;
@@ -38,15 +38,16 @@ namespace Attributes
 			{
 				return;
 			}
+
 #if !UNITY_EDITOR
 			try
 			{
+				var AOTdll = Assembly.Load(AOT_ASSEMBLY);
+				Instance.m_dicAssemblys.TryAdd(AOTdll.FullName, AOTdll);
 				var AOTDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(AOT_ASSEMBLY_LABEL);
 				foreach (var aotDll in AOTDll)
 				{
 					HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(aotDll.bytes, HomologousImageMode.SuperSet);
-					var assembly = Assembly.Load(aotDll.bytes);
-					Instance.m_dicAssemblys.TryAdd(assembly.FullName, assembly);
 				}
 				var HotfixDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(HOTFIX_ASSEMBLY_LABEL);
 				foreach (var hotfixdll in HotfixDll)
