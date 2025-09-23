@@ -200,7 +200,7 @@ namespace Attributes
 			}
 		}
 
-		private static void CollectBaseAttributesParallel()
+		public static void CollectBaseAttributesParallel()
 		{
 
 			if (Attributes.HasBaseMapping()) return;
@@ -241,7 +241,6 @@ namespace Attributes
 		{
 			if (listTypes == null) throw new ArgumentNullException(nameof(listTypes));
 
-
 			var concurrentTypes = new ConcurrentBag<Type>();
 			var targetType = typeof(T);
 
@@ -251,7 +250,8 @@ namespace Attributes
 
 				Parallel.ForEach(types, type =>
 				{
-					if (isForget(type)) return;
+					if (isForget(type))
+						return;
 					if (targetType.IsAssignableFrom(type) || type.IsSubclassOf(targetType))
 					{
 						concurrentTypes.Add(type);
@@ -271,8 +271,7 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
 
-			// 收集所有BaseAttribute
-			CollectBaseAttributesParallel();
+
 
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes;
@@ -390,7 +389,6 @@ namespace Attributes
 			{
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
-			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
@@ -463,7 +461,6 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
@@ -503,7 +500,6 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes_T1;
 			Dictionary<Type, List<object>> dictAttributes_T2;
@@ -550,7 +546,6 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			CollectBaseAttributesParallel();
 			// 收集所有目标属性成员
 			Dictionary<Type, List<object>> dictAttributes_T1;
 			Dictionary<Type, List<object>> dictAttributes_T2;

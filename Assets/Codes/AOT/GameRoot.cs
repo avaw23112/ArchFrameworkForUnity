@@ -3,7 +3,7 @@ using Attributes;
 using Cysharp.Threading.Tasks;
 using Events;
 using System;
-using System.Runtime.CompilerServices;
+using System.Reflection;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
@@ -32,8 +32,27 @@ namespace Assets.Scripts
 			//发送完毕事件
 			EventBus.Publish<GameStartEvent>(new GameStartEvent());
 		}
+		public static void HotReload(Assembly hotReload)
+		{
+			Assemblys.LoadHotAssembly(hotReload);
 
-		private static async Task Initialize(Action<float> OnProgreess, Action<string> OnprogressTip)
+			//注册事件总线
+			EventBus.RegisterEvents();
+
+			//调度特性处理系统
+			Attributes.Attributes.RemoveMapping();
+			Attributes.Collector.CollectBaseAttributesParallel();
+			Attributes.Attributes.RegisterHotReloadableAttributeSystems();
+
+			//注册所有被标注[System]的系统
+
+			ArchSystems.RegisterArchSystems();
+
+			//重新订阅ReactiveSystem的事件
+			ArchSystems.Instance.SubcribeEntityStart();
+			ArchSystems.Instance.SubcribeEntityDestroy();
+		}
+		private static async UniTask Initialize(Action<float> OnProgreess, Action<string> OnprogressTip)
 		{
 			//初始化日志
 			OnprogressTip?.Invoke("初始化系统");
@@ -48,9 +67,12 @@ namespace Assets.Scripts
 			//加载热更新程序集
 			await Assemblys.LoadAssemblys();
 			OnProgreess?.Invoke(0.4f);
+
 			//注册事件总线
 			EventBus.RegisterEvents();
-			//调度特性处理系统
+
+			//调度特性处理系统		
+			Attributes.Collector.CollectBaseAttributesParallel();
 			Attributes.Attributes.RegisterAttributeSystems();
 
 			//初始化网络系统

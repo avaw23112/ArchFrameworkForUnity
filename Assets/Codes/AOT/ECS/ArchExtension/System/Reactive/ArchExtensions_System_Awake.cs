@@ -1,6 +1,7 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
 
+
 namespace Arch
 {
 	/// <summary>
@@ -16,6 +17,7 @@ namespace Arch
 					Run(entity);
 			});
 		}
+
 	}
 
 	/// <summary>

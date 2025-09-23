@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "ArchTest_3.sln"
+    "dotnet.defaultSolution": "ArchTest_3_2022.sln"
 }

@@ -3,7 +3,7 @@ using Arch.Core.Extensions;
 
 namespace Arch
 {
-	//产生的闭包在可接受范围内，而且不会引起频繁GC
+	//产生的闭包在可接受范围内，而且不会引起频繁GC	
 
 	/// <summary>
 	/// 初始版本，外界可完全掌控查询条件和过滤条件

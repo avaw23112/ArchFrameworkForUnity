@@ -22,8 +22,26 @@ namespace Arch
 
 		protected JobScheduler jobScheduler;
 
+		private static void RestAllSystems()
+		{
+			Instance.m_listAwakeSystems.Clear();
+			Instance.m_listUpdateSystems.Clear();
+			Instance.m_listLateUpdateSystems.Clear();
+			Instance.m_listDestroySystems.Clear();
+			Instance.m_listReactiveAwakeSystems.Clear();
+			Instance.m_listReactiveUpdateSystems.Clear();
+			Instance.m_listReactiveLateUpdateSystems.Clear();
+			Instance.m_listReactiveDestroySystems.Clear();
+
+			NamedWorld.ClearEvents();
+
+		}
+
 		public static void RegisterArchSystems()
 		{
+			//重置所有系统
+			RestAllSystems();
+
 			//获取所有标记了SystemAttribute的类
 			Dictionary<Type, List<object>> dicSystems;
 			Attributes.Attributes.TryGetDecrectType(typeof(SystemAttribute), out dicSystems);

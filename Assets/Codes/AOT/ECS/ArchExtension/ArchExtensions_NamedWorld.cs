@@ -28,6 +28,14 @@ namespace Arch
 			}
 		}
 
+		public static void ClearEvents()
+		{
+			foreach (var world in m_dicWorlds.Values)
+			{
+				world.ClearEvents();
+			}
+		}
+
 		public static void CreateNamed(string worldName)
 		{
 			if (m_dicWorlds.ContainsKey(worldName))

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a9177570a6a4214ea14bdd5606563ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 573c5315499550643ba63f08e28a6ce0, type: 3}
   m_Name: ResourceNameMap
   m_EditorClassIdentifier: 
   _rootGroups:
@@ -28,7 +28,7 @@ MonoBehaviour:
         assetPath: Assets/HybridCLRGenerate/MetaDataDll\mscorlib.dll.bytes
   - groupName: UI
     subGroups:
-    - subGroupName: UI
+    - subGroupName: Assets
       resources:
       - resourceName: Cylinder 1
         address: Assets/Art/UI/Cylinder 1.prefab

@@ -31,6 +31,7 @@ namespace Arch.Tools.Pool
 			}
 			m_SetUsed.Remove(Queue);
 			m_StackFree.Push(Queue);
+			Queue.Clear();
 		}
 
 		public static void Clear()

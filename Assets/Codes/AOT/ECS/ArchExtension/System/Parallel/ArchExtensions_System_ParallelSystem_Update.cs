@@ -18,7 +18,6 @@ namespace Arch
 					 if (GetTrigger(entity))
 						 Run(entity).Forget();
 				 });
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -34,7 +33,6 @@ namespace Arch
 					 if (GetTrigger(entity))
 						 Run(entity, ref component).Forget();
 				 });
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -52,7 +50,6 @@ namespace Arch
 					if (GetTrigger(entity))
 						Run(entity, ref c1, ref c2).Forget();
 				});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -71,7 +68,6 @@ namespace Arch
 					if (GetTrigger(entity))
 						Run(entity, ref c1, ref c2, ref c3).Forget();
 				});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -91,7 +87,6 @@ namespace Arch
 					if (GetTrigger(entity))
 						Run(entity, ref c1, ref c2, ref c3, ref c4).Forget();
 				});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -112,7 +107,6 @@ namespace Arch
 					if (GetTrigger(entity))
 						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5).Forget();
 				});
-			commandBuffer.Playback(world);
 		}
 	}
 
@@ -134,7 +128,6 @@ namespace Arch
 					if (GetTrigger(entity))
 						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6).Forget();
 				});
-			commandBuffer.Playback(world);
 		}
 	}
 

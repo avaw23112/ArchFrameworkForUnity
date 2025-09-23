@@ -1,0 +1,308 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\unity project\\ArchTest_3_2022\\HotfixTest\\HotFixTest\\HotFixTest.csproj": {}
+  },
+  "projects": {
+    "D:\\unity project\\ArchTest_3_2022\\AOT.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\AOT.csproj",
+        "projectName": "AOT",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\AOT.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Editor.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Editor.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\Assembly-CSharp.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\Assembly-CSharp.csproj",
+        "projectName": "Assembly-CSharp",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\Assembly-CSharp.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\AOT.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\AOT.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\Hotfix.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\Hotfix.csproj",
+        "projectName": "Hotfix",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\Hotfix.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\AOT.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\AOT.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Editor.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Editor.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\HotfixTest\\HotFixTest\\HotFixTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\HotfixTest\\HotFixTest\\HotFixTest.csproj",
+        "projectName": "HotFixTest",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\HotfixTest\\HotFixTest\\HotFixTest.csproj",
+        "packagesPath": "C:\\Users\\12141\\.nuget\\packages\\",
+        "outputPath": "D:\\unity project\\ArchTest_3_2022\\HotfixTest\\HotFixTest\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual studio component\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\12141\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\RiderProject\\MyFody.Fody\\MyFody.Fody\\bin\\Debug": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\AOT.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\AOT.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\Assembly-CSharp.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\Assembly-CSharp.csproj"
+              },
+              "D:\\unity project\\ArchTest_3_2022\\Hotfix.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\Hotfix.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj",
+        "projectName": "UniTask.Addressables",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Addressables.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj",
+        "projectName": "UniTask",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj",
+        "projectName": "UniTask.DOTween",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.DOTween.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\UniTask.Editor.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\UniTask.Editor.csproj",
+        "projectName": "UniTask.Editor",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Editor.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj",
+        "projectName": "UniTask.Linq",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.Linq.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    },
+    "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj",
+        "projectName": "UniTask.TextMeshPro",
+        "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.TextMeshPro.csproj",
+        "UsingMicrosoftNETSdk": false,
+        "frameworks": {
+          "net471": {
+            "projectReferences": {
+              "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj": {
+                "projectPath": "D:\\unity project\\ArchTest_3_2022\\UniTask.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net471": {}
+      }
+    }
+  }
+}

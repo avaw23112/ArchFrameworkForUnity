@@ -20,12 +20,19 @@ namespace Attributes
 		public const string AOT_ASSEMBLY = "AOT";
 		public const string HOTFIX_ASSEMBLY = "Hotfix";
 
-		private ConcurrentDictionary<string, Assembly> m_dicAssemblys;
+		private Dictionary<string, Assembly> m_dicAssemblys;
 		public static IEnumerable<Assembly> AllAssemblies => Instance.m_dicAssemblys.Values;
 
 		public Assemblys()
 		{
-			m_dicAssemblys = new ConcurrentDictionary<string, Assembly>();
+			m_dicAssemblys = new Dictionary<string, Assembly>();
+		}
+
+		public static void LoadHotAssembly(Assembly hotReload)
+		{
+			//TODO:只会成功一次
+			Instance.m_dicAssemblys.Remove(HOTFIX_ASSEMBLY);
+			Instance.m_dicAssemblys.Add(hotReload.GetName().Name, hotReload);
 		}
 
 		public static async UniTask LoadAssemblys()
@@ -61,13 +68,14 @@ namespace Attributes
 				ArchLog.Error($"加载程序集时出错: {e.Message}");
 			}
 #else
+
 			string[] assembliesToLoad = { AOT_ASSEMBLY, HOTFIX_ASSEMBLY };
 			foreach (var assemblyName in assembliesToLoad)
 			{
 				try
 				{
 					var assembly = Assembly.Load(assemblyName);
-					Instance.m_dicAssemblys.TryAdd(assembly.FullName, assembly);
+					Instance.m_dicAssemblys.TryAdd(assembly.GetName().Name, assembly);
 				}
 				catch (Exception ex)
 				{

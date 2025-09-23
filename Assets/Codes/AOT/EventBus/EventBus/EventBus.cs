@@ -61,8 +61,11 @@ namespace Events
 		{
 			if (Instance.Events.Count > 0)
 			{
-				ArchLog.Debug("事件已经注册");
-				return;
+				foreach (var eventHandle in Instance.Events)
+				{
+					eventHandle.Release();
+				}
+				Instance.Events.Clear();
 			}
 			List<Type> aEvents = ListPool<Type>.Get();
 			Collector.CollectTypesParallel<IEvent>(aEvents);
