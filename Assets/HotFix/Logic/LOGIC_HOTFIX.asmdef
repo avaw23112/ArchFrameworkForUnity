@@ -1,5 +1,5 @@
 {
-    "name": "Hotfix",
+    "name": "LOGIC_HOTFIX",
     "rootNamespace": "",
     "references": [
         "GUID:7dbe63cb0c2603148a0db969c4725055",
@@ -10,14 +10,15 @@
         "GUID:029c1c1b674aaae47a6841a0b89ad80e",
         "GUID:4129704b5a1a13841ba16f230bf24a57",
         "GUID:5c01796d064528144a599661eaab93a6",
-        "GUID:dc47925d1a5fa2946bdd37746b2b5d48"
+        "GUID:dc47925d1a5fa2946bdd37746b2b5d48",
+        "GUID:2056619ffb07b474aa1cda8dbb6da98e"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": false,
+    "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false

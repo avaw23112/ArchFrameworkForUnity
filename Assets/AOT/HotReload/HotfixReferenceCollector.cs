@@ -14,8 +14,10 @@ namespace Arch
 		public static readonly List<string> SearchDirectories = new()
 		{
 			Path.GetFullPath(Path.Combine(Application.dataPath, "..\\HybridCLRData\\AssembliesPostIl2CppStrip\\StandaloneWindows64")),
-			Path.GetDirectoryName(typeof(object).Assembly.Location)
+			Path.GetDirectoryName(typeof(object).Assembly.Location),
+			Path.GetDirectoryName(Path.Combine(Application.dataPath, "..\\Library\\ScriptAssemblies")),
 		};
+
 		/// <summary>
 		/// 收集当前Hotfix.dll的引用路径并保存到文件
 		/// </summary>

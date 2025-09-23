@@ -18,7 +18,7 @@ namespace Attributes
 		public const string AOT_ASSEMBLY_LABEL = "AOTdll";
 		public const string HOTFIX_ASSEMBLY_LABEL = "Hotfixdll";
 		public const string AOT_ASSEMBLY = "AOT";
-		public const string HOTFIX_ASSEMBLY = "Hotfix";
+		public const string HOTFIX_ASSEMBLY = "LOGIC_HOTFIX";
 
 		private Dictionary<string, Assembly> m_dicAssemblys;
 		public static IEnumerable<Assembly> AllAssemblies => Instance.m_dicAssemblys.Values;

@@ -10,14 +10,14 @@ namespace Arch
 	public class HotfixSourceCollector
 	{
 		// 热更源码根目录（可在框架配置中修改）
-		public static string HotfixRootDir = Path.Combine("Assets", "Codes", "Hotfix");
+		public static string HotfixRootDir = Path.Combine("Assets", "HotFix", "Logic");
 
 		// 需排除的文件/目录（支持通配符）
 		private static readonly HashSet<string> ExcludePatterns = new()
 		{
 			"*.meta",          // Unity元文件
-			"Editor/",         // 编辑器代码（不参与热更）
-			"Test/"           // 测试代码（不参与热更）
+			"Editor/",         // 编辑器代码（不参与热更，重载）
+			"Test/",           // 测试代码（不参与热更，重载）
 		};
 
 		/// <summary>

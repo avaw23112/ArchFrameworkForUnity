@@ -80,11 +80,7 @@ namespace Arch.Editor
 				Directory.CreateDirectory(outputDir);
 			}
 			bool success = CustomCompiler.Compile(outputPath, sourceFiles, references);
-			if (success)
-			{
-				EditorUtility.DisplayDialog("成功", $"热更代码编译成功！\n输出路径：{outputPath}", "确定");
-			}
-			else
+			if (!success)
 			{
 				EditorUtility.DisplayDialog("失败", "热更代码编译失败，请查看控制台日志", "确定");
 			}
