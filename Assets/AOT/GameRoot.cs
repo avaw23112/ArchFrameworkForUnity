@@ -32,10 +32,11 @@ namespace Assets.Scripts
 			//发送完毕事件
 			EventBus.Publish<GameStartEvent>(new GameStartEvent());
 		}
-		public static void HotReload(Assembly hotReload)
+		public static async UniTask HotReload(Assembly hotReload)
 		{
-			Assemblys.LoadHotAssembly(hotReload);
+			await UniTask.SwitchToMainThread();
 
+			Assemblys.LoadHotAssembly(hotReload);
 			//注册事件总线
 			EventBus.RegisterEvents();
 

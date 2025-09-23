@@ -1,9 +1,11 @@
 ﻿#if UNITY_EDITOR
+using Arch.Tools;
 using Assets.Scripts;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -15,11 +17,15 @@ namespace Arch.Editor
 		[MenuItem("Tools/HotReload", false, 100)]
 		public static void HotReload()
 		{
-			CompileHotfixCode();
-			AssemblyReload();
+			Task task = new Task(() =>
+			{
+				CompileHotfixCode();
+				AssemblyReload();
+			});
+			task.Start();
 		}
 
-		private static void AssemblyReload()
+		private static async void AssemblyReload()
 		{
 			// 3. 设置输出路径
 			string hotReloadDir = Path.Combine(Application.dataPath, "..\\HotfixOutput");
@@ -37,7 +43,7 @@ namespace Arch.Editor
 				// 加载程序集
 				byte[] rawBytes = File.ReadAllBytes(hotfixDll);
 				Assembly hotfixAssembly = Assembly.Load(rawBytes);
-				GameRoot.HotReload(hotfixAssembly);
+				await GameRoot.HotReload(hotfixAssembly);
 			}
 			catch (Exception ex)
 			{
@@ -83,6 +89,10 @@ namespace Arch.Editor
 			if (!success)
 			{
 				EditorUtility.DisplayDialog("失败", "热更代码编译失败，请查看控制台日志", "确定");
+			}
+			else
+			{
+				ArchLog.Debug("热重载成功");
 			}
 		}
 	}
