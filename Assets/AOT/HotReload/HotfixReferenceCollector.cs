@@ -13,9 +13,9 @@ namespace Arch
 		// 已知的程序集搜索目录（框架可配置的扩展点）
 		public static readonly List<string> SearchDirectories = new()
 		{
-			Path.GetFullPath(Path.Combine(Application.dataPath, "..\\HybridCLRData\\AssembliesPostIl2CppStrip\\StandaloneWindows64")),
-			Path.GetDirectoryName(typeof(object).Assembly.Location),
 			Path.GetDirectoryName(Path.Combine(Application.dataPath, "..\\Library\\ScriptAssemblies")),
+			Path.GetDirectoryName(typeof(object).Assembly.Location),
+			//Path.GetFullPath(Path.Combine(Application.dataPath, "..\\HybridCLRData\\AssembliesPostIl2CppStrip\\StandaloneWindows64")),
 		};
 
 		/// <summary>

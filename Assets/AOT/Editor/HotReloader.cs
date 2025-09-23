@@ -13,10 +13,22 @@ namespace Arch.Editor
 {
 	public static class HotfixCompilerEditor
 	{
+		static bool isReloading = false;
 		// 在Unity编辑器菜单中添加编译选项
-		[MenuItem("Tools/HotReload", false, 100)]
+		[MenuItem("Tools/HotReload %g", false, 100)]
 		public static void HotReload()
 		{
+			if (!EditorApplication.isPlaying)
+			{
+				ArchLog.Warning("热重载只能在编辑运行时完成！");
+				return;
+			}
+			if (isReloading)
+			{
+				ArchLog.Warning("热重载不能重复开启！");
+				return;
+			}
+			isReloading = true;
 			Task task = new Task(() =>
 			{
 				CompileHotfixCode();
@@ -29,7 +41,7 @@ namespace Arch.Editor
 		{
 			// 3. 设置输出路径
 			string hotReloadDir = Path.Combine(Application.dataPath, "..\\HotfixOutput");
-			string hotfixDll = Path.Combine(hotReloadDir, "Hotfix.dll");
+			string hotfixDll = Path.Combine(hotReloadDir, "LOGIC_HOTFIX.dll");
 
 			// 加载Assembly
 			try
@@ -49,6 +61,10 @@ namespace Arch.Editor
 			{
 				Debug.LogError($"加载热更DLL时发生错误：{ex.Message}\n{ex.StackTrace}");
 				EditorUtility.DisplayDialog("异常", $"加载失败：{ex.Message}", "确定");
+			}
+			finally
+			{
+				isReloading = false;
 			}
 		}
 
@@ -78,7 +94,7 @@ namespace Arch.Editor
 
 			// 3. 设置输出路径
 			string outputDir = Path.Combine(Application.dataPath, "../HotfixOutput");
-			string outputPath = Path.Combine(outputDir, "Hotfix.dll");
+			string outputPath = Path.Combine(outputDir, "LOGIC_HOTFIX.dll");
 
 			// 确保输出目录存在
 			if (!Directory.Exists(outputDir))
