@@ -19,13 +19,6 @@ public class HotReloadTest_1_UpdateTest : UpdateSystem<HotReloadTest_Model>
 	{
 		ArchLog.Debug($"{component_T1.a1 + 99}");
 		ArchLog.Debug($"{component_T1.a1 + 999}");
-		ArchLog.Debug($"{component_T1.a1 + 1}");
-		ArchLog.Debug($"{component_T1.a1 + 2}");
-		ArchLog.Debug($"{component_T1.a1 + 3}");
-		ArchLog.Debug($"{component_T1.a1 + 4}");
-		ArchLog.Debug($"{component_T1.a1 + 5}");
-		ArchLog.Debug($"{component_T1.a1 + 6}");
-		ArchLog.Debug($"{component_T1.a1 + 7}");
 
 	}
 }

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Collections.Pooled.V2</id>
+    <version>2.1.3</version>
+    <authors>tolzy88, jtmueller</authors>
+    <license type="file">LICENSE</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/tolzy88/Collections.Pooled.V2</projectUrl>
+    <description>Fast, low-allocation ports of List, Dictionary, HashSet, Stack, and Queue using ArrayPool and Span.</description>
+    <tags>List ArrayPool Span Dictionary Stack Set HashSet Collections Pooled</tags>
+    <repository type="git" url="https://github.com/tolzy88/Collections.Pooled.V2.git" commit="75faf15333dadb33cc51fa18b443498ff3600189" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.1" />
+    </dependencies>
+  </metadata>
+</package>
