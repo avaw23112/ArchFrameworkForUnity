@@ -21,12 +21,12 @@ namespace Arch.Tools.Pool
 		{
 			if (Queue == null)
 			{
-				ArchLog.Error("Queue is null.");
+				ArchLog.LogError("Queue is null.");
 				throw new System.NullReferenceException("Queue is null.");
 			}
 			if (!m_SetUsed.Contains(Queue))
 			{
-				ArchLog.Error("Queue is not in used set.");
+				ArchLog.LogError("Queue is not in used set.");
 				throw new System.Exception("Queue is not in used set.");
 			}
 			m_SetUsed.Remove(Queue);

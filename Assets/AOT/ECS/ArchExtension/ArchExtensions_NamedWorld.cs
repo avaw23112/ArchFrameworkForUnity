@@ -40,7 +40,7 @@ namespace Arch
 		{
 			if (m_dicWorlds.ContainsKey(worldName))
 			{
-				ArchLog.Warning("World already exists!");
+				ArchLog.LogWarning("World already exists!");
 				return;
 			}
 			m_dicWorlds.Add(worldName, World.Create());

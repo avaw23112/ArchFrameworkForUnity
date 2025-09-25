@@ -141,7 +141,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error(e);
+				ArchLog.LogError(e);
 				throw;
 			}
 		}
@@ -151,7 +151,7 @@ namespace Arch
 			var entity = EntitySingleton;
 			if (!entity.Has<T>())
 			{
-				Tools.ArchLog.Error($"{entity} not has the required components");
+				Tools.ArchLog.LogError($"{entity} not has the required components");
 				throw new NullReferenceException($"{entity} not has the component of {typeof(T)}");
 			}
 			T sComponent = entity.Get<T>();
@@ -163,7 +163,7 @@ namespace Arch
 			var entity = EntitySingleton;
 			if (!entity.Has<T>())
 			{
-				Tools.ArchLog.Error($"{entity} not has the required components");
+				Tools.ArchLog.LogError($"{entity} not has the required components");
 				throw new NullReferenceException($"{entity} not has the component of {typeof(T)}");
 			}
 			T sComponent = entity.Get<T>();

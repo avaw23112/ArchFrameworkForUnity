@@ -293,7 +293,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.Debug("请用MultiCollectAttributes方法收集多重属性");
+						Arch.Tools.ArchLog.LogDebug("请用MultiCollectAttributes方法收集多重属性");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -347,7 +347,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.Debug("请用MultiCollectAttributes方法收集多重属性");
+						Arch.Tools.ArchLog.LogDebug("请用MultiCollectAttributes方法收集多重属性");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -416,7 +416,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.Debug("请用MultiCollectAttributes方法收集多重属性");
+						Arch.Tools.ArchLog.LogDebug("请用MultiCollectAttributes方法收集多重属性");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -445,7 +445,7 @@ namespace Attributes
 
 					if (attribute2T == null || attribute3T == null)
 					{
-						ArchLog.Error("捕获错误！捕获到非有效属性");
+						ArchLog.LogError("捕获错误！捕获到非有效属性");
 						throw new Exception("捕获错误！捕获到非有效属性！");
 					}
 					listAttributes.Add((attribute, attribute2T, attribute3T, pDerectType));

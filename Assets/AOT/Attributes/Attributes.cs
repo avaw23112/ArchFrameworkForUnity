@@ -75,7 +75,7 @@ namespace Attributes
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error(e.Message);
+				ArchLog.LogError(e.Message);
 				throw;
 			}
 			finally
@@ -108,7 +108,7 @@ namespace Attributes
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error(e.Message);
+				ArchLog.LogError(e.Message);
 				throw;
 			}
 			finally

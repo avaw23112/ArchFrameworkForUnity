@@ -79,7 +79,7 @@ namespace Attributes
 				}
 				catch (Exception ex)
 				{
-					ArchLog.Error($"加载程序集 {assemblyName} 时出错: {ex.Message}");
+					ArchLog.LogError($"加载程序集 {assemblyName} 时出错: {ex.Message}");
 				}
 			}
 			await UniTask.CompletedTask;

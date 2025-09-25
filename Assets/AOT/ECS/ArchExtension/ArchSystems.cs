@@ -62,7 +62,7 @@ namespace Arch
 
 			if (dicSystems == null || dicSystems.Count == 0)
 			{
-				ArchLog.Debug("系统中暂无System可创建");
+				ArchLog.LogDebug("系统中暂无System可创建");
 				return;
 			}
 
@@ -200,7 +200,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Start System: {e.Message}");
+				ArchLog.LogError($"Start System: {e.Message}");
 				throw;
 			}
 		}
@@ -216,7 +216,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Start System: {e.Message}");
+				ArchLog.LogError($"Start System: {e.Message}");
 				throw;
 			}
 		}
@@ -236,7 +236,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Update System: {e.Message}");
+				ArchLog.LogError($"Update System: {e.Message}");
 				throw;
 			}
 		}
@@ -256,7 +256,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"LateUpdate System: {e.Message}");
+				ArchLog.LogError($"LateUpdate System: {e.Message}");
 				throw;
 			}
 		}
@@ -273,7 +273,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Destroy System: {e.Message}");
+				ArchLog.LogError($"Destroy System: {e.Message}");
 				throw;
 			}
 			finally
@@ -293,7 +293,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Destroy System: {e.Message}");
+				ArchLog.LogError($"Destroy System: {e.Message}");
 				throw;
 			}
 		}

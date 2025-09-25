@@ -10,13 +10,13 @@ namespace Arch
 		protected override void OnAwake(ref EntityBindingComponent component)
 		{
 			component.dicEntitiesBindings = new NativeMultiHashMap<Entity, Entity>(256, Allocator.Persistent);
-			ArchLog.Debug("create entityBindingComponent success");
+			ArchLog.LogDebug("create entityBindingComponent success");
 		}
 
 		protected override void OnDestroy(ref EntityBindingComponent component)
 		{
 			component.dicEntitiesBindings.Dispose();
-			ArchLog.Debug("Release entityBindingComponent success");
+			ArchLog.LogDebug("Release entityBindingComponent success");
 		}
 	}
 
@@ -29,17 +29,17 @@ namespace Arch
 			if (!entityTransform.entities.IsCreated)
 			{
 				entityTransform.entities = new NativeList<Entity>(Allocator.Persistent);
-				ArchLog.Debug("create EntityTransform success");
+				ArchLog.LogDebug("create EntityTransform success");
 			}
 			else
 			{
-				Tools.ArchLog.Error($"{entity} 重复创建组件{typeof(EntityTransform)}！");
+				Tools.ArchLog.LogError($"{entity} 重复创建组件{typeof(EntityTransform)}！");
 				throw new System.Exception($"{entity} 重复创建组件{typeof(EntityTransform)}！");
 			}
 			EntityBindingComponent sEntityBindingComponent = SingletonComponent.GetOrAdd<EntityBindingComponent>();
 			if (!sEntityBindingComponent.dicEntitiesBindings.IsCreated)
 			{
-				Tools.ArchLog.Error($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
+				Tools.ArchLog.LogError($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
 				throw new System.Exception($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
 			}
 			foreach (var vSubEntity in entityTransform.entities)
@@ -67,7 +67,7 @@ namespace Arch
 			EntityBindingComponent sEntityBindingComponent = SingletonComponent.GetOrAdd<EntityBindingComponent>();
 			if (!sEntityBindingComponent.dicEntitiesBindings.IsCreated)
 			{
-				Tools.ArchLog.Error($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
+				Tools.ArchLog.LogError($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
 				throw new System.Exception($"{typeof(EntityBindingComponent)} 组件不存在或已被销毁！");
 			}
 
@@ -76,11 +76,11 @@ namespace Arch
 			if (entityTransform.entities.IsCreated)
 			{
 				entityTransform.entities.Dispose();
-				ArchLog.Debug("Release entityTransform success");
+				ArchLog.LogDebug("Release entityTransform success");
 			}
 			else
 			{
-				Tools.ArchLog.Error($"{entity} 重复销毁组件{typeof(EntityTransform)}！");
+				Tools.ArchLog.LogError($"{entity} 重复销毁组件{typeof(EntityTransform)}！");
 				throw new System.Exception($"{entity} 重复销毁组件{typeof(EntityTransform)}！");
 			}
 		}

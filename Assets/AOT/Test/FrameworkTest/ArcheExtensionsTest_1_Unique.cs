@@ -10,7 +10,7 @@ namespace Assets.Scripts.Test.FrameworkTest
         public override void Run(Events.ArchSystem_1_Test value)
         {
             EntityBindingComponent component = SingletonComponent.GetOrAdd<EntityBindingComponent>();
-            Arch.Tools.ArchLog.Debug($"{component}");
+            Arch.Tools.ArchLog.LogDebug($"{component}");
         }
     }
 }

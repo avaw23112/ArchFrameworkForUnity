@@ -27,10 +27,10 @@ public class AttributeSystemTest_1AttributeSystem : AttributeSystem<AttributeSys
 
     public override void Process(AttributeSystemTest_1Attribute attribute, Type derectType)
     {
-        Arch.Tools.ArchLog.Debug("AttributeSystemTest_1AttributeSystem.Process: " + attribute.name);
+        Arch.Tools.ArchLog.LogDebug("AttributeSystemTest_1AttributeSystem.Process: " + attribute.name);
         if (derectType == typeof(AttributeSystemTest_1))
         {
-            Arch.Tools.ArchLog.Debug("AttributeSystemTest_1AttributeSystem.Process: " + attribute.name + " is applied to " + derectType.Name);
+            Arch.Tools.ArchLog.LogDebug("AttributeSystemTest_1AttributeSystem.Process: " + attribute.name + " is applied to " + derectType.Name);
         }
     }
 }

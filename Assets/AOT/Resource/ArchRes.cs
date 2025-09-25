@@ -83,13 +83,13 @@ namespace Arch
 				if (!LoadResourceNameMapAsync(onError))
 					return false;
 				_isNameMapInited = true;
-				ArchLog.Debug($"ArchRes 完整初始化完成！");
+				ArchLog.LogDebug($"ArchRes 完整初始化完成！");
 				return true;
 			}
 			catch (Exception ex)
 			{
 				onError?.Invoke($"初始化异常：{ex.Message}\n{ex.StackTrace}");
-				ArchLog.Error($"ArchRes InitializeAsync Exception: {ex}");
+				ArchLog.LogError($"ArchRes InitializeAsync Exception: {ex}");
 				return false;
 			}
 		}
@@ -113,7 +113,7 @@ namespace Arch
 			{
 				string errorMsg = $"Addressables初始化失败：{initHandle.OperationException?.Message ?? "未知错误"}";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				// 释放失败的句柄
 				Addressables.Release(initHandle);
 			}
@@ -136,12 +136,12 @@ namespace Arch
 			{
 				string errorMsg = $"资源映射表加载失败： 映射表不存在，请先执行「Tools→生成资源名称映射表」";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				Resources.UnloadAsset(_nameMap);
 				return false;
 			}
 
-			ArchLog.Debug($"资源映射表加载完成，包含 {_nameMap.GetAllMappings().Count} 条资源映射");
+			ArchLog.LogDebug($"资源映射表加载完成，包含 {_nameMap.GetAllMappings().Count} 条资源映射");
 			return true;
 		}
 		#endregion
@@ -162,7 +162,7 @@ namespace Arch
 				{
 					string error = $"Catalog检测失败：{catalogCheckHandle.OperationException?.Message}";
 					onError?.Invoke(error);
-					ArchLog.Error(error);
+					ArchLog.LogError(error);
 					Addressables.Release(catalogCheckHandle);
 					return false;
 				}
@@ -177,13 +177,13 @@ namespace Arch
 					{
 						string error = $"Catalog更新失败：{catalogUpdateHandle.OperationException?.Message}";
 						onError?.Invoke(error);
-						ArchLog.Error(error);
+						ArchLog.LogError(error);
 						Addressables.Release(catalogUpdateHandle);
 						Addressables.Release(catalogCheckHandle);
 						return false;
 					}
 
-					ArchLog.Debug($"已更新{catalogUpdateHandle.Result.Count}个Catalog");
+					ArchLog.LogDebug($"已更新{catalogUpdateHandle.Result.Count}个Catalog");
 					Addressables.Release(catalogUpdateHandle);
 				}
 
@@ -191,7 +191,7 @@ namespace Arch
 				var preloadKeys = await GetValidPreloadKeysAsync(preloadLabel);
 				if (preloadKeys.Count == 0)
 				{
-					ArchLog.Debug($"预加载标签[{preloadLabel}]下无有效资源，无需更新");
+					ArchLog.LogDebug($"预加载标签[{preloadLabel}]下无有效资源，无需更新");
 					Addressables.Release(catalogCheckHandle);
 					return true; // 无资源需更新，视为成功
 				}
@@ -208,13 +208,13 @@ namespace Arch
 				{
 					string error = $"资源依赖下载失败：{downloadHandle.Status}";
 					onError?.Invoke(error);
-					ArchLog.Error(error);
+					ArchLog.LogError(error);
 					Addressables.Release(downloadHandle);
 					Addressables.Release(catalogCheckHandle);
 					return false;
 				}
 
-				ArchLog.Debug($"成功载完成，共{preloadKeys.Count}个资源");
+				ArchLog.LogDebug($"成功载完成，共{preloadKeys.Count}个资源");
 				Addressables.Release(downloadHandle);
 				Addressables.Release(catalogCheckHandle);
 				return true;
@@ -224,14 +224,14 @@ namespace Arch
 				// 专门门处理无效Key异常（通常是资源配置错误）
 				string error = $"无效的资源Key：{ex.Message}，请检查资源配置";
 				onError?.Invoke(error);
-				ArchLog.Error(error);
+				ArchLog.LogError(error);
 				return false;
 			}
 			catch (Exception ex)
 			{
 				string error = $"更新检测异常：{ex.Message}\n{ex.StackTrace}";
 				onError?.Invoke(error);
-				ArchLog.Error(error);
+				ArchLog.LogError(error);
 				return false;
 			}
 		}
@@ -306,7 +306,7 @@ namespace Arch
 				if (!_hasAvailableUpdate || _updateSizeMap.Count == 0)
 				{
 					progressCallback?.Invoke(1f); // 进度置为100%
-					ArchLog.Debug("无可用更新，无需下载");
+					ArchLog.LogDebug("无可用更新，无需下载");
 					return true;
 				}
 			}
@@ -325,7 +325,7 @@ namespace Arch
 					downloadKeys.AddRange(_updateSizeMap.Keys);
 				}
 
-				ArchLog.Debug($"开始下载更新：{downloadKeys.Count} 个资源，总大小 {FormatFileSize(_totalUpdateSize)}");
+				ArchLog.LogDebug($"开始下载更新：{downloadKeys.Count} 个资源，总大小 {FormatFileSize(_totalUpdateSize)}");
 
 				// 2. 执行下载（合并模式：Union，不自动释放句柄）
 				downloadHandle = Addressables.DownloadDependenciesAsync(
@@ -355,14 +355,14 @@ namespace Arch
 						_updateSizeMap.Clear();
 					}
 
-					ArchLog.Debug("所有更新资源下载完成！");
+					ArchLog.LogDebug("所有更新资源下载完成！");
 					return true;
 				}
 				else
 				{
 					string errorMsg = $"下载失败：{downloadHandle.OperationException?.Message ?? "未知错误"}";
 					onError?.Invoke(errorMsg);
-					ArchLog.Error(errorMsg);
+					ArchLog.LogError(errorMsg);
 					return false;
 				}
 			}
@@ -370,7 +370,7 @@ namespace Arch
 			{
 				string errorMsg = $"下载异常：{ex.Message}\n{ex.StackTrace}";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				return false;
 			}
 			finally
@@ -442,7 +442,7 @@ namespace Arch
 			{
 				string errorMsg = "加载资源失败：Label不能为空";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				return new List<T>();
 			}
 
@@ -462,7 +462,7 @@ namespace Arch
 				{
 					string errorMsg = $"获取Label[{label}]的资源定位失败：{locsHandle.OperationException?.Message}";
 					onError?.Invoke(errorMsg);
-					ArchLog.Error(errorMsg);
+					ArchLog.LogError(errorMsg);
 					Addressables.Release(locsHandle);
 					return new List<T>();
 				}
@@ -475,7 +475,7 @@ namespace Arch
 				if (totalCount == 0)
 				{
 					string tipMsg = $"Label[{label}]下无{typeof(T).Name}类型的资源";
-					ArchLog.Debug(tipMsg);
+					ArchLog.LogDebug(tipMsg);
 					onLoaded?.Invoke(new List<T>());
 					return new List<T>();
 				}
@@ -490,7 +490,7 @@ namespace Arch
 				{
 					if (loc == null || string.IsNullOrEmpty(loc.PrimaryKey)) // 关键修正2：使用IResourceLocation的PrimaryKey
 					{
-						ArchLog.Warning($"Label[{label}]包含无效资源定位，已跳过");
+						ArchLog.LogWarning($"Label[{label}]包含无效资源定位，已跳过");
 						completedCount++;
 						progressCallback?.Invoke(completedCount, totalCount);
 						continue;
@@ -538,7 +538,7 @@ namespace Arch
 
 							completedCount++;
 							progressCallback?.Invoke(completedCount, totalCount);
-							ArchLog.Warning($"Label[{label}]下资源[{loc.PrimaryKey}]加载失败：{errorMsg}");
+							ArchLog.LogWarning($"Label[{label}]下资源[{loc.PrimaryKey}]加载失败：{errorMsg}");
 						}));
 					}
 				}
@@ -548,7 +548,7 @@ namespace Arch
 
 				// 8. 最终回调与日志
 				string resultMsg = $"Label[{label}]资源加载完成：共{totalCount}个，成功{loadedResources.Count}个，失败{totalCount - loadedResources.Count}个";
-				ArchLog.Debug(resultMsg);
+				ArchLog.LogDebug(resultMsg);
 				onLoaded?.Invoke(loadedResources);
 				return loadedResources;
 			}
@@ -556,7 +556,7 @@ namespace Arch
 			{
 				string errorMsg = $"Label[{label}]资源加载异常：{ex.Message}\n{ex.StackTrace}";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				return new List<T>();
 			}
 			finally
@@ -596,7 +596,7 @@ namespace Arch
 				{
 					T resource = loadHandle.Result;
 					onSingleLoaded?.Invoke(resource);
-					ArchLog.Debug($"Label资源加载成功：{loc.PrimaryKey}（类型：{typeof(T).Name}）");
+					ArchLog.LogDebug($"Label资源加载成功：{loc.PrimaryKey}（类型：{typeof(T).Name}）");
 					return resource;
 				}
 				else
@@ -634,7 +634,7 @@ namespace Arch
 			{
 				string errorMsg = $"资源 {resourceName} 不存在于映射表中";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				return null;
 			}
 
@@ -644,7 +644,7 @@ namespace Arch
 			{
 				// 引用计数+1
 				existingRecord.RefCount++;
-				ArchLog.Debug($"复用资源 {resourceName}（Address：{address}），当前引用计数：{existingRecord.RefCount}");
+				ArchLog.LogDebug($"复用资源 {resourceName}（Address：{address}），当前引用计数：{existingRecord.RefCount}");
 
 				// 等待已有Handle完成（若仍在加载中）
 				if (!existingRecord.Handle.IsDone)
@@ -685,13 +685,13 @@ namespace Arch
 							// 创建资源记录并加入字典
 							var newRecord = new ResourceRecord(address, loadHandle);
 							_resourceRecords.Add(address, newRecord);
-							ArchLog.Debug($"首次加载资源 {resourceName}（Address：{address}），引用计数：1");
+							ArchLog.LogDebug($"首次加载资源 {resourceName}（Address：{address}），引用计数：1");
 						}
 						else
 						{
 							// 多线程并发场景：复用已有记录，引用计数+1
 							_resourceRecords[address].RefCount++;
-							ArchLog.Debug($"多线程并发加载资源 {resourceName}，当前引用计数：{_resourceRecords[address].RefCount}");
+							ArchLog.LogDebug($"多线程并发加载资源 {resourceName}，当前引用计数：{_resourceRecords[address].RefCount}");
 						}
 					}
 
@@ -702,7 +702,7 @@ namespace Arch
 				{
 					string errorMsg = $"资源 {resourceName}（Address：{address}）加载成功但结果为空";
 					onError?.Invoke(errorMsg);
-					ArchLog.Error(errorMsg);
+					ArchLog.LogError(errorMsg);
 					return null;
 				}
 			}
@@ -710,7 +710,7 @@ namespace Arch
 			{
 				string errorMsg = $"资源 {resourceName}（Address：{address}）加载异常：{ex.Message}";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 
 				// 加载失败：释放Handle，避免内存泄漏
 				if (loadHandle.IsValid())
@@ -734,14 +734,14 @@ namespace Arch
 				if (result != null)
 				{
 					onLoaded?.Invoke(result);
-					ArchLog.Debug($"资源加载完成（复用已有操作）：{result.name}");
+					ArchLog.LogDebug($"资源加载完成（复用已有操作）：{result.name}");
 					return result;
 				}
 				else
 				{
 					string errorMsg = $"复用已有加载操作失败：结果为空";
 					onError?.Invoke(errorMsg);
-					ArchLog.Error(errorMsg);
+					ArchLog.LogError(errorMsg);
 					return null;
 				}
 			}
@@ -749,7 +749,7 @@ namespace Arch
 			{
 				string errorMsg = $"复用已有加载操作异常：{ex.Message}";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				return null;
 			}
 		}
@@ -784,7 +784,7 @@ namespace Arch
 					}
 					else
 					{
-						ArchLog.Warning($"实例化资源 {resourceName} 未找到对应记录，无法跟踪实例（可能已被释放）");
+						ArchLog.LogWarning($"实例化资源 {resourceName} 未找到对应记录，无法跟踪实例（可能已被释放）");
 					}
 				}
 
@@ -795,7 +795,7 @@ namespace Arch
 			{
 				string errorMsg = $"预制体 {resourceName} 实例化异常：{ex.Message}";
 				onError?.Invoke(errorMsg);
-				ArchLog.Error(errorMsg);
+				ArchLog.LogError(errorMsg);
 				return null;
 			}
 		}
@@ -821,7 +821,7 @@ namespace Arch
 						isInstanceRemoved = record.RemoveInstance(instance);
 						if (isInstanceRemoved)
 						{
-							ArchLog.Debug($"从资源 {resourceName}（Address：{targetAddress}）移除实例，剩余实例数：{record.InstanceObjects.Count}");
+							ArchLog.LogDebug($"从资源 {resourceName}（Address：{targetAddress}）移除实例，剩余实例数：{record.InstanceObjects.Count}");
 						}
 					}
 				}
@@ -850,7 +850,7 @@ namespace Arch
 				}
 				else
 				{
-					ArchLog.Warning($"释放实例 {instance.name} 失败：未找到对应资源记录，可能已被释放");
+					ArchLog.LogWarning($"释放实例 {instance.name} 失败：未找到对应资源记录，可能已被释放");
 					return;
 				}
 			}
@@ -858,7 +858,7 @@ namespace Arch
 			// 2. 处理底层资源释放（引用计数为0或强制释放时）
 			if (!_nameMap.TryGetAddress(resourceName, out string address))
 			{
-				ArchLog.Warning($"释放底层资源失败：{resourceName} 不存在于映射表中");
+				ArchLog.LogWarning($"释放底层资源失败：{resourceName} 不存在于映射表中");
 				return;
 			}
 
@@ -866,7 +866,7 @@ namespace Arch
 			{
 				if (!_resourceRecords.TryGetValue(address, out var record))
 				{
-					ArchLog.Warning($"释放底层资源失败：{resourceName}（Address：{address}）无资源记录，可能已释放");
+					ArchLog.LogWarning($"释放底层资源失败：{resourceName}（Address：{address}）无资源记录，可能已释放");
 					return;
 				}
 
@@ -884,7 +884,7 @@ namespace Arch
 
 					// 步骤3：从字典中移除记录
 					_resourceRecords.Remove(address);
-					ArchLog.Debug($"资源 {resourceName}（Address：{address}）已彻底释放（引用计数≤0或强制释放）");
+					ArchLog.LogDebug($"资源 {resourceName}（Address：{address}）已彻底释放（引用计数≤0或强制释放）");
 				}
 			}
 		}
@@ -901,7 +901,7 @@ namespace Arch
 			{
 				if (_resourceRecords.Count == 0)
 				{
-					ArchLog.Debug("ForceRelease：无已加载资源，无需释放");
+					ArchLog.LogDebug("ForceRelease：无已加载资源，无需释放");
 					return;
 				}
 
@@ -916,17 +916,17 @@ namespace Arch
 						// 2. 强制释放Handle
 						record.ReleaseHandle();
 
-						ArchLog.Debug($"ForceRelease：资源 {address} 强制释放完成");
+						ArchLog.LogDebug($"ForceRelease：资源 {address} 强制释放完成");
 					}
 					catch (Exception ex)
 					{
-						ArchLog.Error($"ForceRelease：处理资源 {address} 异常：{ex.Message}\n{ex.StackTrace}");
+						ArchLog.LogError($"ForceRelease：处理资源 {address} 异常：{ex.Message}\n{ex.StackTrace}");
 					}
 				}
 
 				// 3. 清空所有资源记录
 				_resourceRecords.Clear();
-				ArchLog.Debug($"ForceRelease：所有资源记录已清空，共释放 {_resourceRecords.Count} 个资源");
+				ArchLog.LogDebug($"ForceRelease：所有资源记录已清空，共释放 {_resourceRecords.Count} 个资源");
 			}
 
 			// 额外清理：重置初始化状态（可选，根据业务需求决定是否保留）
@@ -934,7 +934,7 @@ namespace Arch
 			// _isNameMapInited = false;
 			// _nameMap = null;
 
-			ArchLog.Debug("ForceRelease：强制释放流程完成");
+			ArchLog.LogDebug("ForceRelease：强制释放流程完成");
 		}
 		#endregion
 
@@ -1022,7 +1022,7 @@ namespace Arch
 							UnityEngine.Object.Destroy(obj);
 					}
 
-					ArchLog.Debug($"销毁实例：{obj.name}（资源Address：{Address}）");
+					ArchLog.LogDebug($"销毁实例：{obj.name}（资源Address：{Address}）");
 				}
 				InstanceObjects.Clear();
 			}
@@ -1035,7 +1035,7 @@ namespace Arch
 				if (Handle.IsValid())
 				{
 					Addressables.Release(Handle);
-					ArchLog.Debug($"释放资源Handle：{Address}");
+					ArchLog.LogDebug($"释放资源Handle：{Address}");
 				}
 			}
 		}

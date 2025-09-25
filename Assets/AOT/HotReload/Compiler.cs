@@ -76,7 +76,7 @@ namespace Arch
 					}
 
 					// 单次输出完整信息
-					ArchLog.Error(errorDetails);
+					ArchLog.LogError(errorDetails);
 				}
 			}
 

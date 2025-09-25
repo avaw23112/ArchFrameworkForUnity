@@ -12,12 +12,12 @@ namespace Arch
 		{
 			if (directType.IsClass || directType.IsAbstract)
 			{
-				ArchLog.Error($"{directType} is not struct");
+				ArchLog.LogError($"{directType} is not struct");
 				throw new Exception($"{directType} is not struct");
 			}
 			if (directType.GetInterface(nameof(IComponent)) == null)
 			{
-				ArchLog.Error($"{directType} is not component");
+				ArchLog.LogError($"{directType} is not component");
 				throw new Exception($"{directType} is not component");
 			}
 			// 通过反射调用泛型方法

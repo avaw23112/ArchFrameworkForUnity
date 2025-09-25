@@ -25,7 +25,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	{
 		protected override void Run(Entity entity, ref TestOrderComponent component_T1)
 		{
-			ArchLog.Debug($"1");
+			ArchLog.LogDebug($"1");
 		}
 	}
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	{
 		protected override void Run(Entity entity, ref TestOrderComponent component_T1)
 		{
-			ArchLog.Debug($"2");
+			ArchLog.LogDebug($"2");
 		}
 	}
 
@@ -47,7 +47,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	{
 		protected override void Run(Entity entity, ref TestOrderComponent component_T1)
 		{
-			ArchLog.Debug($"3");
+			ArchLog.LogDebug($"3");
 		}
 	}
 }

@@ -20,12 +20,12 @@ namespace Arch.Editor
 		{
 			if (!EditorApplication.isPlaying)
 			{
-				ArchLog.Warning("热重载只能在编辑运行时完成！");
+				ArchLog.LogWarning("热重载只能在编辑运行时完成！");
 				return;
 			}
 			if (isReloading)
 			{
-				ArchLog.Warning("热重载不能重复开启！");
+				ArchLog.LogWarning("热重载不能重复开启！");
 				return;
 			}
 			isReloading = true;
@@ -108,7 +108,7 @@ namespace Arch.Editor
 			}
 			else
 			{
-				ArchLog.Debug("热重载成功");
+				ArchLog.LogDebug("热重载成功");
 			}
 		}
 	}

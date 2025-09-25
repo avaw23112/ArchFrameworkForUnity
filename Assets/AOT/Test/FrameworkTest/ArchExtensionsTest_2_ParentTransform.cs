@@ -27,7 +27,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	{
 		protected override void Run(Entity entity, ref TestParentComponent component_T1)
 		{
-			ArchLog.Debug($"Awake : {entity} is awake,ID :{component_T1.id}");
+			ArchLog.LogDebug($"Awake : {entity} is awake,ID :{component_T1.id}");
 		}
 	}
 
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 	{
 		protected override void Run(Entity entity, ref TestParentComponent component_T1)
 		{
-			ArchLog.Debug($"Destroy : {entity} is awake,ID :{component_T1.id}");
+			ArchLog.LogDebug($"Destroy : {entity} is awake,ID :{component_T1.id}");
 		}
 	}
 }
