@@ -31,7 +31,7 @@ namespace Attributes
 		public static void LoadHotAssembly(Assembly hotReload)
 		{
 			//TODO:只会成功一次
-			Instance.m_dicAssemblys.Remove(HOTFIX_ASSEMBLY);
+			Instance.m_dicAssemblys.Remove(hotReload.GetName().Name);
 			Instance.m_dicAssemblys.Add(hotReload.GetName().Name, hotReload);
 		}
 

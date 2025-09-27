@@ -101,12 +101,10 @@ namespace Arch
 			foreach (var system in listPureSystems)
 			{
 				AddSystem(system);
-				ArchLog.LogInfo($"系统 {system} 已添加");
 			}
 			foreach (var system in listReactiveSystems)
 			{
 				AddSystem(system);
-				ArchLog.LogInfo($"系统 {system} 已添加");
 			}
 
 			listPureSystems.Clear();

@@ -1,4 +1,5 @@
 ﻿using Arch;
+using Arch.Tools;
 using Attributes;
 using Cysharp.Threading.Tasks;
 using Events;
@@ -35,14 +36,13 @@ namespace Assets.Scripts
 		public static async UniTask HotReload(Assembly hotReload)
 		{
 			await UniTask.SwitchToMainThread();
-
 			Assemblys.LoadHotAssembly(hotReload);
 			//注册事件总线
 			EventBus.RegisterEvents();
 
 			//调度特性处理系统
 			Attributes.Attributes.RemoveMapping();
-			Attributes.Collector.CollectBaseAttributesParallel();
+			Attributes.Collector.CollectBaseAttributes();
 			Attributes.Attributes.RegisterHotReloadableAttributeSystems();
 
 			//注册所有被标注[System]的系统
@@ -51,6 +51,8 @@ namespace Assets.Scripts
 			//重新订阅ReactiveSystem的事件
 			ArchSystems.Instance.SubcribeEntityStart();
 			ArchSystems.Instance.SubcribeEntityDestroy();
+
+			ArchLog.LogInfo("热重载执行完成！");
 		}
 		private static async UniTask Initialize(Action<float> OnProgreess, Action<string> OnprogressTip)
 		{

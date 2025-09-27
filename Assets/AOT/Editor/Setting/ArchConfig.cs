@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -15,14 +16,25 @@ namespace Arch.Editor
 		[Header("热更新程序集输出目录")]
 		public string hotUpdateDllOutputPath = "";
 
-		[Header("源生成器集")]
-		public List<string> m_sourceGeneratorList = new List<string>();
-
-		[Header("热重载输出目录")]
+		[Header("=== 热重载核心路径配置 ===")]
+		[Tooltip("热重载输出目录（存放编译后的DLL）")]
 		public string hotReloadOutputPath = "";
-
-		[Header("热更源码目录")]
+		[Tooltip("热更源码目录（存放需要热更的C#脚本）")]
 		public List<string> hotfixSourceDirectories = new List<string>();
+
+		[Header("=== 引用程序集配置 ===")]
+		[Tooltip("需要手动引用的外部DLL路径（如第三方库、自定义模块）")]
+		public List<string> referenceAssemblyPaths = new List<string>();
+
+		[Tooltip("编译器查找依赖的目录（自动解析DLL依赖）")]
+		public List<string> referenceResolvePaths = new List<string>()
+		{
+			Path.GetDirectoryName(typeof(object).Assembly.Location)
+		};
+
+		[Header("=== 源生成器配置 ===")]
+		[Tooltip("源生成器DLL路径（编译时自动生成代码的模块）")]
+		public List<string> sourceGeneratorPaths = new List<string>();
 	}
 
 	// 全局静态配置管理类
@@ -115,3 +127,4 @@ namespace Arch.Editor
 	}
 
 }
+#endif

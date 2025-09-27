@@ -50,7 +50,7 @@ namespace Attributes
 		{
 
 			List<Type> processors = ListPool<Type>.Get();
-			Collector.CollectTypesParallel<IAttributeProcessor>(processors);
+			Collector.CollectTypes<IAttributeProcessor>(processors);
 			try
 			{
 				foreach (var processor in processors)

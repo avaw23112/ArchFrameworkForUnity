@@ -139,7 +139,36 @@ namespace Attributes
 			return false;
 		}
 
-		private static void CollectBaseAttributes()
+
+		#endregion 辅助方法
+
+		public static void CollectTypes<T>(List<Type> listTypes) where T : class
+		{
+			if (listTypes == null)
+			{
+				throw new ArgumentNullException(nameof(listTypes));
+			}
+
+			// 收集所有属性标记了的类型
+			foreach (var assembly in Assemblys.AllAssemblies)
+			{
+				Type[] types = assembly.GetTypes();
+				foreach (var type in types)
+				{
+					if (isForget(type)) return;
+					if (typeof(T).IsAssignableFrom(type))
+					{
+						listTypes.Add(type);
+					}
+					else if (type.IsSubclassOf(typeof(T)))
+					{
+						listTypes.Add(type);
+					}
+				}
+			}
+		}
+
+		public static void CollectBaseAttributes()
 		{
 
 			// 收集所有BaseAttribute
@@ -167,34 +196,6 @@ namespace Attributes
 					foreach (var attribute in attributeTypes)
 					{
 						Attributes.AddMapping(attribute.GetType(), attribute, type);
-					}
-				}
-			}
-		}
-
-		#endregion 辅助方法
-
-		public static void CollectTypes<T>(List<Type> listTypes) where T : class
-		{
-			if (listTypes == null)
-			{
-				throw new ArgumentNullException(nameof(listTypes));
-			}
-
-			// 收集所有属性标记了的类型
-			foreach (var assembly in Assemblys.AllAssemblies)
-			{
-				Type[] types = assembly.GetTypes();
-				foreach (var type in types)
-				{
-					if (isForget(type)) return;
-					if (typeof(T).IsAssignableFrom(type))
-					{
-						listTypes.Add(type);
-					}
-					else if (type.IsSubclassOf(typeof(T)))
-					{
-						listTypes.Add(type);
 					}
 				}
 			}
