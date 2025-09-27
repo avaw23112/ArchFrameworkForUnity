@@ -1,8 +1,10 @@
 ﻿using Arch.Core;
 using Arch.Tools;
+using MemoryPack.Internal;
 using Schedulers;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
 
@@ -62,7 +64,7 @@ namespace Arch
 
 			if (dicSystems == null || dicSystems.Count == 0)
 			{
-				ArchLog.Debug("系统中暂无System可创建");
+				ArchLog.LogInfo("系统中暂无System可创建");
 				return;
 			}
 
@@ -140,8 +142,30 @@ namespace Arch
 				Instance.m_listReactiveDestroySystems.Add(ReactiveDestroySystem);
 		}
 
+		// 添加 IL2CPP 兼容包装器
+		[Preserve]
+		static PlayerLoopSystem.UpdateFunction UpdateWithIL2CPPWorkaround(Action action)
+		{
+			return () =>
+			{
+				if (Debug.isDebugBuild)
+					GC.KeepAlive(action.Target);
+				action?.Invoke();
+			};
+		}
+
 		public static void ApplyToPlayerLoop()
 		{
+			// IL2CPP 需要显式保留类型信息
+			[Preserve]
+			static void PreserveTypes()
+			{
+				// 强制保留相关类型信息
+				var t1 = typeof(ArchSystems);
+				var t2 = typeof(Update);
+				var t3 = typeof(PreLateUpdate);
+			}
+
 			// 确保使用有效默认循环
 			var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
 			playerOriginLoop = PlayerLoop.GetCurrentPlayerLoop();
@@ -150,13 +174,13 @@ namespace Arch
 			var updateSystem = new PlayerLoopSystem()
 			{
 				type = typeof(ArchSystems),
-				updateDelegate = Instance.Update,
+				updateDelegate = UpdateWithIL2CPPWorkaround(Instance.Update),
 			};
 
 			var lateUpdateSystem = new PlayerLoopSystem()
 			{
 				type = typeof(ArchSystems),
-				updateDelegate = Instance.LateUpdate,
+				updateDelegate = UpdateWithIL2CPPWorkaround(Instance.LateUpdate),
 			};
 
 			PlayerLoopSystem[] currentSystems = playerLoop.subSystemList;
@@ -200,7 +224,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Start System: {e.Message}");
+				ArchLog.LogError($"Start System: {e.Message}");
 				throw;
 			}
 		}
@@ -216,7 +240,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Start System: {e.Message}");
+				ArchLog.LogError($"Start System: {e.Message}");
 				throw;
 			}
 		}
@@ -236,7 +260,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Update System: {e.Message}");
+				ArchLog.LogError($"Update System: {e.Message}");
 				throw;
 			}
 		}
@@ -256,7 +280,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"LateUpdate System: {e.Message}");
+				ArchLog.LogError($"LateUpdate System: {e.Message}");
 				throw;
 			}
 		}
@@ -273,7 +297,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Destroy System: {e.Message}");
+				ArchLog.LogError($"Destroy System: {e.Message}");
 				throw;
 			}
 			finally
@@ -293,7 +317,7 @@ namespace Arch
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Destroy System: {e.Message}");
+				ArchLog.LogError($"Destroy System: {e.Message}");
 				throw;
 			}
 		}

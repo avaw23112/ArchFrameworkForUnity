@@ -139,7 +139,36 @@ namespace Attributes
 			return false;
 		}
 
-		private static void CollectBaseAttributes()
+
+		#endregion 辅助方法
+
+		public static void CollectTypes<T>(List<Type> listTypes) where T : class
+		{
+			if (listTypes == null)
+			{
+				throw new ArgumentNullException(nameof(listTypes));
+			}
+
+			// 收集所有属性标记了的类型
+			foreach (var assembly in Assemblys.AllAssemblies)
+			{
+				Type[] types = assembly.GetTypes();
+				foreach (var type in types)
+				{
+					if (isForget(type)) return;
+					if (typeof(T).IsAssignableFrom(type))
+					{
+						listTypes.Add(type);
+					}
+					else if (type.IsSubclassOf(typeof(T)))
+					{
+						listTypes.Add(type);
+					}
+				}
+			}
+		}
+
+		public static void CollectBaseAttributes()
 		{
 
 			// 收集所有BaseAttribute
@@ -167,34 +196,6 @@ namespace Attributes
 					foreach (var attribute in attributeTypes)
 					{
 						Attributes.AddMapping(attribute.GetType(), attribute, type);
-					}
-				}
-			}
-		}
-
-		#endregion 辅助方法
-
-		public static void CollectTypes<T>(List<Type> listTypes) where T : class
-		{
-			if (listTypes == null)
-			{
-				throw new ArgumentNullException(nameof(listTypes));
-			}
-
-			// 收集所有属性标记了的类型
-			foreach (var assembly in Assemblys.AllAssemblies)
-			{
-				Type[] types = assembly.GetTypes();
-				foreach (var type in types)
-				{
-					if (isForget(type)) return;
-					if (typeof(T).IsAssignableFrom(type))
-					{
-						listTypes.Add(type);
-					}
-					else if (type.IsSubclassOf(typeof(T)))
-					{
-						listTypes.Add(type);
 					}
 				}
 			}
@@ -293,7 +294,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.Debug("请用MultiCollectAttributes方法收集多重属性");
+						Arch.Tools.ArchLog.LogDebug("请用MultiCollectAttributes方法收集多重属性");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -347,7 +348,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.Debug("请用MultiCollectAttributes方法收集多重属性");
+						Arch.Tools.ArchLog.LogDebug("请用MultiCollectAttributes方法收集多重属性");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -416,7 +417,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.Debug("请用MultiCollectAttributes方法收集多重属性");
+						Arch.Tools.ArchLog.LogDebug("请用MultiCollectAttributes方法收集多重属性");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -445,7 +446,7 @@ namespace Attributes
 
 					if (attribute2T == null || attribute3T == null)
 					{
-						ArchLog.Error("捕获错误！捕获到非有效属性");
+						ArchLog.LogError("捕获错误！捕获到非有效属性");
 						throw new Exception("捕获错误！捕获到非有效属性！");
 					}
 					listAttributes.Add((attribute, attribute2T, attribute3T, pDerectType));

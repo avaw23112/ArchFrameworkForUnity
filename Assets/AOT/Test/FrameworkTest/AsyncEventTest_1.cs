@@ -28,7 +28,7 @@ namespace Assets.Scripts.Test
     {
         public override async void Run(AEventTest_1Event value)
         {
-            Arch.Tools.ArchLog.Debug("AEventTest_1Listener: " + value.num);
+            Arch.Tools.ArchLog.LogDebug("AEventTest_1Listener: " + value.num);
             await UniTask.CompletedTask;
         }
     }

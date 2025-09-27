@@ -21,12 +21,12 @@ namespace Arch.Tools.Pool
 		{
 			if (List == null)
 			{
-				ArchLog.Error("List is null.");
+				ArchLog.LogError("List is null.");
 				throw new System.NullReferenceException("List is null.");
 			}
 			if (!m_SetUsed.Contains(List))
 			{
-				ArchLog.Error("List is not in used set.");
+				ArchLog.LogError("List is not in used set.");
 				throw new System.Exception("List is not in used set.");
 			}
 			m_SetUsed.Remove(List);

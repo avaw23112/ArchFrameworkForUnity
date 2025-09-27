@@ -17,7 +17,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         public void Awake()
         {
-            Arch.Tools.ArchLog.Debug("1");
+            Arch.Tools.ArchLog.LogDebug("1");
         }
     }
 
@@ -27,7 +27,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         public void Awake()
         {
-            Arch.Tools.ArchLog.Debug("2");
+            Arch.Tools.ArchLog.LogDebug("2");
         }
     }
 
@@ -37,7 +37,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     {
         public void Awake()
         {
-            Arch.Tools.ArchLog.Debug("3");
+            Arch.Tools.ArchLog.LogDebug("3");
         }
     }
 }

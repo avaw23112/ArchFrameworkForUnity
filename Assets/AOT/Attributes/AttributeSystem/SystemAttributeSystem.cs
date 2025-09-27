@@ -11,7 +11,7 @@ namespace Arch
 			// 检查是否实现了 ISystem 或 IReactiveSystem 接口
 			if (!typeof(ISystem).IsAssignableFrom(directType) && !typeof(IReactiveSystem).IsAssignableFrom(directType))
 			{
-				ArchLog.Error($"{directType.Name} 不是 ISystem 或 IReactiveSystem 的实现");
+				ArchLog.LogError($"{directType.Name} 不是 ISystem 或 IReactiveSystem 的实现");
 			}
 		}
 	}

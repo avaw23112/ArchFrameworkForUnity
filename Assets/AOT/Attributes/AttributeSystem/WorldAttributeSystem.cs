@@ -11,17 +11,17 @@ namespace Arch
 		{
 			if (typeof(IGlobalSystem).IsAssignableFrom(derectType))
 			{
-				ArchLog.Error($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
+				ArchLog.LogError($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
 				throw new Exception($"系统：{derectType} 属于全局系统，不应该被World属性标记！");
 			}
 			if (typeof(ISystem).IsAssignableFrom(derectType))
 			{
-				ArchLog.Error($"类型：{derectType} 非可设置世界的系统，请检查实现！");
+				ArchLog.LogError($"类型：{derectType} 非可设置世界的系统，请检查实现！");
 				return;
 			}
 			if (!typeof(IReactiveSystem).IsAssignableFrom(derectType))
 			{
-				ArchLog.Error($"类型：{derectType} 非系统，请检查实现！");
+				ArchLog.LogError($"类型：{derectType} 非系统，请检查实现！");
 				throw new Exception($"类型：{derectType} 非系统，请检查实现！");
 			}
 		}

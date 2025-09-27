@@ -10,7 +10,7 @@ namespace Assets.Scripts.Test
     {
         public void Awake()
         {
-            ArchLog.Debug("EntitasSystemTest_1_System.Execute()");
+            ArchLog.LogDebug("EntitasSystemTest_1_System.Execute()");
         }
     }
 
@@ -20,7 +20,7 @@ namespace Assets.Scripts.Test
     {
         public void Update()
         {
-            ArchLog.Error("EntitasSystemTest_2_System.Execute()");
+            ArchLog.LogError("EntitasSystemTest_2_System.Execute()");
         }
     }
 
@@ -30,7 +30,7 @@ namespace Assets.Scripts.Test
     {
         public void LateUpdate()
         {
-            ArchLog.Debug("EntitasSystemTest_3_System.Cleanup()");
+            ArchLog.LogDebug("EntitasSystemTest_3_System.Cleanup()");
         }
     }
 
@@ -40,7 +40,7 @@ namespace Assets.Scripts.Test
     {
         public void Destroy()
         {
-            ArchLog.Debug("EntitasSystemTest_4_System.TearDown()");
+            ArchLog.LogDebug("EntitasSystemTest_4_System.TearDown()");
         }
     }
 }

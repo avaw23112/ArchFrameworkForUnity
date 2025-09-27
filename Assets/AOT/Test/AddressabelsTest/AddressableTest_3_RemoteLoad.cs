@@ -21,17 +21,17 @@ namespace Assets.Scripts.Test.AddressabelsTest
 				if (o != null)
 				{
 					GameObject.Instantiate(o);
-					ArchLog.Info("Resource loaded and instantiated successfully.");
+					ArchLog.LogInfo("Resource loaded and instantiated successfully.");
 				}
 				else
 				{
-					ArchLog.Error("Failed to load resource: loaded object is null.");
+					ArchLog.LogError("Failed to load resource: loaded object is null.");
 				}
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"Exception: {e.Message}");
-				ArchLog.Error($"Stack Trace: {e.StackTrace}");
+				ArchLog.LogError($"Exception: {e.Message}");
+				ArchLog.LogError($"Stack Trace: {e.StackTrace}");
 			}
 		}
 

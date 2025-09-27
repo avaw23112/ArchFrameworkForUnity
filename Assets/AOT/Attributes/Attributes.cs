@@ -50,7 +50,7 @@ namespace Attributes
 		{
 
 			List<Type> processors = ListPool<Type>.Get();
-			Collector.CollectTypesParallel<IAttributeProcessor>(processors);
+			Collector.CollectTypes<IAttributeProcessor>(processors);
 			try
 			{
 				foreach (var processor in processors)
@@ -75,7 +75,7 @@ namespace Attributes
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error(e.Message);
+				ArchLog.LogError(e.Message);
 				throw;
 			}
 			finally
@@ -108,7 +108,7 @@ namespace Attributes
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error(e.Message);
+				ArchLog.LogError(e.Message);
 				throw;
 			}
 			finally

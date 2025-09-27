@@ -72,31 +72,32 @@ namespace Arch.Tools
 			}
 		}
 
-		public static void Debug(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+		public static void LogDebug(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
 			if (CurrentLogLevel > LogLevel.Debug) return;
+			if (!Application.isEditor) return;
 			LogInternal(message, UnityEngine.LogType.Log, filePath, lineNumber);
 		}
 
-		public static void Info(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+		public static void LogInfo(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
 			if (CurrentLogLevel > LogLevel.Info) return;
 			LogInternal(message, UnityEngine.LogType.Log, filePath, lineNumber);
 		}
 
-		public static void Warning(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+		public static void LogWarning(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
 			if (CurrentLogLevel > LogLevel.Warning) return;
 			LogInternal(message, UnityEngine.LogType.Warning, filePath, lineNumber);
 		}
 
-		public static void Error(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+		public static void LogError(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
 			if (CurrentLogLevel > LogLevel.Error) return;
 			LogInternal(message, UnityEngine.LogType.Error, filePath, lineNumber, true);
 		}
 
-		public static void Error(Exception ex, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+		public static void LogError(Exception ex, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
 			LogInternal(ex.ToString(), UnityEngine.LogType.Exception, filePath, lineNumber, true, ex);
 			throw ex;
@@ -122,11 +123,6 @@ namespace Arch.Tools
 					break;
 			}
 
-			//只记录Error问题
-			if (logType == LogType.Log)
-			{
-				return;
-			}
 
 			// 写入文件日志 - 包含调用者信息（只在非编辑器环境下）
 #if !UNITY_EDITOR
@@ -149,13 +145,10 @@ namespace Arch.Tools
                         _logFileWriter.WriteLine(); // 空行分隔
                     }
                 }
-                else
-                {
-                    _logFileWriter.WriteLine("File Trace:");
-                    _logFileWriter.WriteLine($"  at {fileName}:{lineNumber}");
-                    _logFileWriter.WriteLine(); // 空行分隔
-                    _logFileWriter.WriteLine(); // 空行分隔
-                }
+                _logFileWriter.WriteLine("File Trace:");
+                _logFileWriter.WriteLine($"  at {fileName}:{lineNumber}");
+                _logFileWriter.WriteLine(); // 空行分隔
+                _logFileWriter.WriteLine(); // 空行分隔
                 if (ex != null)
                 {
                     _logFileWriter.WriteLine($"Exception: ");
