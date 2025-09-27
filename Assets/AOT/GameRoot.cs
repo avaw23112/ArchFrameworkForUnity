@@ -52,7 +52,6 @@ namespace Assets.Scripts
 			ArchSystems.Instance.SubcribeEntityStart();
 			ArchSystems.Instance.SubcribeEntityDestroy();
 
-			ArchLog.LogInfo("热重载执行完成！");
 		}
 		private static async UniTask Initialize(Action<float> OnProgreess, Action<string> OnprogressTip)
 		{
