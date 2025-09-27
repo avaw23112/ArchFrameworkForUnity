@@ -5,6 +5,7 @@ using HybridCLR;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Attributes
 		public const string HOTFIX_ASSEMBLY_LABEL = "Hotfixdll";
 		public const string AOT_ASSEMBLY = "AOT";
 		public const string HOTFIX_ASSEMBLY = "LOGIC_HOTFIX";
+		public const string MODEL_ASSEMBLY = "MODEL_HOFIX";
 
 		private Dictionary<string, Assembly> m_dicAssemblys;
 		public static IEnumerable<Assembly> AllAssemblies => Instance.m_dicAssemblys.Values;
@@ -49,13 +51,14 @@ namespace Attributes
 #if !UNITY_EDITOR
 			try
 			{
-				var AOTdll = Assembly.Load(AOT_ASSEMBLY);
-				Instance.m_dicAssemblys.TryAdd(AOTdll.FullName, AOTdll);
 				var AOTDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(AOT_ASSEMBLY_LABEL);
 				foreach (var aotDll in AOTDll)
 				{
 					HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(aotDll.bytes, HomologousImageMode.SuperSet);
 				}
+				var AOTdll = Assembly.Load(AOT_ASSEMBLY);
+				Instance.m_dicAssemblys.TryAdd(AOTdll.FullName, AOTdll);
+
 				var HotfixDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(HOTFIX_ASSEMBLY_LABEL);
 				foreach (var hotfixdll in HotfixDll)
 				{
@@ -69,7 +72,7 @@ namespace Attributes
 			}
 #else
 
-			string[] assembliesToLoad = { AOT_ASSEMBLY, HOTFIX_ASSEMBLY };
+			string[] assembliesToLoad = { AOT_ASSEMBLY, MODEL_ASSEMBLY, HOTFIX_ASSEMBLY };
 			foreach (var assemblyName in assembliesToLoad)
 			{
 				try
@@ -82,6 +85,7 @@ namespace Attributes
 					ArchLog.LogError($"加载程序集 {assemblyName} 时出错: {ex.Message}");
 				}
 			}
+
 			await UniTask.CompletedTask;
 #endif
 		}

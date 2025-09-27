@@ -46,7 +46,6 @@ namespace Assets.Scripts
 			Attributes.Attributes.RegisterHotReloadableAttributeSystems();
 
 			//注册所有被标注[System]的系统
-
 			ArchSystems.RegisterArchSystems();
 
 			//重新订阅ReactiveSystem的事件
@@ -97,8 +96,8 @@ namespace Assets.Scripts
 				{
 					if (state == PlayModeStateChange.ExitingPlayMode)
 					{
-						ArchSystems.Instance.Destroy();
 						ArchSystems.ResetPlayerLoop();
+						ArchSystems.Instance.Destroy();
 					}
 				};
 #else
