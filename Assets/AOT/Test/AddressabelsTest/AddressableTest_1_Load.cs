@@ -7,7 +7,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class AddressableTest_1_Load : MonoBehaviour
 {
-	async void Start()
+	void Start()
 	{
 		Load();
 	}
@@ -19,15 +19,15 @@ public class AddressableTest_1_Load : MonoBehaviour
 	}
 	void Load()
 	{
-		var loadTask = Addressables.LoadAsset<GameObject>("bb");
-		if (loadTask.Status == AsyncOperationStatus.Succeeded)
-		{
-			GameObject gameObject = loadTask.Result;
-			GameObject.Instantiate(gameObject);
-		}
-		else
-		{
-			Debug.LogError("Failed to load asset with key 'bb'");
-		}
+		//var loadTask = Addressables.LoadAsset<GameObject>("bb");
+		//if (loadTask.Status == AsyncOperationStatus.Succeeded)
+		//{
+		//	GameObject gameObject = loadTask.Result;
+		//	GameObject.Instantiate(gameObject);
+		//}
+		//else
+		//{
+		//	Debug.LogError("Failed to load asset with key 'bb'");
+		//}
 	}
 }

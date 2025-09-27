@@ -134,7 +134,6 @@ namespace Arch.Editor
 					// 加载DLL并添加为引用
 					Assembly referenceAssembly = Assembly.LoadFrom(assemblyPath);
 					compiler.AddReferencedAssembly(referenceAssembly);
-					ArchLog.LogDebug($"已添加引用程序集：{referenceAssembly.FullName}");
 				}
 				catch (Exception ex)
 				{
@@ -242,7 +241,6 @@ namespace Arch.Editor
 				if (Directory.Exists(sourcePath))
 				{
 					compiler.AddCodePath(sourcePath, Assemblys.HOTFIX_ASSEMBLY);
-					ArchLog.LogDebug($"已添加热更源码路径：{sourcePath}");
 				}
 				else
 				{
@@ -269,6 +267,7 @@ namespace Arch.Editor
 				byte[] dllBytes = File.ReadAllBytes(hotfixDllPath);
 				Assembly hotfixAssembly = Assembly.Load(dllBytes);
 				await GameRoot.HotReload(hotfixAssembly);
+				ArchLog.LogInfo("热重载执行完成！");
 			}
 			catch (Exception ex)
 			{
