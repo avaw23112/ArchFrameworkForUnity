@@ -153,19 +153,18 @@ namespace Arch
 				action?.Invoke();
 			};
 		}
+		// IL2CPP 需要显式保留类型信息
+		[Preserve]
+		static void PreserveTypes()
+		{
+			// 强制保留相关类型信息
+			var t1 = typeof(ArchSystems);
+			var t2 = typeof(Update);
+			var t3 = typeof(PreLateUpdate);
+		}
 
 		public static void ApplyToPlayerLoop()
 		{
-			// IL2CPP 需要显式保留类型信息
-			[Preserve]
-			static void PreserveTypes()
-			{
-				// 强制保留相关类型信息
-				var t1 = typeof(ArchSystems);
-				var t2 = typeof(Update);
-				var t3 = typeof(PreLateUpdate);
-			}
-
 			// 确保使用有效默认循环
 			var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
 			playerOriginLoop = PlayerLoop.GetCurrentPlayerLoop();

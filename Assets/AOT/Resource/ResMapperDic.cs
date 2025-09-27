@@ -376,8 +376,9 @@ namespace Arch
 			if (string.IsNullOrEmpty(address)) return "";
 			var settings = AddressableAssetSettingsDefaultObject.Settings;
 			return settings?.FindAssetEntry(address)?.AssetPath ?? "";
-#endif
+#else
 			return "";
+#endif
 		}
 		#endregion
 	}
