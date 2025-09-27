@@ -75,6 +75,7 @@ namespace Arch.Tools
 		public static void LogDebug(string message, [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
 		{
 			if (CurrentLogLevel > LogLevel.Debug) return;
+			if (!Application.isEditor) return;
 			LogInternal(message, UnityEngine.LogType.Log, filePath, lineNumber);
 		}
 
@@ -144,13 +145,10 @@ namespace Arch.Tools
                         _logFileWriter.WriteLine(); // 空行分隔
                     }
                 }
-                else
-                {
-                    _logFileWriter.WriteLine("File Trace:");
-                    _logFileWriter.WriteLine($"  at {fileName}:{lineNumber}");
-                    _logFileWriter.WriteLine(); // 空行分隔
-                    _logFileWriter.WriteLine(); // 空行分隔
-                }
+                _logFileWriter.WriteLine("File Trace:");
+                _logFileWriter.WriteLine($"  at {fileName}:{lineNumber}");
+                _logFileWriter.WriteLine(); // 空行分隔
+                _logFileWriter.WriteLine(); // 空行分隔
                 if (ex != null)
                 {
                     _logFileWriter.WriteLine($"Exception: ");

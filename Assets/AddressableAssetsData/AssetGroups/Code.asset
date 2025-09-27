@@ -21,13 +21,13 @@ MonoBehaviour:
     m_Address: Assets/HybridCLRGenerate/HotFixDll
     m_ReadOnly: 0
     m_SerializedLabels:
-    - AOTdll
+    - Hotfixdll
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc55a3544390e8949aa2c55c6a09a340
     m_Address: Assets/HybridCLRGenerate/MetaDataDll
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Hotfixdll
+    - AOTdll
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: eebe3d64c371f38498a121f12f5fdf53, type: 2}

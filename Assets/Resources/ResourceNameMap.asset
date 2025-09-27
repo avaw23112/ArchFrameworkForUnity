@@ -17,27 +17,33 @@ MonoBehaviour:
     subGroups:
     - subGroupName: Assets
       resources:
+      - resourceName: A_MODEL_HOFIX.dll
+        address: Assets/HybridCLRGenerate/HotFixDll/A_MODEL_HOFIX.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/HotFixDll\A_MODEL_HOFIX.dll.bytes
       - resourceName: AOT.dll
         address: Assets/HybridCLRGenerate/MetaDataDll/AOT.dll.bytes
         assetPath: Assets/HybridCLRGenerate/MetaDataDll\AOT.dll.bytes
-      - resourceName: Hotfix.dll
-        address: Assets/HybridCLRGenerate/HotFixDll/Hotfix.dll.bytes
-        assetPath: Assets/HybridCLRGenerate/HotFixDll\Hotfix.dll.bytes
+      - resourceName: Arch.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/Arch.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\Arch.dll.bytes
+      - resourceName: Arch.LowLevel.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/Arch.LowLevel.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\Arch.LowLevel.dll.bytes
+      - resourceName: B_LOGIC_HOTFIX.dll
+        address: Assets/HybridCLRGenerate/HotFixDll/B_LOGIC_HOTFIX.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/HotFixDll\B_LOGIC_HOTFIX.dll.bytes
+      - resourceName: CommunityToolkit.HighPerformance.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/CommunityToolkit.HighPerformance.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\CommunityToolkit.HighPerformance.dll.bytes
+      - resourceName: MemoryPack.Core.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/MemoryPack.Core.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\MemoryPack.Core.dll.bytes
       - resourceName: mscorlib.dll
         address: Assets/HybridCLRGenerate/MetaDataDll/mscorlib.dll.bytes
         assetPath: Assets/HybridCLRGenerate/MetaDataDll\mscorlib.dll.bytes
-  - groupName: UI
-    subGroups:
-    - subGroupName: Assets
-      resources:
-      - resourceName: Cylinder 1
-        address: Assets/Art/UI/Cylinder 1.prefab
-        assetPath: Assets/Art/UI/Cylinder 1.prefab
-      - resourceName: Cylinder 2
-        address: Assets/Art/UI/Cylinder 2.prefab
-        assetPath: Assets/Art/UI/Cylinder 2.prefab
-    - subGroupName: UI
-      resources:
-      - resourceName: Cylinder
-        address: UI/Art/Cylinder.prefab
-        assetPath: Assets/Art/UI/Cylinder.prefab
+      - resourceName: System.Core.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/System.Core.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\System.Core.dll.bytes
+      - resourceName: System.Runtime.CompilerServices.Unsafe.dll
+        address: Assets/HybridCLRGenerate/MetaDataDll/System.Runtime.CompilerServices.Unsafe.dll.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\System.Runtime.CompilerServices.Unsafe.dll.bytes

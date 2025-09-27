@@ -3,11 +3,9 @@ using Arch.Tools;
 using Cysharp.Threading.Tasks;
 using HybridCLR;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
+using System.Text;
 using UnityEngine;
 
 
@@ -19,8 +17,8 @@ namespace Attributes
 		public const string AOT_ASSEMBLY_LABEL = "AOTdll";
 		public const string HOTFIX_ASSEMBLY_LABEL = "Hotfixdll";
 		public const string AOT_ASSEMBLY = "AOT";
-		public const string HOTFIX_ASSEMBLY = "LOGIC_HOTFIX";
-		public const string MODEL_ASSEMBLY = "MODEL_HOFIX";
+		public const string HOTFIX_ASSEMBLY = "Logic";
+		public const string MODEL_ASSEMBLY = "Data";
 
 		private Dictionary<string, Assembly> m_dicAssemblys;
 		public static IEnumerable<Assembly> AllAssemblies => Instance.m_dicAssemblys.Values;
@@ -48,18 +46,21 @@ namespace Attributes
 				return;
 			}
 
+			var AOTDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(AOT_ASSEMBLY_LABEL);
+			var HotfixDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(HOTFIX_ASSEMBLY_LABEL);
+
 #if !UNITY_EDITOR
 			try
 			{
-				var AOTDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(AOT_ASSEMBLY_LABEL);
+				HomologousImageMode mode = HomologousImageMode.SuperSet;
 				foreach (var aotDll in AOTDll)
 				{
-					HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(aotDll.bytes, HomologousImageMode.SuperSet);
+					LoadImageErrorCode err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(aotDll.bytes, HomologousImageMode.SuperSet);
+					ArchLog.LogInfo($"LoadMetadataForAOTAssembly:{aotDll.name}. mode:{mode} ret:{err}");
 				}
 				var AOTdll = Assembly.Load(AOT_ASSEMBLY);
 				Instance.m_dicAssemblys.TryAdd(AOTdll.FullName, AOTdll);
 
-				var HotfixDll = await ArchRes.LoadAllByLabelAsync<TextAsset>(HOTFIX_ASSEMBLY_LABEL);
 				foreach (var hotfixdll in HotfixDll)
 				{
 					var assembly = Assembly.Load(hotfixdll.bytes);
@@ -68,10 +69,61 @@ namespace Attributes
 			}
 			catch (Exception e)
 			{
-				ArchLog.Error($"加载程序集时出错: {e.Message}");
+				StringBuilder errorInfo = new StringBuilder();
+				errorInfo.AppendLine($"程序集加载失败: [{e.GetType().Name}] {e.Message}");
+
+				// 添加资源加载状态
+				errorInfo.AppendLine($"AOT标签: {AOT_ASSEMBLY_LABEL}");
+				errorInfo.AppendLine($"热更新标签: {HOTFIX_ASSEMBLY_LABEL}");
+
+				// 遍历加载器上下文
+				if (AOTDll != null)
+				{
+					errorInfo.AppendLine($"已加载AOT程序集数量: {AOTDll.Count}");
+					foreach (var asset in AOTDll)
+					{
+						errorInfo.AppendLine($"- {asset.name} 大小: {asset.bytes.Length} bytes");
+					}
+				}
+
+				if (HotfixDll != null)
+				{
+					errorInfo.AppendLine($"已加载热更新程序集数量: {HotfixDll.Count}");
+					foreach (var asset in HotfixDll)
+					{
+						errorInfo.AppendLine($"- {asset.name} 大小: {asset.bytes.Length} bytes");
+					}
+				}
+
+				// 添加完整的异常链
+				Exception current = e;
+				int level = 0;
+				while (current != null)
+				{
+					errorInfo.AppendLine($"[异常层级 {level++}]");
+					errorInfo.AppendLine($"类型: {current.GetType().FullName}");
+					errorInfo.AppendLine($"消息: {current.Message}");
+					errorInfo.AppendLine($"堆栈跟踪:\n{current.StackTrace}");
+					current = current.InnerException;
+				}
+
+				// 添加程序集加载上下文
+				try
+				{
+					errorInfo.AppendLine("\n当前已加载程序集:");
+					foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+					{
+						errorInfo.AppendLine($"- {asm.FullName} Location: {asm.Location}");
+					}
+				}
+				catch (Exception asmEx)
+				{
+					errorInfo.AppendLine($"获取程序集列表失败: {asmEx.Message}");
+				}
+
+				ArchLog.LogError(errorInfo.ToString());
 			}
 #else
-
 			string[] assembliesToLoad = { AOT_ASSEMBLY, MODEL_ASSEMBLY, HOTFIX_ASSEMBLY };
 			foreach (var assemblyName in assembliesToLoad)
 			{
@@ -82,10 +134,9 @@ namespace Attributes
 				}
 				catch (Exception ex)
 				{
-					ArchLog.LogError($"加载程序集 {assemblyName} 时出错: {ex.Message}");
+					ArchLog.LogError($"Editor :加载程序集 {assemblyName} 时出错: {ex.Message}");
 				}
 			}
-
 			await UniTask.CompletedTask;
 #endif
 		}

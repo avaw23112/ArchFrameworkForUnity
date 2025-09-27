@@ -1,5 +1,5 @@
 {
-    "name": "LOGIC_HOTFIX",
+    "name": "Logic",
     "rootNamespace": "",
     "references": [
         "GUID:7dbe63cb0c2603148a0db969c4725055",
@@ -13,9 +13,7 @@
         "GUID:dc47925d1a5fa2946bdd37746b2b5d48",
         "GUID:2056619ffb07b474aa1cda8dbb6da98e"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

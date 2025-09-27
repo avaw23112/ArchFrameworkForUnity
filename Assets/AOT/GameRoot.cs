@@ -64,6 +64,7 @@ namespace Assets.Scripts
 			OnProgreess?.Invoke(0.3f);
 
 			OnprogressTip?.Invoke("加载资源中");
+
 			//加载热更新程序集
 			await Assemblys.LoadAssemblys();
 			OnProgreess?.Invoke(0.4f);

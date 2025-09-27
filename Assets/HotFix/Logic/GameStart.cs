@@ -12,12 +12,12 @@ namespace Assets.HotFix
 	{
 		public override void Run(GameStartEvent value)
 		{
-			ArchLog.LogDebug("game start");
+			ArchLog.LogInfo("game start");
 			HotReloadTest_Model hotReloadTest_Model = new HotReloadTest_Model();
 			byte[] bin = MemoryPackSerializer.Serialize(hotReloadTest_Model);
 			HotReloadTest_Model hotReloadTest_Model1 = new HotReloadTest_Model();
 			MemoryPackSerializer.Deserialize(bin, ref hotReloadTest_Model1);
-			ArchLog.LogDebug($"{hotReloadTest_Model1.a1}");
+			ArchLog.LogInfo($"{hotReloadTest_Model1.a1}");
 		}
 	}
 }

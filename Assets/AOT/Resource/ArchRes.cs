@@ -83,7 +83,7 @@ namespace Arch
 				if (!LoadResourceNameMapAsync(onError))
 					return false;
 				_isNameMapInited = true;
-				ArchLog.LogDebug($"ArchRes 完整初始化完成！");
+				ArchLog.LogInfo($"ArchRes 完整初始化完成！");
 				return true;
 			}
 			catch (Exception ex)
@@ -548,7 +548,7 @@ namespace Arch
 
 				// 8. 最终回调与日志
 				string resultMsg = $"Label[{label}]资源加载完成：共{totalCount}个，成功{loadedResources.Count}个，失败{totalCount - loadedResources.Count}个";
-				ArchLog.LogDebug(resultMsg);
+				ArchLog.LogInfo(resultMsg);
 				onLoaded?.Invoke(loadedResources);
 				return loadedResources;
 			}

@@ -15,7 +15,7 @@ namespace Arch.Editor
 	{
 		static bool isReloading = false;
 		// 在Unity编辑器菜单中添加编译选项
-		[MenuItem("Tools/HotReload %g", false, 100)]
+		[MenuItem("Tools/热重载 _F4", false, 100)]
 		public static void HotReload()
 		{
 			if (!EditorApplication.isPlaying)
