@@ -1,121 +1,126 @@
 ﻿using Arch;
+using Arch.Net;
 using Arch.Tools;
 using Attributes;
 using Cysharp.Threading.Tasks;
 using Events;
 using System;
 using System.Reflection;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-	//初始化完毕事件
-	public struct GameStartEvent
-	{
+    //初始化完毕事件
+    public struct GameStartEvent
+    {
+    }
 
-	}
+    public class GameRoot
+    {
+        //切忌改变初始化顺序
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static async void OnGameStart()
+        {
+            Action<float> OnProgreess = null;
+            Action<string> OnprogressTip = null;
 
-	public class GameRoot
-	{
+            Loading(OnProgreess, OnprogressTip);
+            await Initialize(OnProgreess, OnprogressTip);
 
-		//切忌改变初始化顺序
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-		private static async void OnGameStart()
-		{
-			Action<float> OnProgreess = null;
-			Action<string> OnprogressTip = null;
+            //发送完毕事件
+            EventBus.Publish<GameStartEvent>(new GameStartEvent());
+        }
 
-			Loading(OnProgreess, OnprogressTip);
-			await Initialize(OnProgreess, OnprogressTip);
+        public static async UniTask HotReload(Assembly hotReload)
+        {
+            await UniTask.SwitchToMainThread();
+            Assemblys.LoadHotAssembly(hotReload);
+            //注册事件总线
+            EventBus.RegisterEvents();
 
-			//发送完毕事件
-			EventBus.Publish<GameStartEvent>(new GameStartEvent());
-		}
-		public static async UniTask HotReload(Assembly hotReload)
-		{
-			await UniTask.SwitchToMainThread();
-			Assemblys.LoadHotAssembly(hotReload);
-			//注册事件总线
-			EventBus.RegisterEvents();
+            //调度特性处理系统
+            Attributes.Attributes.RemoveMapping();
+            Attributes.Collector.CollectBaseAttributes();
+            Attributes.Attributes.RegisterHotReloadableAttributeSystems();
 
-			//调度特性处理系统
-			Attributes.Attributes.RemoveMapping();
-			Attributes.Collector.CollectBaseAttributes();
-			Attributes.Attributes.RegisterHotReloadableAttributeSystems();
+            //注册所有被标注[System]的系统
+            ArchSystems.RegisterArchSystems();
 
-			//注册所有被标注[System]的系统
-			ArchSystems.RegisterArchSystems();
+            //重新订阅ReactiveSystem的事件
+            ArchSystems.Instance.SubcribeEntityStart();
+            ArchSystems.Instance.SubcribeEntityDestroy();
 
-			//重新订阅ReactiveSystem的事件
-			ArchSystems.Instance.SubcribeEntityStart();
-			ArchSystems.Instance.SubcribeEntityDestroy();
+            ArchLog.LogInfo("热重载执行完成！");
+        }
 
-			ArchLog.LogInfo("热重载执行完成！");
-		}
-		private static async UniTask Initialize(Action<float> OnProgreess, Action<string> OnprogressTip)
-		{
-			//初始化日志
-			OnprogressTip?.Invoke("初始化系统");
-			Arch.Tools.ArchLog.Initialize();
-			OnProgreess?.Invoke(0.1f);
+        private static async UniTask Initialize(Action<float> OnProgreess, Action<string> OnprogressTip)
+        {
+            //初始化日志
+            OnprogressTip?.Invoke("初始化系统");
+            Arch.Tools.ArchLog.Initialize();
+            OnProgreess?.Invoke(0.1f);
 
-			//初始化资源管理系统
-			await ArchRes.InitializeAsync();
-			OnProgreess?.Invoke(0.3f);
+            //初始化资源管理系统
+            await ArchRes.InitializeAsync();
+            OnProgreess?.Invoke(0.3f);
 
-			OnprogressTip?.Invoke("加载资源中");
+            OnprogressTip?.Invoke("加载资源中");
 
-			//加载热更新程序集
-			await Assemblys.LoadAssemblys();
-			OnProgreess?.Invoke(0.4f);
+            //加载热更新程序集
+            await Assemblys.LoadAssemblys();
+            OnProgreess?.Invoke(0.4f);
 
-			//注册事件总线
-			EventBus.RegisterEvents();
+            //注册事件总线
+            EventBus.RegisterEvents();
 
-			//调度特性处理系统		
-			Attributes.Collector.CollectBaseAttributesParallel();
-			Attributes.Attributes.RegisterAttributeSystems();
+            //调度特性处理系统
+            Attributes.Collector.CollectBaseAttributesParallel();
+            Attributes.Attributes.RegisterAttributeSystems();
 
-			//初始化网络系统
+            //初始化系统属性
+            ComponentRegistryExtensions.RegisterAllComponents();
+            ComponentSerializer.RegisterAllSerializers();
 
-			//初始化渲染系统
+            //创建同步组件序列化器
 
-			//注册所有被标注[System]的系统
-			ArchSystems.RegisterArchSystems();
-			OnProgreess?.Invoke(0.8f);
-			OnprogressTip?.Invoke("注册系统");
+            //初始化网络系统
 
-			//启动系统工作流
-			ArchSystems.Instance.Start();
-			ArchSystems.Instance.SubcribeEntityStart();
-			ArchSystems.Instance.SubcribeEntityDestroy();
-			ArchSystems.ApplyToPlayerLoop();
+            //初始化渲染系统
+
+            //注册所有被标注[System]的系统
+            ArchSystems.RegisterArchSystems();
+            OnProgreess?.Invoke(0.8f);
+            OnprogressTip?.Invoke("注册系统");
+
+            //启动系统工作流
+            ArchSystems.Instance.Start();
+            ArchSystems.Instance.SubcribeEntityStart();
+            ArchSystems.Instance.SubcribeEntityDestroy();
+            ArchSystems.ApplyToPlayerLoop();
 
 #if UNITY_EDITOR
-			EditorApplication.playModeStateChanged +=
-				(state) =>
-				{
-					if (state == PlayModeStateChange.ExitingPlayMode)
-					{
-						ArchSystems.ResetPlayerLoop();
-						ArchSystems.Instance.Destroy();
-					}
-				};
+            EditorApplication.playModeStateChanged +=
+                (state) =>
+                {
+                    if (state == PlayModeStateChange.ExitingPlayMode)
+                    {
+                        ArchSystems.ResetPlayerLoop();
+                        ArchSystems.Instance.Destroy();
+                    }
+                };
 #else
 			Application.quitting += () =>
 			{
 				ArchSystems.Instance.Destroy();
 			};
 #endif
-			OnProgreess?.Invoke(1f);
-			OnprogressTip?.Invoke("加载完成");
-		}
+            OnProgreess?.Invoke(1f);
+            OnprogressTip?.Invoke("加载完成");
+        }
 
-		private static void Loading(Action<float> OnProgreess, Action<string> OnprogressTip)
-		{
-
-		}
-	}
+        private static void Loading(Action<float> OnProgreess, Action<string> OnprogressTip)
+        {
+        }
+    }
 }
