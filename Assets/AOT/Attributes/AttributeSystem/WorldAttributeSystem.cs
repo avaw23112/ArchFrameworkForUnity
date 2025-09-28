@@ -1,4 +1,5 @@
-﻿using Arch.Tools;
+﻿using Arch.Core;
+using Arch.Tools;
 using Attributes;
 using System;
 
@@ -23,7 +24,6 @@ namespace Arch
 				ArchLog.LogError($"类型：{derectType} 非系统，请检查实现！");
 				throw new Exception($"类型：{derectType} 非系统，请检查实现！");
 			}
-			NamedWorld.CreateNamed(attribute.worldName);
 		}
 	}
 }
