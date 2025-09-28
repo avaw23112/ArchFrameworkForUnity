@@ -27,7 +27,7 @@ namespace Arch.Editor
 			public string assetPath;     // 本地资源路径（预览用）
 		}
 
-		[MenuItem("Tools/生成资源名称映射表")]
+		[MenuItem("Tools/生成资源名称映射表 _F3")]
 		public static void GenerateResourceNameMap()
 		{
 			var settings = AddressableAssetSettingsDefaultObject.Settings;

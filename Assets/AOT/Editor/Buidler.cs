@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Arch.Compilation.Editor
 {
-	public static class AssemblyBuilder
+	public static class Builder
 	{
 		static string MetaDLLResPath = "";
 		static string HotDllResPath = "";
@@ -68,6 +68,8 @@ namespace Arch.Compilation.Editor
 			AddressableAssetSettings settings = AddressableAssetSettingsDefaultObject.Settings;
 			AddressableAssetSettings.BuildPlayerContent();
 			ArchLog.LogInfo("打包成功");
+
+			ResourceNameMapGenerator.GenerateResourceNameMap();
 		}
 		public static bool CopyHotUpdateDllInProject()
 		{

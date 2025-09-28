@@ -20,7 +20,7 @@ namespace Arch.Editor
 	{
 		private static bool isReloading = false;
 		// 热重载菜单（F4快捷键）
-		[MenuItem("Tools/热重载 _F4", false, 100)]
+		[MenuItem("Tools/热重载 _F4", false)]
 		public static void TriggerHotReload()
 		{
 			// 基础校验
