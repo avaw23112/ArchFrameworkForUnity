@@ -1,100 +1,113 @@
-﻿using Arch;
+using System;
+using Arch;
+using Arch.Tools;
 using Arch.Net;
 using Attributes;
 using Cysharp.Threading.Tasks;
 using Events;
-using System;
 using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-
-
     public class GameRoot
     {
-        //切忌改变初始化顺序
+        // Entry point: initialize after the first scene is loaded
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static async void OnGameStart()
         {
-            Action<float> OnProgreess = null;
-            Action<string> OnprogressTip = null;
+            Action<float> onProgress = null;
+            Action<string> onProgressTip = null;
 
-            Loading(OnProgreess, OnprogressTip);
-            await Initialize(OnProgreess, OnprogressTip);
+            Loading(onProgress, onProgressTip);
+            await Initialize(onProgress, onProgressTip);
 
-            //发送完毕事件
+            // Broadcast game start
             EventBus.Publish<GameStartEvent>(new GameStartEvent());
         }
 
-
-
-        private static async UniTask Initialize(Action<float> OnProgreess, Action<string> OnprogressTip)
+        private static async UniTask Initialize(Action<float> onProgress, Action<string> onProgressTip)
         {
-            //初始化日志
-            OnprogressTip?.Invoke("初始化系统");
+            // Init logging
+            onProgressTip?.Invoke("Initialize systems");
             Arch.Tools.ArchLog.Initialize();
-            OnProgreess?.Invoke(0.1f);
+            onProgress?.Invoke(0.1f);
 
-            //初始化资源管理系统
+            // Init resource system
             await ArchRes.InitializeAsync();
-            OnProgreess?.Invoke(0.3f);
+            onProgress?.Invoke(0.3f);
+            onProgressTip?.Invoke("Loading resources");
 
-            OnprogressTip?.Invoke("加载资源中");
-
-            //加载热更新程序集
+            // Load hot assemblies
             await Assemblys.LoadAssemblys();
-            OnProgreess?.Invoke(0.4f);
+            onProgress?.Invoke(0.4f);
 
-            //注册事件总线
+            // Register events
             EventBus.RegisterEvents();
 
-            //调度特性处理系统
+            // Collect and register attribute systems
             Attributes.Collector.CollectBaseAttributesParallel();
             Attributes.Attributes.RegisterAttributeSystems();
 
-            //初始化系统属性
+            // Register components and serializers
             ComponentRegistryExtensions.RegisterAllComponents();
             ComponentSerializer.RegisterAllSerializers();
 
-            //创建同步组件序列化器
+            // Net init (set local ClientId and start session)
+            try
+            {
+                // Read local ClientId via env ARCH_CLIENT_ID; default 1
+                int clientId = 1;
+                var envId = Environment.GetEnvironmentVariable("ARCH_CLIENT_ID");
+                if (!string.IsNullOrEmpty(envId) && int.TryParse(envId, out var parsed)) clientId = parsed;
+                OwnershipService.MyClientId = clientId;
 
-            //初始化网络系统
+                // Pick endpoint: prefer NetworkConfig.DefaultEndpoint; fallback loopback
+                var cfg = Arch.Net.NetworkSettings.Config;
+                var endpoint = (cfg != null && !string.IsNullOrEmpty(cfg.DefaultEndpoint))
+                    ? cfg.DefaultEndpoint
+                    : "loopback://local";
 
-            //初始化渲染系统
+                // Seed NetworkRuntime to trigger NetworkAwakeSystem -> NetworkSingleton.EnsureInitialized
+                SingletonComponent.Set(new NetworkRuntime { Endpoint = endpoint });
+                ArchLog.LogInfo($"[NetInit] ClientId={clientId} Endpoint={endpoint}");
+            }
+            catch (Exception ex)
+            {
+                ArchLog.LogWarning($"[NetInit] Init failed: {ex.Message}");
+            }
 
-            //注册所有被标注[System]的系统
+            // Register [System] systems
             ArchSystems.RegisterArchSystems();
-            OnProgreess?.Invoke(0.8f);
-            OnprogressTip?.Invoke("注册系统");
+            onProgress?.Invoke(0.8f);
+            onProgressTip?.Invoke("Register systems");
 
-            //启动系统工作流
+            // Start systems
             ArchSystems.Instance.Start();
             ArchSystems.Instance.SubcribeEntityStart();
             ArchSystems.Instance.SubcribeEntityDestroy();
             ArchSystems.ApplyToPlayerLoop();
 
 #if UNITY_EDITOR
-            EditorApplication.playModeStateChanged +=
-                (state) =>
+            EditorApplication.playModeStateChanged += state =>
+            {
+                if (state == PlayModeStateChange.ExitingPlayMode)
                 {
-                    if (state == PlayModeStateChange.ExitingPlayMode)
-                    {
-                        ArchSystems.ResetPlayerLoop();
-                        ArchSystems.Instance.Destroy();
-                    }
-                };
+                    ArchSystems.ResetPlayerLoop();
+                    ArchSystems.Instance.Destroy();
+                }
+            };
 #else
-			Application.quitting += () =>
-			{
-				ArchSystems.Instance.Destroy();
-			};
+            Application.quitting += () =>
+            {
+                ArchSystems.Instance.Destroy();
+            };
 #endif
-            OnProgreess?.Invoke(1f);
-            OnprogressTip?.Invoke("加载完成");
+            onProgress?.Invoke(1f);
+            onProgressTip?.Invoke("Startup complete");
         }
 
-        private static void Loading(Action<float> OnProgreess, Action<string> OnprogressTip)
+        private static void Loading(Action<float> onProgress, Action<string> onProgressTip)
         {
         }
     }
