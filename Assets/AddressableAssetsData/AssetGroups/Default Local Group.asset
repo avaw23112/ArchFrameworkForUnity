@@ -15,20 +15,8 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_Data:
     m_SerializedData: []
-  m_GUID: ed0d8c4aba941d0488ae5244c41ae560
-  m_SerializeEntries:
-  - m_GUID: 937ca42545a320e4e9939d0012f20073
-    m_Address: Assets/HybridCLRGenerate/HotFixDll
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Hotfixdll
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dc55a3544390e8949aa2c55c6a09a340
-    m_Address: Assets/HybridCLRGenerate/MetaDataDll
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - AOTdll
-    FlaggedDuringContentUpdateRestriction: 0
+  m_GUID: e5497528c8cad5e4e8b06d47812e71c6
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: eebe3d64c371f38498a121f12f5fdf53, type: 2}
   m_SchemaSet:

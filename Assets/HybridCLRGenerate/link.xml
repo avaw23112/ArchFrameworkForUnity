@@ -17,8 +17,8 @@
     <type fullname="Arch.UniqueAttribute" preserve="all" />
     <type fullname="Arch.UniqueComponentSystem`1" preserve="all" />
     <type fullname="Arch.UpdateSystem`1" preserve="all" />
-    <type fullname="Assets.Scripts.GameStartEvent" preserve="all" />
     <type fullname="Events.Event`1" preserve="all" />
+    <type fullname="Events.GameStartEvent" preserve="all" />
   </assembly>
   <assembly fullname="Arch">
     <type fullname="Arch.Core.Entity" preserve="all" />
@@ -34,8 +34,6 @@
     <type fullname="MemoryPack.MemoryPackFormatterProvider" preserve="all" />
     <type fullname="MemoryPack.MemoryPackFormatter`1" preserve="all" />
     <type fullname="MemoryPack.MemoryPackReader" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackSerializer" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackSerializerOptions" preserve="all" />
     <type fullname="MemoryPack.MemoryPackWriter`1" preserve="all" />
     <type fullname="MemoryPack.MemoryPackableAttribute" preserve="all" />
   </assembly>
@@ -57,7 +55,6 @@
     <type fullname="System.Int32" preserve="all" />
     <type fullname="System.NotImplementedException" preserve="all" />
     <type fullname="System.Object" preserve="all" />
-    <type fullname="System.ReadOnlySpan`1" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.CompilationRelaxationsAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.CompilerGeneratedAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute" preserve="all" />
