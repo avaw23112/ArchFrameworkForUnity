@@ -10,25 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Built In Data
+  m_Name: Code
   m_EditorClassIdentifier: 
-  m_GroupName: Built In Data
+  m_GroupName: Code
   m_Data:
     m_SerializedData: []
-  m_GUID: 7acba73e1eb4c6d4899094a3e441695f
+  m_GUID: eb8003fec44f51b43b826bbdf7c3ee49
   m_SerializeEntries:
-  - m_GUID: EditorSceneList
-    m_Address: EditorSceneList
-    m_ReadOnly: 1
-    m_SerializedLabels: []
+  - m_GUID: 937ca42545a320e4e9939d0012f20073
+    m_Address: Assets/HybridCLRGenerate/HotFixDll
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Hotfixdll
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: Resources
-    m_Address: Resources
-    m_ReadOnly: 1
-    m_SerializedLabels: []
+  - m_GUID: dc55a3544390e8949aa2c55c6a09a340
+    m_Address: Assets/HybridCLRGenerate/MetaDataDll
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AOTdll
     FlaggedDuringContentUpdateRestriction: 0
-  m_ReadOnly: 1
+  m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: d1162fa184a474c44b869d0aa7b7c80c, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 08cbd46ca41945140b8c0ce8e00e1658, type: 2}
+    - {fileID: 11400000, guid: 9551d57c16eed6840a1fa09da4ac668e, type: 2}
+    - {fileID: 11400000, guid: a8da1462ec07f97459f76997e1fe71f4, type: 2}

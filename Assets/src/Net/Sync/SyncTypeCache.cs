@@ -12,9 +12,9 @@ namespace Arch.Net
     /// - Stores: Type, typeId, archId, HasSyncDelta, and a strong-typed send delegate (BuildAndSend).
     /// - Built on first use; call Rebuild() if the component set changes.
     /// </summary>
-    internal static class SyncTypeCache
+    public static class SyncTypeCache
     {
-        internal sealed class Entry
+        public sealed class Entry
         {
             public Type Type;
             public int TypeId;
