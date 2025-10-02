@@ -77,14 +77,10 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-*.meta
-*.meta
-*.meta
 *.xml
 
 /bin
 /HybridCLRData
-*.asset
 Packages/packages-lock.json
 Packages/packages-lock.json
 /Packages
