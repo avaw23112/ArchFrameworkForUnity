@@ -8,6 +8,7 @@ namespace Arch
 	public class NamedWorld : Singleton<NamedWorld>
 	{
 		private static readonly Dictionary<string, World> m_dicWorlds = new Dictionary<string, World>();
+		private static readonly Dictionary<uint, World> m_dicWorldIds = new Dictionary<uint, World>();
 		private World m_defaultWorld;
 
 		public IEnumerable<World> NamedWorlds => m_dicWorlds.Values;
@@ -44,6 +45,23 @@ namespace Arch
 				return;
 			}
 			m_dicWorlds.Add(worldName, World.Create());
+		}
+
+		/// <summary>
+		/// Map a numeric world id to a world instance for networking.
+		/// </summary>
+		public static void MapWorldId(uint id, World world)
+		{
+			if (world == null) throw new ArgumentNullException(nameof(world));
+			m_dicWorldIds[id] = world;
+		}
+
+		/// <summary>
+		/// Try get world by mapped id.
+		/// </summary>
+		public static bool TryGetById(uint id, out World world)
+		{
+			return m_dicWorldIds.TryGetValue(id, out world);
 		}
 
 		public static void DisposeNamed(string worldName)

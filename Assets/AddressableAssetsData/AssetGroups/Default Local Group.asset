@@ -9,17 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Script: {fileID: 0}
   m_Name: Default Local Group
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Unity.Addressables.Editor:UnityEditor.AddressableAssets.Settings:AddressableAssetGroup
   m_GroupName: Default Local Group
   m_Data:
     m_SerializedData: []
-  m_GUID: 70c7846d0a41bf74eb54755807e328ad
-  m_SerializeEntries: []
+  m_GUID: ed0d8c4aba941d0488ae5244c41ae560
+  m_SerializeEntries:
+  - m_GUID: 937ca42545a320e4e9939d0012f20073
+    m_Address: Assets/HybridCLRGenerate/HotFixDll
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Hotfixdll
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc55a3544390e8949aa2c55c6a09a340
+    m_Address: Assets/HybridCLRGenerate/MetaDataDll
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AOTdll
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: eebe3d64c371f38498a121f12f5fdf53, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 96b3392ffd45b1949a43ad74524b0dd2, type: 2}
     - {fileID: 11400000, guid: 8535513b1be3068458fa998c1362ed1b, type: 2}
+    - {fileID: 11400000, guid: 96b3392ffd45b1949a43ad74524b0dd2, type: 2}

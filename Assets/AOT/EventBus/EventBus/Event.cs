@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 
 namespace Events
 {
@@ -21,4 +20,10 @@ namespace Events
 		public abstract void Run(T value);
 	}
 
+	/// <summary>
+	/// AOT事件
+	/// </summary>
+	public struct GameStartEvent
+	{
+	}
 }

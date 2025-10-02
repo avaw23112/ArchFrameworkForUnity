@@ -86,3 +86,11 @@ crashlytics-build.properties
 /HybridCLRData
 *.asset
 Packages/packages-lock.json
+Packages/packages-lock.json
+/Packages
+Assets/HotFix/Model/MODEL_HOFIX.asmdef
+Assets/HotFix/Logic/LOGIC_HOTFIX.asmdef
+Assets/HotFix/Model/MODEL_HOFIX.asmdef
+Assets/HotFix/Logic/LOGIC_HOTFIX.asmdef
+Assets/HotFix/Model/Data.asmdef
+Assets/HotFix/Logic/Logic.asmdef

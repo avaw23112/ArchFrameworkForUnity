@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3399833989825478732
+--- !u!114 &-5225498921648447590
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5d17a21594effb4e9591490b009e7aa, type: 3}
+  m_Script: {fileID: 0}
   m_Name: BundledAssetGroupSchema
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Unity.Addressables.Editor:UnityEditor.AddressableAssets.Settings.GroupSchemas:BundledAssetGroupSchema
   m_Group: {fileID: 0}
   m_InternalBundleIdMode: 1
   m_Compression: 1
@@ -52,15 +52,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a3c5d64ac83548c09dd1678b9f6f1cd, type: 3}
+  m_Script: {fileID: 0}
   m_Name: Packed Assets
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Unity.Addressables.Editor:UnityEditor.AddressableAssets.Settings:AddressableAssetGroupTemplate
   m_SchemaObjects:
-  - {fileID: -3399833989825478732}
-  - {fileID: 8636983398811905220}
+  - {fileID: -5225498921648447590}
+  - {fileID: 1199621487409803633}
   m_Description: Pack assets into asset bundles.
   m_Settings: {fileID: 11400000, guid: eebe3d64c371f38498a121f12f5fdf53, type: 2}
---- !u!114 &8636983398811905220
+--- !u!114 &1199621487409803633
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}

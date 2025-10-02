@@ -112,11 +112,7 @@ namespace Arch
                 }
             } while (changed);
 
-            foreach (var node in nodes.Values)
-            {
-                if (node.MinOrder > node.MaxOrder)
-                    throw new InvalidOperationException($"不可解依赖冲突：{node.System.GetType().Name}");
-            }
+
         }
 
         private class ObjectNode

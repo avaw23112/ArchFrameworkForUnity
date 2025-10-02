@@ -1,0 +1,18 @@
+{
+    "name": "Protocol",
+    "rootNamespace": "",
+    "references": [
+        "GUID:756335c0388f7114790e504ed368ae1d",
+        "GUID:7dbe63cb0c2603148a0db969c4725055",
+        "GUID:8b7b001d1f83c614baca4c69a16a6770"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 namespace Attributes
 {
 	/// <summary>
-	/// ¸ºÔðÊÕ¼¯ËùÓÐBaseAttribute
+	/// ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½BaseAttribute
 	/// </summary>
-	internal static class Collector
+	public static class Collector
 	{
 		private static readonly object _attributeLock = new object();
 
-		#region ¸¨Öú·½·¨
+		#region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 		/// <summary>
-		/// ¼ì²é±ê¼ÇÀàÉÏÊÇ·ñ´øÓÐForgetÊôÐÔ
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Forgetï¿½ï¿½ï¿½ï¿½
 		/// </summary>
 		public static bool isForget(Type derectType)
 		{
@@ -31,7 +31,7 @@ namespace Attributes
 		}
 
 		/// <summary>
-		/// ¼ì²é±ê¼ÇÀàÉÏÊÇ·ñ´øÓÐÆäËûCollectableÊôÐÔ
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Collectableï¿½ï¿½ï¿½ï¿½
 		/// </summary>
 		public static bool isCollectable<T>(Type derectType)
 			where T : Attribute
@@ -49,7 +49,7 @@ namespace Attributes
 					continue;
 				}
 
-				//¹ýÂË·ÇTÀàÐÍµÄÆäËûCollectableÊôÐÔ
+				//ï¿½ï¿½ï¿½Ë·ï¿½Tï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½Collectableï¿½ï¿½ï¿½ï¿½
 				if (baseCollectableAttribute.GetType() == typeof(T))
 				{
 					continue;
@@ -63,7 +63,7 @@ namespace Attributes
 		}
 
 		/// <summary>
-		/// ¼ì²é±ê¼ÇÀàÉÏÊÇ·ñ´øÓÐÆäËûCollectableÊôÐÔ
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Collectableï¿½ï¿½ï¿½ï¿½
 		/// </summary>
 		private static bool isCollectable<T1, T2>(Type derectType)
 			where T1 : Attribute
@@ -99,7 +99,7 @@ namespace Attributes
 		}
 
 		/// <summary>
-		/// ¼ì²é±ê¼ÇÀàÉÏÊÇ·ñ´øÓÐÆäËûCollectableÊôÐÔ
+		/// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Collectableï¿½ï¿½ï¿½ï¿½
 		/// </summary>
 		private static bool isCollectable<T1, T2, T3>(Type derectType)
 			where T1 : Attribute
@@ -140,7 +140,7 @@ namespace Attributes
 		}
 
 
-		#endregion ¸¨Öú·½·¨
+		#endregion ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 		public static void CollectTypes<T>(List<Type> listTypes) where T : class
 		{
@@ -149,7 +149,7 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(listTypes));
 			}
 
-			// ÊÕ¼¯ËùÓÐÊôÐÔ±ê¼ÇÁËµÄÀàÐÍ
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½
 			foreach (var assembly in Assemblys.AllAssemblies)
 			{
 				Type[] types = assembly.GetTypes();
@@ -171,10 +171,10 @@ namespace Attributes
 		public static void CollectBaseAttributes()
 		{
 
-			// ÊÕ¼¯ËùÓÐBaseAttribute
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½BaseAttribute
 			if (Attributes.HasBaseMapping()) return;
 
-			// ÊÕ¼¯ËùÓÐÊôÐÔ±ê¼ÇÁËµÄÀàÐÍ
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½
 			foreach (var assembly in Assemblys.AllAssemblies)
 			{
 				Type[] types = assembly.GetTypes();
@@ -237,7 +237,7 @@ namespace Attributes
 			});
 		}
 
-		// ²¢ÐÐ°æ±¾ CollectTypes<T>
+		// ï¿½ï¿½ï¿½Ð°æ±¾ CollectTypes<T>
 		public static void CollectTypesParallel<T>(List<Type> listTypes) where T : class
 		{
 			if (listTypes == null) throw new ArgumentNullException(nameof(listTypes));
@@ -260,7 +260,7 @@ namespace Attributes
 				});
 			});
 
-			// È¥ÖØ²¢ºÏ²¢µ½½á¹ûÁÐ±í
+			// È¥ï¿½Ø²ï¿½ï¿½Ï²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 			var uniqueTypes = concurrentTypes.Distinct().ToList();
 			listTypes.AddRange(uniqueTypes);
 		}
@@ -274,11 +274,11 @@ namespace Attributes
 
 
 
-			// ÊÕ¼¯ËùÓÐÄ¿±êÊôÐÔ³ÉÔ±
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½Ô±
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T), out dictAttributes))
 			{
-				//ForgetµôµÄ³ÉÔ±²»½øÐÐ´¦Àí
+				//Forgetï¿½ï¿½ï¿½Ä³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
 				if (dictAttributes == null)
 				{
 					return;
@@ -294,7 +294,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.LogDebug("ÇëÓÃMultiCollectAttributes·½·¨ÊÕ¼¯¶àÖØÊôÐÔ");
+						Arch.Tools.ArchLog.LogDebug("ï¿½ï¿½ï¿½ï¿½MultiCollectAttributesï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -321,11 +321,11 @@ namespace Attributes
 			}
 
 			CollectBaseAttributesParallel();
-			// ÊÕ¼¯ËùÓÐÄ¿±êÊôÐÔ³ÉÔ±
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½Ô±
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
 			{
-				//ForgetµôµÄ³ÉÔ±²»½øÐÐ´¦Àí
+				//Forgetï¿½ï¿½ï¿½Ä³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
 				if (dictAttributes == null)
 				{
 					return;
@@ -348,7 +348,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.LogDebug("ÇëÓÃMultiCollectAttributes·½·¨ÊÕ¼¯¶àÖØÊôÐÔ");
+						Arch.Tools.ArchLog.LogDebug("ï¿½ï¿½ï¿½ï¿½MultiCollectAttributesï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -362,7 +362,7 @@ namespace Attributes
 					}
 
 					object[] attributeTypes = pDerectType.GetCustomAttributes(typeof(T2), false);
-					//Èç¹ûÃ»¹ÒÔØT2ÊôÐÔ£¬Ö±½ÓÌø¹ý
+					//ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½T2ï¿½ï¿½ï¿½Ô£ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					if (attributeTypes.Length <= 0)
 					{
 						continue;
@@ -372,7 +372,7 @@ namespace Attributes
 						T2 attribute2T = attribute2 as T2;
 						if (attribute2T != null)
 						{
-							//ÊÕ¼¯µ½Ò»×é¾ÍÖ±½ÓÌô×ß
+							//ï¿½Õ¼ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 							listAttributes.Add((attribute, attribute2T, pDerectType));
 							continue;
 						}
@@ -390,11 +390,11 @@ namespace Attributes
 			{
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
-			// ÊÕ¼¯ËùÓÐÄ¿±êÊôÐÔ³ÉÔ±
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½Ô±
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
 			{
-				//ForgetµôµÄ³ÉÔ±²»½øÐÐ´¦Àí
+				//Forgetï¿½ï¿½ï¿½Ä³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
 				if (dictAttributes == null)
 				{
 					return;
@@ -417,7 +417,7 @@ namespace Attributes
 					}
 					if (item.Value.Count > 1)
 					{
-						Arch.Tools.ArchLog.LogDebug("ÇëÓÃMultiCollectAttributes·½·¨ÊÕ¼¯¶àÖØÊôÐÔ");
+						Arch.Tools.ArchLog.LogDebug("ï¿½ï¿½ï¿½ï¿½MultiCollectAttributesï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 						continue;
 					}
 					if (item.Value.Count <= 0)
@@ -432,7 +432,7 @@ namespace Attributes
 
 					object[] attributeTypes_T2 = pDerectType.GetCustomAttributes(typeof(T2), false);
 					object[] attributeTypes_T3 = pDerectType.GetCustomAttributes(typeof(T3), false);
-					//Èç¹ûÃ»¹ÒÔØT2ÊôÐÔ£¬Ö±½ÓÌø¹ý
+					//ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½T2ï¿½ï¿½ï¿½Ô£ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					if (attributeTypes_T2.Length <= 0 || attributeTypes_T3.Length <= 0)
 					{
 						continue;
@@ -446,8 +446,8 @@ namespace Attributes
 
 					if (attribute2T == null || attribute3T == null)
 					{
-						ArchLog.LogError("²¶»ñ´íÎó£¡²¶»ñµ½·ÇÓÐÐ§ÊôÐÔ");
-						throw new Exception("²¶»ñ´íÎó£¡²¶»ñµ½·ÇÓÐÐ§ÊôÐÔ£¡");
+						ArchLog.LogError("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¡²ï¿½ï¿½ñµ½·ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½");
+						throw new Exception("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¡²ï¿½ï¿½ñµ½·ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Ô£ï¿½");
 					}
 					listAttributes.Add((attribute, attribute2T, attribute3T, pDerectType));
 				}
@@ -462,11 +462,11 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			// ÊÕ¼¯ËùÓÐÄ¿±êÊôÐÔ³ÉÔ±
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½Ô±
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
 			{
-				//ForgetµôµÄ³ÉÔ±²»½øÐÐ´¦Àí
+				//Forgetï¿½ï¿½ï¿½Ä³ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½
 				if (dictAttributes == null)
 				{
 					return;
@@ -501,13 +501,13 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			// ÊÕ¼¯ËùÓÐÄ¿±êÊôÐÔ³ÉÔ±
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½Ô±
 			Dictionary<Type, List<object>> dictAttributes_T1;
 			Dictionary<Type, List<object>> dictAttributes_T2;
 			Attributes.TryGetDecrectType(typeof(T1), out dictAttributes_T1);
 			Attributes.TryGetDecrectType(typeof(T2), out dictAttributes_T2);
 
-			//Èç¹ûÔÚÊÕ¼¯Ö®Ç°¾ÍÒÑ¾­±»Forgetµô£¬¾Í»áµ¼ÖÂÈ¡¿Õ£¬Ö±½Ó·µ»Ø
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½Ö®Ç°ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Forgetï¿½ï¿½ï¿½ï¿½ï¿½Í»áµ¼ï¿½ï¿½È¡ï¿½Õ£ï¿½Ö±ï¿½Ó·ï¿½ï¿½ï¿½
 			if (dictAttributes_T1 == null || dictAttributes_T2 == null)
 			{
 				return;
@@ -547,7 +547,7 @@ namespace Attributes
 				throw new ArgumentNullException(nameof(dictAttributesMulti));
 			}
 
-			// ÊÕ¼¯ËùÓÐÄ¿±êÊôÐÔ³ÉÔ±
+			// ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ô³ï¿½Ô±
 			Dictionary<Type, List<object>> dictAttributes_T1;
 			Dictionary<Type, List<object>> dictAttributes_T2;
 			Dictionary<Type, List<object>> dictAttributes_T3;
@@ -555,7 +555,7 @@ namespace Attributes
 			Attributes.TryGetDecrectType(typeof(T2), out dictAttributes_T2);
 			Attributes.TryGetDecrectType(typeof(T3), out dictAttributes_T3);
 
-			//Èç¹ûÔÚÊÕ¼¯Ö®Ç°¾ÍÒÑ¾­±»Forgetµô£¬¾Í»áµ¼ÖÂÈ¡¿Õ£¬Ö±½Ó·µ»Ø
+			//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½Ö®Ç°ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Forgetï¿½ï¿½ï¿½ï¿½ï¿½Í»áµ¼ï¿½ï¿½È¡ï¿½Õ£ï¿½Ö±ï¿½Ó·ï¿½ï¿½ï¿½
 			if (dictAttributes_T1 == null || dictAttributes_T2 == null || dictAttributes_T3 == null)
 			{
 				return;

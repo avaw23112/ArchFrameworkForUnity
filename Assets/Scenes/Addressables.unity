@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 1006158129}
   - component: {fileID: 1006158130}
   - component: {fileID: 1006158131}
+  - component: {fileID: 1006158132}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -304,6 +305,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AssetLabel:
     m_LabelString: UI
+--- !u!114 &1006158132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006158126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97f20c74517552d428a03128312f7e92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_szEndpoint: loopback://local
 --- !u!1 &1666876638
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,9 @@
-﻿// HotReloader.cs (完整更新版)
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using Arch.Compilation;
 using Arch.Tools;
-using Assets.Scripts;
 using Attributes;
 using Cysharp.Threading.Tasks;
+using Events;
 using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
@@ -266,7 +265,7 @@ namespace Arch.Editor
 				// 加载DLL字节流（避免文件占用）
 				byte[] dllBytes = File.ReadAllBytes(hotfixDllPath);
 				Assembly hotfixAssembly = Assembly.Load(dllBytes);
-				await GameRoot.HotReload(hotfixAssembly);
+				await HotReload(hotfixAssembly);
 				ArchLog.LogInfo("热重载执行完成！");
 			}
 			catch (Exception ex)
@@ -278,6 +277,28 @@ namespace Arch.Editor
 			{
 				isReloading = false;
 			}
+		}
+
+		public static async UniTask HotReload(Assembly hotReload)
+		{
+			await UniTask.SwitchToMainThread();
+			Assemblys.LoadHotAssembly(hotReload);
+			//注册事件总线
+			EventBus.RegisterEvents();
+
+			//调度特性处理系统
+			Attributes.Attributes.RemoveMapping();
+			Attributes.Collector.CollectBaseAttributes();
+			Attributes.Attributes.RegisterHotReloadableAttributeSystems();
+
+			//注册所有被标注[System]的系统
+			ArchSystems.RegisterArchSystems();
+
+			//重新订阅ReactiveSystem的事件
+			ArchSystems.Instance.SubcribeEntityStart();
+			ArchSystems.Instance.SubcribeEntityDestroy();
+
+			ArchLog.LogInfo("热重载执行完成！");
 		}
 		#endregion
 	}
