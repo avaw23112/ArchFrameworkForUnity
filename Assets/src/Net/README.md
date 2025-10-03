@@ -19,12 +19,14 @@
   - 从 `NetworkSettings.Config.DefaultEndpoint` 读取 Endpoint，回退 `loopback://local`。
   - 写入 `SingletonComponent.Set(new NetworkRuntime { Endpoint = endpoint })` 触发网络系统初始化。
 
-- 常用配置（Assets/Net/Config/NetworkConfig.cs）
+- 常用配置（`Assets/src/Net/Core/Config/NetworkConfig.cs`）
   - `DefaultEndpoint`：`loopback://local` 或 `lite://ip:port`。
   - `UseChunkScan`：是否使用“块级 memcpy 扫描”（true）或“逐实体扫描”（false）。
   - `EntitiesPerPacket`、`PacketsPerFrame`：发送节流参数。
   - `EnableCompression`、`CompressThresholdBytes`：大包压缩阈值。
   - `EnableSyncRelay` 及 TTL/去重窗口：是否启用同步中继与相关参数。
+- 自定义初始化流水线
+  - 调用 `NetworkSingleton.ConfigureBootstrapper(...)` 替换默认 `NetworkBootstrapper`，可插入自定义的 `INetworkInitializationStep`，例如扩展路由或在连接前发送额外的握手数据。
 
 - 创建网络实体（推荐入口）
   - NetworkEntityFactory（集中创建与元数据补全）
@@ -58,12 +60,17 @@
 ## 二、技术文档
 
 ### 1. 模块结构总览
-- 传输（Transport）：`MockLoopbackTransport`（进程内回环）、`LiteNetLibTransport`（UDP）。
-- 会话（Session）：`Session` 负责事件、数据入队、RPC 注册与分发。
-- 协议（Protocol）：
+- 分层目录
+  - **Core**（核心域层）：组件/值类型定义（Components、Unit、Ownership）、协议/配置（Protocol、Config、Compression）、会话与统计（Session、Stats）、同步与序列化（Sync、Serialization）、常用扩展（Extensions）。
+  - **Application**（流程层）：启动流水线（Bootstrap）、命令队列（CommandQueue）、路由（Routing）、系统（Systems）、`NetworkSingleton` 等运行时组织代码。
+  - **Infrastructure**（基础设施层）：具体传输实现与实体工厂（Transport、Factory）。
+- 传输（Infrastructure/Transport）：`MockLoopbackTransport`（进程内回环）、`LiteNetLibTransport`（UDP）。
+- 会话（Core/Session）：`Session` 负责事件、数据入队、RPC 注册与分发。
+- 协议（Core/Protocol）：
   - `PacketHeader`（统一头部，包含版本/类型/定位/标志位等）。
   - `PacketBuilder`（构包）：支持“段数组重载”与“回调重载（FillDelegate）”。
-- 同步（Sync）：
+- 启动（Application/Bootstrap）：`NetworkBootstrapper` + 多个 Step（会话生命周期、路由、RPC、Manifest、World 初始化）构成流水线化初始化流程，便于增删扩展点。
+- 同步（Core/Sync）：
   - 发送：逐实体 `SyncScanSystem`（BuildAndSend）与块级 `SyncChunkScanSystem`（回调构包 + memcpy/delta）。
   - 接收：`SyncApplySystem` 解析段并写回世界，优先 Chunk 快路径、失败回退强类型应用器。
   - Delta：`SenderDeltaCache`/`ReceiverDeltaCache`（掩码 + 差异字节）。
@@ -82,6 +89,7 @@
 - 委托注册表：`SyncTypeCache` 一次性收集 `[NetworkSync]` 值类型，绑定 `BuildAndSendGeneric<T>`。
 - 回调构包：`FillDelegate(int index, Span<byte> dst)` 直接写 payload，避免“段数组中间体”。
 - 工厂/Builder：`NetworkEntityFactory`、`UnitFactory`、`UnitBuilder` 集中构建实体，统一扩展点。
+- 启动流水线：`NetworkBootstrapper` 串联 `INetworkInitializationStep`，每一步专注于路由、RPC、Manifest 等职责，便于调整顺序或自定义实现。
 
 ### 4. 设计优劣势
 - 优势：
