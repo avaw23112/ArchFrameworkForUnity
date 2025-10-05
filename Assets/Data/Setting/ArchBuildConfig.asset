@@ -13,29 +13,46 @@ MonoBehaviour:
   m_Name: ArchBuildConfig
   m_EditorClassIdentifier: 
   compilePipeLineSetting:
-    preBuildProcessors: []
+    preBuildProcessors:
+    - "\u70ED\u66F4\u65B0\u73AF\u5883\u9A8C\u8BC1\u5668"
+    - "\u6E05\u7406\u65E7\u70ED\u66F4\u65B0DLL"
     postProcessors:
-    - "\u6E05\u7406\u65E7\u70ED\u66F4\u65B0DLL"
+    - "DLL \u5BFC\u51FA\u5668"
     globalPostProcessors:
-    - "\u6E05\u7406\u65E7\u70ED\u66F4\u65B0DLL"
-    postExportDir: Assets/BuildOutput
-    postExportSuffix: hotfix
+    - "\u8865\u5145\u5143\u6570\u636Edll\u5BFC\u51FA\u5668"
+    - "Addressables\u81EA\u52A8\u6784\u5EFA\u6D41\u7A0B"
+    postExportDir: Assets/HybridCLRGenerate/HotFixDll
+    postExportSuffix: .bytes
   buildSetting:
-    MetaDllPath: 
-    HotFixDllPath: 
+    MetaDllPath: Assets/HybridCLRGenerate/MetaDataDll
+    HotFixDllPath: Assets/HybridCLRGenerate/HotFixDll
     buildMode: 0
     hotReloadAssemblies:
-    - Hot
+    - Code.Logic
     isolated:
-    - assemblyName: Hot
-      outputDir: HotfixOutput
+    - assemblyName: Code.Model
+      outputDir: D:/unity project/ArchFrameworkForUnity/ArchFramework/Library/ScriptAssemblies
       sourceDirs:
-      - 
-      additionalDefines:
-      - 
-      additionalReferences:
-      - 
-      useEngineModules: 0
+      - D:/unity project/ArchFrameworkForUnity/ArchFramework/Codes/Model
+      additionalDefines: []
+      additionalReferences: []
+      useEngineModules: 1
+      editorAssembly: 0
+    - assemblyName: Code.Logic
+      outputDir: D:/unity project/ArchFrameworkForUnity/ArchFramework/Library/ScriptAssemblies
+      sourceDirs:
+      - D:/unity project/ArchFrameworkForUnity/ArchFramework/Codes/Logic
+      additionalDefines: []
+      additionalReferences: []
+      useEngineModules: 1
+      editorAssembly: 0
+    - assemblyName: Code.Protocol
+      outputDir: D:/unity project/ArchFrameworkForUnity/ArchFramework/Library/ScriptAssemblies
+      sourceDirs:
+      - D:/unity project/ArchFrameworkForUnity/Common/Protocol
+      additionalDefines: []
+      additionalReferences: []
+      useEngineModules: 1
       editorAssembly: 0
     fullLink:
       assemblyName: Game.FullLink

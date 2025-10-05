@@ -16,6 +16,8 @@ namespace Arch.Runtime
 			public static string SettingPath = "Assets/Data/Setting";
 			public static string ResourseNameMapSettingPath = $"{SettingPath}/ResourceNameMap.asset";
 			public static string ArchSettingPath = $"{SettingPath}/ArchBuildConfig.asset";
+
+			public static string AOT = "ArchFramework.Runtime";
 		}
 
 		// Entry point: initialize after the first scene is loaded
@@ -57,13 +59,13 @@ namespace Arch.Runtime
 			// Register events
 			EventBus.RegisterEvents();
 
-			// Collect and register attribute systems
-			Attributes.Collector.CollectBaseAttributesParallel();
-			Attributes.Attributes.RegisterAttributeSystems();
-
 			// Register components and serializers
 			ComponentRegistryExtensions.RegisterAllComponents();
 			ComponentSerializer.RegisterAllSerializers();
+
+			// Collect and register attribute systems
+			Attributes.Collector.CollectBaseAttributesParallel();
+			Attributes.Attributes.RegisterAttributeSystems();
 
 			// Net init (set local ClientId and start session)
 

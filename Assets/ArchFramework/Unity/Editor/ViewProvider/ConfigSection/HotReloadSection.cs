@@ -22,7 +22,7 @@ namespace Arch.Compilation.Editor
 			if (cfg == null) return;
 
 			// 🔁 同步清理已删除的 Isolated 条目
-			SyncRemovedIsolatedEntries(cfg);
+			SyncRemovedIsolatedEntries(cfg, so);
 
 			// ✅ 初始化可拖拽列表
 			if (!reorderInit)
@@ -126,11 +126,14 @@ namespace Arch.Compilation.Editor
 		/// <summary>
 		/// 检测并同步清除不存在的 Isolated 条目
 		/// </summary>
-		private void SyncRemovedIsolatedEntries(ArchBuildConfig cfg)
+		/// <summary>
+		/// 检测并清除 HotReloadAssemblies 中已被删除的 Isolated 条目（只删不增）
+		/// </summary>
+		private void SyncRemovedIsolatedEntries(ArchBuildConfig cfg, SerializedObject so)
 		{
-			if (cfg == null) return;
+			if (cfg == null || so == null) return;
 
-			// 当前有效的独立程序集名称
+			// 当前有效的 Isolated 程序集名称
 			var validNames = cfg.buildSetting.isolated?
 				.Select(i => i.assemblyName)
 				.Where(s => !string.IsNullOrEmpty(s))
@@ -138,13 +141,18 @@ namespace Arch.Compilation.Editor
 
 			if (cfg.buildSetting.hotReloadAssemblies == null) return;
 
-			int before = cfg.buildSetting.hotReloadAssemblies.Count;
+			// 删除 HotReloadAssemblies 中所有无效项
+			int beforeCount = cfg.buildSetting.hotReloadAssemblies.Count;
 			cfg.buildSetting.hotReloadAssemblies.RemoveAll(name => !validNames.Contains(name));
-			if (cfg.buildSetting.hotReloadAssemblies.Count != before)
+
+			if (cfg.buildSetting.hotReloadAssemblies.Count != beforeCount)
 			{
+				// 记录修改并刷新 UI
+				Undo.RecordObject(cfg, "Sync HotReloadAssemblies (Removed Missing)");
 				EditorUtility.SetDirty(cfg);
-				if (reorderableList != null)
-					reorderableList.serializedProperty.serializedObject.Update();
+				// 🔁 重新构建 ReorderableList 确保显示同步
+				InitReorderableList(cfg, so);
+				Debug.Log($"[HotReloadSection] 已清除 {beforeCount - cfg.buildSetting.hotReloadAssemblies.Count} 个失效热重载条目。");
 			}
 		}
 	}

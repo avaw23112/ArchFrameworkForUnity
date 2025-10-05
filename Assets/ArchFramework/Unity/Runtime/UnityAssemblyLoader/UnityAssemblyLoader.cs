@@ -1,6 +1,7 @@
 ﻿#if UNITY_2020_1_OR_NEWER
 
 using Arch.Resource;
+using Arch.Runtime;
 using HybridCLR;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,11 @@ namespace Arch.Tools
 					var err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(aot.bytes, HomologousImageMode.SuperSet);
 					ArchLog.LogInfo($"Loaded AOT metadata: {aot.name}, result: {err}");
 				}
+				Assembly assembly = Assembly.Load(GameRoot.Setting.AOT);
+				if (assembly != null)
+				{
+					result.Add(assembly);
+				}
 				foreach (var dll in hotfixDlls)
 				{
 					var asm = Assembly.Load(dll.bytes);
@@ -61,6 +67,12 @@ namespace Arch.Tools
 				{
 					var err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(aot.bytes, HomologousImageMode.SuperSet);
 					ArchLog.LogInfo($"Loaded AOT metadata: {aot.name}, result: {err}");
+				}
+
+				Assembly assembly = Assembly.Load(GameRoot.Setting.AOT);
+				if (assembly != null)
+				{
+					result.Add(assembly);
 				}
 
 				foreach (var dll in hotfixDlls)

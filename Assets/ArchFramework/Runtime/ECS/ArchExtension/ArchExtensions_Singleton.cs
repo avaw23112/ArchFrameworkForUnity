@@ -16,7 +16,7 @@ namespace Arch
 			{
 				get
 				{
-					if (m_UniqueEntity == null)
+					if (m_UniqueEntity == Core.Entity.Null || !m_UniqueEntity.isVaild())
 					{
 						m_UniqueEntity = Unique.World.Instance.Create();
 					}
@@ -43,9 +43,24 @@ namespace Arch
 
 			public static void TearDown()
 			{
-				if (m_UniqueWorld.IsAlive(Entity.Instance) && Entity.Instance.isVaild())
+				if (Instance.IsAlive(Entity.Instance) && Entity.Instance.isVaild())
 				{
-					m_UniqueWorld.Destroy(Entity.Instance);
+					Instance.Destroy(Entity.Instance);
+				}
+			}
+		}
+
+		public class Component
+		{
+			public static void Set(ComponentType componentType, object component)
+			{
+				if (World.Instance.Has(Entity.Instance, componentType))
+				{
+					Entity.Instance.Set(component);
+				}
+				else
+				{
+					Entity.Instance.Add(component);
 				}
 			}
 		}
@@ -54,7 +69,6 @@ namespace Arch
 		{
 			public static T GetOrAdd()
 			{
-				Core.World self = World.Instance;
 				if (!Entity.Instance.Has<T>())
 				{
 					throw new System.Exception($"Component {typeof(T)} is not singleton component");
@@ -64,7 +78,6 @@ namespace Arch
 
 			public static void Set(T value)
 			{
-				Core.World self = World.Instance;
 				if (Entity.Instance.Has<T>())
 				{
 					Entity.Instance.Set(value);

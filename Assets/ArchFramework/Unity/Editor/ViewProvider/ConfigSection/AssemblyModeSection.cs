@@ -75,14 +75,18 @@ namespace Arch.Compilation.Editor
 				InitReorderableList(so, cfg);
 				reorderInit = true;
 			}
+			var isoProp = so.FindProperty("buildSetting.isolated");
+			if (reorderableList == null || reorderableList.serializedProperty.arraySize != isoProp.arraySize)
+			{
+				InitReorderableList(so, cfg);
+			}
 
 			reorderableList.DoLayoutList();
 		}
 
 		private void InitReorderableList(SerializedObject so, ArchBuildConfig cfg)
 		{
-			reorderableList = new ReorderableList(so, so.FindProperty("isolated"), true, true, false, false);
-
+			reorderableList = new ReorderableList(so, so.FindProperty("buildSetting.isolated"), true, true, false, false);
 			reorderableList.drawHeaderCallback = rect =>
 			{
 				EditorGUI.LabelField(rect, "Isolated Assemblies 顺序");
@@ -90,7 +94,7 @@ namespace Arch.Compilation.Editor
 
 			reorderableList.drawElementCallback = (rect, index, active, focused) =>
 			{
-				var list = so.FindProperty("isolated");
+				var list = so.FindProperty("buildSetting.isolated");
 				if (index >= list.arraySize) return;
 				var element = list.GetArrayElementAtIndex(index);
 				rect.y += 2;

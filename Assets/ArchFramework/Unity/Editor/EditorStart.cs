@@ -36,8 +36,18 @@ public class EditorStart
 
 		CsprojPatcher
 			.Begin()
-			.Target("Protocol")
+			.Target("Code.Protocol")
 			.AddSourceFolder(@"..\Common\Protocol")
+			.Apply();
+		CsprojPatcher
+			.Begin()
+			.Target("Code.Model")
+			.AddSourceFolder(@"Codes\Model")
+			.Apply();
+		CsprojPatcher
+			.Begin()
+			.Target("Code.Logic")
+			.AddSourceFolder(@"Codes\Logic")
 			.Apply();
 	}
 }

@@ -2,9 +2,12 @@
     "name": "Code.Model",
     "rootNamespace": "",
     "references": [
-        "GUID:7dbe63cb0c2603148a0db969c4725055"
+        "GUID:7dbe63cb0c2603148a0db969c4725055",
+        "GUID:756335c0388f7114790e504ed368ae1d"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

@@ -43,8 +43,9 @@ namespace Arch.Compilation.Editor
 
 		protected void DrawList(string listLabel)
 		{
-			EditorGUILayout.Space(4);
+			EditorGUILayout.Space(10);
 			isPostProcessorListExpanded = EditorGUILayout.Foldout(isPostProcessorListExpanded, listLabel, true);
+			EditorGUILayout.Space(2);
 			if (isPostProcessorListExpanded)
 			{
 				reorderableList.DoLayoutList();

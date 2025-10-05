@@ -1,7 +1,7 @@
-﻿using Arch.Tools;
+﻿using Arch.Core;
+using Arch.Tools;
 using Attributes;
 using System;
-using System.Reflection;
 
 namespace Arch
 {
@@ -20,17 +20,10 @@ namespace Arch
 				ArchLog.LogError($"{directType} is not component");
 				throw new Exception($"{directType} is not component");
 			}
-			// 通过反射调用泛型方法
-			MethodInfo setSingleMethod = typeof(Unique)
-				.GetMethod("Set", BindingFlags.Static | BindingFlags.Public);
-
-			MethodInfo genericMethod = setSingleMethod.MakeGenericMethod(directType);
-
-			// 通过反射创建参数实例（要求值类型有无参构造）
-			object component = Activator.CreateInstance(directType);
-
-			// 调用 SetSingle<T>(T value)
-			genericMethod.Invoke(null, new[] { component });
+			if (ComponentRegistry.TryGet(directType, out ComponentType componentType))
+			{
+				Unique.Component.Set(componentType, Activator.CreateInstance(directType));
+			}
 		}
 	}
 }

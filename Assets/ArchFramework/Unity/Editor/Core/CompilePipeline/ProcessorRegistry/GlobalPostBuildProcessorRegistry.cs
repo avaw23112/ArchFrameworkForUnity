@@ -40,7 +40,7 @@ namespace Arch.Compilation.Editor
 			}
 		}
 
-		public static IEnumerable<IGlobalPostProcessor> AllGlobals => _globalProcessors.Values;
+		public static IEnumerable<IGlobalPostProcessor> All => _globalProcessors.Values;
 
 		public static bool TryGet(string name, out IGlobalPostProcessor processor)
 			=> _globalProcessors.TryGetValue(name, out processor);

@@ -35,33 +35,65 @@ namespace Arch.Resource
 
 		#region 初始化
 
+		public void RefreshMappings()
+		{
+			_initialized = false;
+			InitializeAsync().Forget();
+		}
+
 		public async UniTask InitializeAsync()
 		{
 			if (_initialized) return;
 
 			await Addressables.InitializeAsync().Task;
 
-			// 只做一次全量位置扫描，建立【短名->地址】映射
-			var locHandle = Addressables.LoadResourceLocationsAsync((object)null);
-			var locs = await locHandle.Task;
-
-			foreach (var loc in locs)
+			foreach (var locator in Addressables.ResourceLocators)
 			{
-				string shortName = ShortName(loc);
-				string addr = loc.PrimaryKey; // 用 PrimaryKey 作为可加载 key
+				if (locator == null)
+					continue; // 🔒 防御空对象
 
-				if (_name2Addr.TryGetValue(shortName, out var exist))
+				if (locator.Keys == null)
+					continue; // 🔒 防御部分 DynamicResourceLocator 未初始化的情况
+
+				foreach (var keyObj in locator.Keys)
 				{
-					if (!_duplicates.TryGetValue(shortName, out var list))
-						_duplicates[shortName] = list = new List<string> { exist };
-					list.Add(addr);
-					ArchLog.LogWarning($"[Res] Duplicate name '{shortName}':\n - {exist}\n - {addr}");
-					continue; // 保留第一个，避免歧义
+					if (keyObj is not string addr || string.IsNullOrWhiteSpace(addr))
+						continue;
+
+					// 🔒 某些 locator 的 Locate() 内部未初始化
+					try
+					{
+						if (!locator.Locate(addr, typeof(UnityEngine.Object), out var locations) || locations == null)
+							continue;
+
+						foreach (var loc in locations)
+						{
+							if (loc == null)
+								continue;
+
+							string shortName = ShortName(loc);
+							if (string.IsNullOrEmpty(shortName))
+								continue;
+
+							if (_name2Addr.TryGetValue(shortName, out var exist))
+							{
+								if (!_duplicates.TryGetValue(shortName, out var list))
+									_duplicates[shortName] = list = new List<string> { exist };
+								list.Add(addr);
+								ArchLog.LogWarning($"[Res] Duplicate name '{shortName}':\n - {exist}\n - {addr}");
+								continue;
+							}
+
+							_name2Addr[shortName] = addr;
+						}
+					}
+					catch (Exception ex)
+					{
+						ArchLog.LogWarning($"[Res] Locate failed for key '{addr}' in locator {locator.GetType().Name}: {ex.Message}");
+					}
 				}
-				_name2Addr[shortName] = addr;
 			}
 
-			Addressables.Release(locHandle);
 			_initialized = true;
 
 			ArchLog.LogInfo($"[Res] Initialized. Entries={_name2Addr.Count}, Duplicates={_duplicates.Count}");

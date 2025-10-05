@@ -1,6 +1,5 @@
 ﻿using MemoryPack;
 
-
 namespace Arch
 {
 	[MemoryPackable]

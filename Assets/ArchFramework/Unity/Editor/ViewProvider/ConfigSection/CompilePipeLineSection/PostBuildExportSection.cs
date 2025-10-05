@@ -2,6 +2,7 @@
 
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace Arch.Compilation.Editor
 {
@@ -13,23 +14,24 @@ namespace Arch.Compilation.Editor
 		{
 			var cfg = so.targetObject as ArchBuildConfig;
 			if (cfg == null) return;
-
-			//InitList(cfg, "单编译后处理流程", cfg.compilePipeLineSetting.postProcessors);
+			if (selectedProcessorIndex >= cfg.compilePipeLineSetting.postProcessors.Count)
+				selectedProcessorIndex = -1;
+			InitList(cfg, "单编译后处理流程", cfg.compilePipeLineSetting.postProcessors);
 			EditorGUILayout.Space(10);
 
 			DrawAddProcessorPopup(cfg);
 			DrawSelectedProcessorGUI(cfg, so);
-			//DrawList("单位编译后处理列表");
+			DrawList("单位编译后处理列表");
 		}
 
 		private void DrawAddProcessorPopup(ArchBuildConfig cfg)
 		{
-			var all = PreBuildProcessorRegistry.All.ToList();
+			var all = UnitPostBuildProcessorRegistry.All.ToList();
 			var allNames = all.Select(p => p.Name).ToArray();
-			int addIdx = EditorGUILayout.Popup("添加处理器", -1, allNames);
-			if (addIdx >= 0)
+			selectedProcessorIndex = EditorGUILayout.Popup("添加处理器", selectedProcessorIndex, allNames);
+			if (selectedProcessorIndex >= 0)
 			{
-				var name = allNames[addIdx];
+				var name = allNames[selectedProcessorIndex];
 				if (!cfg.compilePipeLineSetting.postProcessors.Contains(name))
 				{
 					Undo.RecordObject(cfg, "Add PreBuild Processor");

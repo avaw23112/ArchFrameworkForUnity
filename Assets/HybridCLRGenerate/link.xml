@@ -1,29 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <linker>
-  <assembly fullname="AOT">
-    <type fullname="Arch.AwakeSystem`1" preserve="all" />
-    <type fullname="Arch.DestroySystem`1" preserve="all" />
-    <type fullname="Arch.HierarchicalPriorityTree" preserve="all" />
-    <type fullname="Arch.IAwake" preserve="all" />
+  <assembly fullname="ArchFramework.Runtime">
     <type fullname="Arch.IComponent" preserve="all" />
-    <type fullname="Arch.ISystem" preserve="all" />
     <type fullname="Arch.ITag" preserve="all" />
-    <type fullname="Arch.LateUpdateSystem`1" preserve="all" />
-    <type fullname="Arch.NamedWorld" preserve="all" />
-    <type fullname="Arch.SingletonComponent" preserve="all" />
-    <type fullname="Arch.SystemAttribute" preserve="all" />
     <type fullname="Arch.Tools.ArchLog" preserve="all" />
-    <type fullname="Arch.Tools.Pool.QueuePool`1" preserve="all" />
     <type fullname="Arch.UniqueAttribute" preserve="all" />
-    <type fullname="Arch.UniqueComponentSystem`1" preserve="all" />
-    <type fullname="Arch.UpdateSystem`1" preserve="all" />
     <type fullname="Events.Event`1" preserve="all" />
     <type fullname="Events.GameStartEvent" preserve="all" />
-  </assembly>
-  <assembly fullname="Arch">
-    <type fullname="Arch.Core.Entity" preserve="all" />
-    <type fullname="Arch.Core.Extensions.EntityExtensions" preserve="all" />
-    <type fullname="Arch.Core.World" preserve="all" />
   </assembly>
   <assembly fullname="MemoryPack.Core">
     <type fullname="MemoryPack.Formatters.ArrayFormatter`1" preserve="all" />
@@ -52,7 +35,6 @@
     <type fullname="System.Byte" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute/DebuggingModes" preserve="all" />
-    <type fullname="System.Int32" preserve="all" />
     <type fullname="System.NotImplementedException" preserve="all" />
     <type fullname="System.Object" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.CompilationRelaxationsAttribute" preserve="all" />
@@ -60,7 +42,6 @@
     <type fullname="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.RuntimeHelpers" preserve="all" />
     <type fullname="System.RuntimeFieldHandle" preserve="all" />
-    <type fullname="System.String" preserve="all" />
     <type fullname="System.ValueType" preserve="all" />
   </assembly>
 </linker>

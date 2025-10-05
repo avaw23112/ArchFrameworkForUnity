@@ -1,9 +1,12 @@
 ﻿#if UNITY_EDITOR
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using UnityEditor;
 
 /// <summary>
@@ -58,67 +61,27 @@ public class CsprojPatcher : AssetPostprocessor
 		bool modified = false;
 		var builder = new StringBuilder();
 
-		// ===== 添加 <ItemGroup> =====
 		builder.AppendLine();
 		builder.AppendLine("  <ItemGroup>");
-
-		foreach (var prj in s.ProjectRefs)
-		{
-			if (!content.Contains(prj))
-			{
-				builder.AppendLine($@"    <ProjectReference Include=""{prj}"" />");
-				modified = true;
-			}
-		}
 
 		foreach (var folder in s.SourceFolders)
 		{
 			if (!content.Contains(folder))
 			{
-				builder.AppendLine($@"    <Compile Include=""{folder}\**\*.cs"" Link=""{Path.GetFileName(folder)}\%(RecursiveDir)%(Filename)%(Extension)"" />");
-				modified = true;
-			}
-		}
-
-		foreach (var analyzer in s.Analyzers)
-		{
-			if (!content.Contains(analyzer))
-			{
-				builder.AppendLine($@"    <Analyzer Include=""{analyzer}"" />");
+				builder.AppendLine($@"    <Compile Include=""{folder}\**\*.cs"" />");
 				modified = true;
 			}
 		}
 
 		builder.AppendLine("  </ItemGroup>");
-		builder.AppendLine("</Project>");
 
 		if (modified)
-			content = content.Replace("</Project>", builder.ToString());
-
-		// ===== 添加 DefineConstants =====
-		if (s.Defines.Count > 0)
 		{
-			var pattern = new Regex(@"<DefineConstants>(.*?)</DefineConstants>", RegexOptions.Singleline);
-			if (pattern.IsMatch(content))
+			int insertPos = content.LastIndexOf("</ItemGroup>", StringComparison.OrdinalIgnoreCase);
+			if (insertPos >= 0)
 			{
-				content = pattern.Replace(content, m => $"<DefineConstants>{m.Groups[1].Value};{string.Join(";", s.Defines)}</DefineConstants>");
+				content = content.Insert(insertPos + "</ItemGroup>".Length, builder.ToString());
 			}
-			else
-			{
-				content = content.Replace("</PropertyGroup>", $"  <DefineConstants>{string.Join(";", s.Defines)}</DefineConstants>\n  </PropertyGroup>");
-			}
-		}
-
-		// ===== 添加 LangVersion =====
-		if (!string.IsNullOrEmpty(s.LangVersion) && !content.Contains("<LangVersion>"))
-		{
-			content = content.Replace("</PropertyGroup>", $"  <LangVersion>{s.LangVersion}</LangVersion>\n  </PropertyGroup>");
-		}
-
-		// ===== 添加 NoWarn =====
-		if (s.NoWarns.Count > 0 && !content.Contains("<NoWarn>"))
-		{
-			content = content.Replace("</PropertyGroup>", $"  <NoWarn>{string.Join(";", s.NoWarns)}</NoWarn>\n  </PropertyGroup>");
 		}
 
 		return content;

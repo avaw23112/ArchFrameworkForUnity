@@ -14,18 +14,24 @@ namespace Arch.Compilation.Editor
 
 		public void Process(ArchBuildConfig cfg, string builtDllPath)
 		{
-			if (string.IsNullOrEmpty(cfg.compilePipeLineSetting.postExportDir)) return;
+			if (cfg == null || string.IsNullOrEmpty(cfg.compilePipeLineSetting.postExportDir)) return;
 			if (!File.Exists(builtDllPath)) return;
 
 			string exportRoot = Path.GetFullPath(cfg.compilePipeLineSetting.postExportDir);
 			Directory.CreateDirectory(exportRoot);
 
 			string asmName = Path.GetFileNameWithoutExtension(builtDllPath);
-			string suffix = string.IsNullOrEmpty(cfg.compilePipeLineSetting.postExportSuffix) ? "dll" : cfg.compilePipeLineSetting.postExportSuffix;
-			string newName = $"{asmName}_{suffix}.dll";
+			int order = 0;
+			if (cfg.buildSetting.isolated != null)
+			{
+				for (int i = 0; i < cfg.buildSetting.isolated.Count; i++)
+					if (cfg.buildSetting.isolated[i].assemblyName == asmName) order = i;
+			}
 
-			File.Copy(builtDllPath, Path.Combine(exportRoot, newName), true);
-			Debug.Log($"[PostBuild] 导出 DLL: {newName}");
+			string suffix = string.IsNullOrEmpty(cfg.compilePipeLineSetting.postExportSuffix) ? "dll" : cfg.compilePipeLineSetting.postExportSuffix;
+			string newName = $"{order}_{asmName}{suffix}";
+			string dstPath = Path.Combine(exportRoot, newName);
+			File.Copy(builtDllPath, dstPath, true);
 		}
 
 		// 🔹 GUI 实现
