@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d63caa852e8d6f14ea836e79a13be7fc, type: 3}
+  m_Name: ArchBuildConfig
+  m_EditorClassIdentifier: 
+  compilePipeLineSetting:
+    preBuildProcessors: []
+    postProcessors:
+    - "\u6E05\u7406\u65E7\u70ED\u66F4\u65B0DLL"
+    globalPostProcessors:
+    - "\u6E05\u7406\u65E7\u70ED\u66F4\u65B0DLL"
+    postExportDir: Assets/BuildOutput
+    postExportSuffix: hotfix
+  buildSetting:
+    MetaDllPath: 
+    HotFixDllPath: 
+    buildMode: 0
+    hotReloadAssemblies:
+    - Hot
+    isolated:
+    - assemblyName: Hot
+      outputDir: HotfixOutput
+      sourceDirs:
+      - 
+      additionalDefines:
+      - 
+      additionalReferences:
+      - 
+      useEngineModules: 0
+      editorAssembly: 0
+    fullLink:
+      assemblyName: Game.FullLink
+      outputDir: 
+      sourceDirs: []
+      additionalDefines: []
+      additionalReferences: []
+      useEngineModules: 1
+      editorAssembly: 0

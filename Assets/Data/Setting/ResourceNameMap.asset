@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3461e48382f9cc64f9710222a22cd312, type: 3}
+  m_Name: ResourceNameMap
+  m_EditorClassIdentifier: 
+  _rootGroups:
+  - groupName: Code
+    subGroups:
+    - subGroupName: Assets
+      resources:
+      - resourceName: AOT
+        address: Assets/HybridCLRGenerate/MetaDataDll/AOT.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\AOT.bytes
+      - resourceName: Arch
+        address: Assets/HybridCLRGenerate/MetaDataDll/Arch.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\Arch.bytes
+      - resourceName: Arch.LowLevel
+        address: Assets/HybridCLRGenerate/MetaDataDll/Arch.LowLevel.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\Arch.LowLevel.bytes
+      - resourceName: CommunityToolkit.HighPerformance
+        address: Assets/HybridCLRGenerate/MetaDataDll/CommunityToolkit.HighPerformance.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\CommunityToolkit.HighPerformance.bytes
+      - resourceName: Data
+        address: Assets/HybridCLRGenerate/HotFixDll/Data.bytes
+        assetPath: Assets/HybridCLRGenerate/HotFixDll\Data.bytes
+      - resourceName: Logic
+        address: Assets/HybridCLRGenerate/HotFixDll/Logic.bytes
+        assetPath: Assets/HybridCLRGenerate/HotFixDll\Logic.bytes
+      - resourceName: MemoryPack.Core
+        address: Assets/HybridCLRGenerate/MetaDataDll/MemoryPack.Core.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\MemoryPack.Core.bytes
+      - resourceName: mscorlib
+        address: Assets/HybridCLRGenerate/MetaDataDll/mscorlib.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\mscorlib.bytes
+      - resourceName: System.Core
+        address: Assets/HybridCLRGenerate/MetaDataDll/System.Core.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\System.Core.bytes
+      - resourceName: System.Runtime.CompilerServices.Unsafe
+        address: Assets/HybridCLRGenerate/MetaDataDll/System.Runtime.CompilerServices.Unsafe.bytes
+        assetPath: Assets/HybridCLRGenerate/MetaDataDll\System.Runtime.CompilerServices.Unsafe.bytes
+  - groupName: Setting
+    subGroups:
+    - subGroupName: Assets
+      resources:
+      - resourceName: ArchBuildConfig
+        address: Assets/Data/Setting/ArchBuildConfig.asset
+        assetPath: Assets/Data/Setting\ArchBuildConfig.asset
+      - resourceName: ResourceNameMap
+        address: Assets/Data/Setting/ResourceNameMap.asset
+        assetPath: Assets/Data/Setting\ResourceNameMap.asset
