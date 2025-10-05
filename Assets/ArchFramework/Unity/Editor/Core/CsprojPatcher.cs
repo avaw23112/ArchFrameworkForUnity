@@ -6,22 +6,23 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using UnityEditor;
 
 /// <summary>
 /// ✅ Unity .csproj 自动补丁系统（基于 OnGeneratedCSProject 接口）
-/// 适配 Unity 2021.2+
-/// 支持链式配置 + 多会话
+/// 保持原有结构与调用方式，支持：
+/// - SourceFolder
+/// - Analyzer
+/// - ProjectReference
+/// - Define
+/// - LangVersion
+/// - NoWarn
 /// </summary>
 public class CsprojPatcher : AssetPostprocessor
 {
-	// 保存所有注册的 PatchSession
+	// ================== 保持原有结构 ==================
 	private static readonly List<PatchSession> sessions = new();
 
-	/// <summary>
-	/// 开启一个新的补丁配置会话
-	/// </summary>
 	public static PatchSession Begin()
 	{
 		var s = new PatchSession();
@@ -30,8 +31,7 @@ public class CsprojPatcher : AssetPostprocessor
 	}
 
 	/// <summary>
-	/// Unity 官方回调：每生成一个 .csproj 文件时调用。
-	/// 我们在这里修改内容并返回。
+	/// Unity 在生成每个 .csproj 时调用
 	/// </summary>
 	private static string OnGeneratedCSProject(string path, string content)
 	{
@@ -39,10 +39,9 @@ public class CsprojPatcher : AssetPostprocessor
 
 		foreach (var session in sessions)
 		{
-			// 如果没有目标限制，或者匹配到目标，则执行补丁
 			bool match = session.TargetNames.Count == 0 && session.TargetPaths.Count == 0
-						 || session.TargetNames.Contains(fileName)
-						 || session.TargetPaths.Contains(Path.GetFullPath(path));
+				|| session.TargetNames.Contains(fileName)
+				|| session.TargetPaths.Contains(Path.GetFullPath(path));
 
 			if (!match)
 				continue;
@@ -53,41 +52,140 @@ public class CsprojPatcher : AssetPostprocessor
 		return content;
 	}
 
-	/// <summary>
-	/// 实际的补丁逻辑（修改 XML 文本）
-	/// </summary>
+	// ================== 主补丁逻辑 ==================
 	private static string ApplyPatch(PatchSession s, string path, string content)
 	{
 		bool modified = false;
 		var builder = new StringBuilder();
 
-		builder.AppendLine();
-		builder.AppendLine("  <ItemGroup>");
-
-		foreach (var folder in s.SourceFolders)
+		// --- 1️⃣ 添加源码目录 ---
+		if (s.SourceFolders.Count > 0)
 		{
-			if (!content.Contains(folder))
+			builder.AppendLine();
+			builder.AppendLine("  <ItemGroup>");
+			foreach (var folder in s.SourceFolders)
 			{
-				builder.AppendLine($@"    <Compile Include=""{folder}\**\*.cs"" />");
+				if (!content.Contains(folder))
+				{
+					builder.AppendLine($@"    <Compile Include=""{folder}\**\*.cs"" />");
+					modified = true;
+				}
+			}
+			builder.AppendLine("  </ItemGroup>");
+		}
+
+		// --- 2️⃣ 添加 Analyzer ---
+		if (s.Analyzers.Count > 0)
+		{
+			builder.AppendLine();
+			builder.AppendLine("  <ItemGroup>");
+			foreach (var analyzer in s.Analyzers)
+			{
+				if (!content.Contains(analyzer))
+				{
+					builder.AppendLine($@"    <Analyzer Include=""{analyzer}"" />");
+					modified = true;
+				}
+			}
+			builder.AppendLine("  </ItemGroup>");
+		}
+
+		// --- 3️⃣ 添加 ProjectReference ---
+		if (s.ProjectRefs.Count > 0)
+		{
+			builder.AppendLine();
+			builder.AppendLine("  <ItemGroup>");
+			foreach (var reference in s.ProjectRefs)
+			{
+				string name = Path.GetFileNameWithoutExtension(reference);
+				if (!content.Contains(name))
+				{
+					builder.AppendLine($@"    <ProjectReference Include=""{reference}"">");
+					builder.AppendLine($@"      <Name>{name}</Name>");
+					builder.AppendLine("    </ProjectReference>");
+					modified = true;
+				}
+			}
+			builder.AppendLine("  </ItemGroup>");
+		}
+
+		// --- 4️⃣ 添加 Define ---
+		if (s.Defines.Count > 0)
+		{
+			var match = Regex.Match(content, @"<DefineConstants>(.*?)</DefineConstants>", RegexOptions.Singleline);
+			if (match.Success)
+			{
+				string old = match.Groups[1].Value;
+				string merged = old;
+				foreach (var d in s.Defines)
+					if (!merged.Contains(d))
+						merged += ";" + d;
+
+				content = content.Replace(match.Value, $"<DefineConstants>{merged}</DefineConstants>");
 				modified = true;
 			}
 		}
 
-		builder.AppendLine("  </ItemGroup>");
+		// --- 5️⃣ 设置 LangVersion ---
+		if (!string.IsNullOrEmpty(s.LangVersion))
+		{
+			var match = Regex.Match(content, @"<LangVersion>(.*?)</LangVersion>", RegexOptions.Singleline);
+			if (match.Success)
+			{
+				content = content.Replace(match.Value, $"<LangVersion>{s.LangVersion}</LangVersion>");
+			}
+			else
+			{
+				int insertPos = content.IndexOf("<PropertyGroup>", StringComparison.OrdinalIgnoreCase);
+				if (insertPos > 0)
+				{
+					content = content.Insert(insertPos + "<PropertyGroup>".Length,
+						$"\n    <LangVersion>{s.LangVersion}</LangVersion>");
+				}
+			}
+			modified = true;
+		}
 
+		// --- 6️⃣ 添加 NoWarn ---
+		if (s.NoWarns.Count > 0)
+		{
+			var match = Regex.Match(content, @"<NoWarn>(.*?)</NoWarn>", RegexOptions.Singleline);
+			if (match.Success)
+			{
+				string old = match.Groups[1].Value;
+				string merged = old;
+				foreach (var n in s.NoWarns)
+					if (!merged.Contains(n))
+						merged += ";" + n;
+
+				content = content.Replace(match.Value, $"<NoWarn>{merged}</NoWarn>");
+				modified = true;
+			}
+			else
+			{
+				int insertPos = content.IndexOf("<PropertyGroup>", StringComparison.OrdinalIgnoreCase);
+				if (insertPos > 0)
+				{
+					string newWarn = string.Join(";", s.NoWarns);
+					content = content.Insert(insertPos + "<PropertyGroup>".Length,
+						$"\n    <NoWarn>{newWarn}</NoWarn>");
+				}
+				modified = true;
+			}
+		}
+
+		// --- 7️⃣ 插入新节点 ---
 		if (modified)
 		{
-			int insertPos = content.LastIndexOf("</ItemGroup>", StringComparison.OrdinalIgnoreCase);
-			if (insertPos >= 0)
-			{
-				content = content.Insert(insertPos + "</ItemGroup>".Length, builder.ToString());
-			}
+			int pos = content.LastIndexOf("</ItemGroup>", StringComparison.OrdinalIgnoreCase);
+			if (pos >= 0)
+				content = content.Insert(pos + "</ItemGroup>".Length, builder.ToString());
 		}
 
 		return content;
 	}
 
-	// ================== Builder 类 ==================
+	// ================== 配置构造器 ==================
 	public class PatchSession
 	{
 		internal readonly List<string> TargetNames = new();
@@ -99,6 +197,7 @@ public class CsprojPatcher : AssetPostprocessor
 		internal readonly List<string> NoWarns = new();
 		internal string LangVersion;
 
+		// --- 基础目标 ---
 		public PatchSession Target(string name)
 		{
 			if (!TargetNames.Contains(name)) TargetNames.Add(name);
@@ -112,15 +211,16 @@ public class CsprojPatcher : AssetPostprocessor
 			return this;
 		}
 
-		public PatchSession AddProjectReference(string path)
-		{
-			if (!ProjectRefs.Contains(path)) ProjectRefs.Add(path);
-			return this;
-		}
-
+		// --- 添加条目 ---
 		public PatchSession AddSourceFolder(string path)
 		{
 			if (!SourceFolders.Contains(path)) SourceFolders.Add(path);
+			return this;
+		}
+
+		public PatchSession AddProjectReference(string path)
+		{
+			if (!ProjectRefs.Contains(path)) ProjectRefs.Add(path);
 			return this;
 		}
 
@@ -136,12 +236,6 @@ public class CsprojPatcher : AssetPostprocessor
 			return this;
 		}
 
-		public PatchSession AddLangVersion(string version)
-		{
-			LangVersion = version;
-			return this;
-		}
-
 		public PatchSession AddNoWarn(params string[] codes)
 		{
 			foreach (var c in codes)
@@ -150,8 +244,17 @@ public class CsprojPatcher : AssetPostprocessor
 			return this;
 		}
 
+		public PatchSession AddLangVersion(string version)
+		{
+			LangVersion = version;
+			return this;
+		}
+
+		// --- 结束并提交 ---
 		public void Apply()
-		{ /* 实际执行由 Unity 调用 OnGeneratedCSProject 完成 */ }
+		{
+			// Unity 的 OnGeneratedCSProject 会自动触发执行，不需要立即改文件
+		}
 	}
 }
 
