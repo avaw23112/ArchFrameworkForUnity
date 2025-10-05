@@ -233,24 +233,6 @@ namespace Arch
 			commandBuffer.Destroy(entity);
 		}
 
-		public T GetUniqueComponent<T>() where T : IComponent
-		{
-			if (world == null)
-			{
-				throw new System.ArgumentNullException("world is null");
-			}
-			return SingletonComponent.GetOrAdd<T>();
-		}
-
-		public void SetUniqueComponent<T>(T component) where T : IComponent
-		{
-			if (world == null)
-			{
-				throw new System.ArgumentNullException("world is null");
-			}
-			SingletonComponent.Set<T>(component);
-		}
-
 		#endregion 常用方法
 	}
 }

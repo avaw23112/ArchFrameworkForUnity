@@ -36,7 +36,6 @@ namespace Arch
 			Instance.m_listReactiveDestroySystems.Clear();
 
 			NamedWorld.ClearEvents();
-
 		}
 
 		public static void RegisterArchSystems()
@@ -144,7 +143,7 @@ namespace Arch
 
 		// 添加 IL2CPP 兼容包装器
 		[Preserve]
-		static PlayerLoopSystem.UpdateFunction UpdateWithIL2CPPWorkaround(Action action)
+		private static PlayerLoopSystem.UpdateFunction UpdateWithIL2CPPWorkaround(Action action)
 		{
 			return () =>
 			{
@@ -153,9 +152,10 @@ namespace Arch
 				action?.Invoke();
 			};
 		}
+
 		// IL2CPP 需要显式保留类型信息
 		[Preserve]
-		static void PreserveTypes()
+		private static void PreserveTypes()
 		{
 			// 强制保留相关类型信息
 			var t1 = typeof(ArchSystems);
@@ -292,7 +292,7 @@ namespace Arch
 				{
 					m_listDestroySystems[i].Destroy();
 				}
-				SingletonComponent.Clear();
+				Unique.World.TearDown();
 			}
 			catch (Exception e)
 			{

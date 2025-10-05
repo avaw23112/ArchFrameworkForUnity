@@ -1,174 +1,103 @@
 ﻿using Arch.Core;
 using Arch.Core.Extensions;
-using Arch.Tools;
 using inEvent;
 using RefEvent;
 using System;
-using System.Collections.Generic;
 
 namespace Arch
 {
-	public static class SingletonComponent
+	public static class Unique
 	{
-		private static World m_worldSingleton;
-		private static Entity m_entitySingleton;
-
-		public static World WorldSingleton
+		public class Entity
 		{
-			get
+			private static Core.Entity m_UniqueEntity;
+
+			public static Core.Entity Instance
 			{
-				if (m_worldSingleton == null)
+				get
 				{
-					m_worldSingleton = NamedWorld.DefaultWord;
-				}
-				return m_worldSingleton;
-			}
-		}
-
-		public static Entity EntitySingleton
-		{
-			get
-			{
-				if (m_entitySingleton == null)
-				{
-					m_entitySingleton = WorldSingleton.Create();
-				}
-				return m_entitySingleton;
-			}
-		}
-
-		private static Dictionary<World, Entity> m_dicSingleEntity = new Dictionary<World, Entity>();
-
-		public static T GetSingle<T>(this World self) where T : IComponent
-		{
-			Entity entity;
-			if (!m_dicSingleEntity.TryGetValue(self, out entity))
-			{
-				entity = self.Create<T>();
-				m_dicSingleEntity.Add(self, entity);
-			}
-			if (entity.Has<T>())
-			{
-				return entity.Get<T>();
-			}
-			else
-			{
-				entity.Add<T>();
-				return entity.Get<T>();
-			}
-		}
-
-		public static void SetSingle<T>(this World self, T value) where T : IComponent
-		{
-			Entity entity;
-			if (!m_dicSingleEntity.TryGetValue(self, out entity))
-			{
-				entity = self.Create<T>();
-				m_dicSingleEntity.Add(self, entity);
-			}
-			if (entity.Has<T>())
-			{
-				entity.Set(value);
-			}
-			else
-			{
-				entity.Add<T>();
-				entity.Set(value);
-			}
-		}
-
-		public static T GetOrAdd<T>() where T : IComponent
-		{
-			World self = WorldSingleton;
-			if (!m_dicSingleEntity.TryGetValue(self, out m_entitySingleton))
-			{
-				m_entitySingleton = self.Create<T>();
-				m_dicSingleEntity.Add(self, m_entitySingleton);
-			}
-			if (!m_entitySingleton.Has<T>())
-			{
-				throw new System.Exception($"Component {typeof(T)} is not singleton component");
-			}
-			return m_entitySingleton.Get<T>();
-		}
-
-		public static void Set<T>(T value) where T : IComponent
-		{
-			World self = WorldSingleton;
-			if (!m_dicSingleEntity.TryGetValue(self, out m_entitySingleton))
-			{
-				m_entitySingleton = self.Create<T>();
-				m_dicSingleEntity.Add(self, m_entitySingleton);
-			}
-			if (m_entitySingleton.Has<T>())
-			{
-				m_entitySingleton.Set(value);
-			}
-			else
-			{
-				m_entitySingleton.Add<T>();
-				m_entitySingleton.Set(value);
-			}
-		}
-
-		public static bool RemoveSingle<T>(this World self) where T : IComponent
-		{
-			Entity entity;
-			if (m_dicSingleEntity.TryGetValue(self, out entity))
-			{
-				if (entity.Has<T>())
-				{
-					entity.Remove<T>();
-					return true;
-				}
-			}
-			return false;
-		}
-		public static void Clear()
-		{
-			try
-			{
-				m_worldSingleton.Destroy(m_entitySingleton);
-				foreach (var kv in m_dicSingleEntity)
-				{
-					World world = kv.Key;
-					Entity entity = kv.Value;
-					if (world.IsAlive(entity) && entity.isVaild())
+					if (m_UniqueEntity == null)
 					{
-						world.Destroy(entity);
+						m_UniqueEntity = Unique.World.Instance.Create();
 					}
+					return m_UniqueEntity;
 				}
 			}
-			catch (Exception e)
+		}
+
+		public class World
+		{
+			private static Core.World m_UniqueWorld;
+
+			public static Core.World Instance
 			{
-				ArchLog.LogError(e);
-				throw;
+				get
+				{
+					if (m_UniqueWorld == null)
+					{
+						m_UniqueWorld = NamedWorld.DefaultWord;
+					}
+					return m_UniqueWorld;
+				}
+			}
+
+			public static void TearDown()
+			{
+				if (m_UniqueWorld.IsAlive(Entity.Instance) && Entity.Instance.isVaild())
+				{
+					m_UniqueWorld.Destroy(Entity.Instance);
+				}
 			}
 		}
 
-		public static void Getter<T>(InAction<T> action) where T : IComponent
+		public class Component<T> where T : IComponent
 		{
-			var entity = EntitySingleton;
-			if (!entity.Has<T>())
+			public static T GetOrAdd()
 			{
-				Tools.ArchLog.LogError($"{entity} not has the required components");
-				throw new NullReferenceException($"{entity} not has the component of {typeof(T)}");
+				Core.World self = World.Instance;
+				if (!Entity.Instance.Has<T>())
+				{
+					throw new System.Exception($"Component {typeof(T)} is not singleton component");
+				}
+				return Entity.Instance.Get<T>();
 			}
-			T sComponent = entity.Get<T>();
-			action(in sComponent);
-		}
 
-		public static void Setter<T>(RefAction<T> action) where T : IComponent
-		{
-			var entity = EntitySingleton;
-			if (!entity.Has<T>())
+			public static void Set(T value)
 			{
-				Tools.ArchLog.LogError($"{entity} not has the required components");
-				throw new NullReferenceException($"{entity} not has the component of {typeof(T)}");
+				Core.World self = World.Instance;
+				if (Entity.Instance.Has<T>())
+				{
+					Entity.Instance.Set(value);
+				}
+				else
+				{
+					Entity.Instance.Add<T>();
+					Entity.Instance.Set(value);
+				}
 			}
-			T sComponent = entity.Get<T>();
-			action(ref sComponent);
-			entity.Set<T>(in sComponent);
+
+			public static void Getter(InAction<T> action)
+			{
+				if (!Entity.Instance.Has<T>())
+				{
+					Tools.ArchLog.LogError($"{Entity.Instance} not has the required components");
+					throw new NullReferenceException($"{Entity.Instance} not has the component of {typeof(T)}");
+				}
+				T sComponent = Entity.Instance.Get<T>();
+				action(in sComponent);
+			}
+
+			public static void Setter(RefAction<T> action)
+			{
+				if (!Entity.Instance.Has<T>())
+				{
+					Tools.ArchLog.LogError($"{Entity.Instance} not has the required components");
+					throw new NullReferenceException($"{Entity.Instance} not has the component of {typeof(T)}");
+				}
+				T sComponent = Entity.Instance.Get<T>();
+				action(ref sComponent);
+				Entity.Instance.Set<T>(in sComponent);
+			}
 		}
 	}
 }

@@ -1,7 +1,7 @@
 #if UNITY_EDITOR
+
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using UnityEngine;
 
 namespace Arch.Editor
@@ -19,6 +19,7 @@ namespace Arch.Editor
 		[Header("=== 热重载核心路径配置 ===")]
 		[Tooltip("热重载输出目录（存放编译后的DLL）")]
 		public string hotReloadOutputPath = "";
+
 		[Tooltip("热更源码目录（存放需要热更的C#脚本）")]
 		public List<string> hotfixSourceDirectories = new List<string>();
 
@@ -125,6 +126,6 @@ namespace Arch.Editor
 #endif
 		}
 	}
-
 }
+
 #endif

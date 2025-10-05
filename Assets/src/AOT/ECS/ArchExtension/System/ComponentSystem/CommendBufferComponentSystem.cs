@@ -7,7 +7,6 @@ namespace Arch
 	[System]
 	public class CommendBufferComponentAwakeSystem : UniqueComponentSystem<CommendBuffersComponent>
 	{
-
 		protected override void OnAwake(ref CommendBuffersComponent component)
 		{
 			component.commandBuffers = DictionaryPool<int, CommandBufferHandler>.Get();
@@ -28,14 +27,13 @@ namespace Arch
 		}
 	}
 
-
 	[System]
 	[Last]
 	public class CommendBufferComponentLateUpdateSystem : ILateUpdate
 	{
 		public void LateUpdate()
 		{
-			SingletonComponent.Getter<CommendBuffersComponent>((in CommendBuffersComponent component_T1) =>
+			Unique.Component<CommendBuffersComponent>.Getter((in CommendBuffersComponent component_T1) =>
 			{
 				foreach (var kv in component_T1.commandBuffers)
 				{

@@ -4,11 +4,11 @@ using Events;
 
 namespace Assets.HotFix
 {
-    internal class GameStart : Event<GameStartEvent>
-    {
-        public override void Run(GameStartEvent value)
-        {
-
-        }
-    }
+	internal class GameStart : Event<GameStartEvent>
+	{
+		public override void Run(GameStartEvent value)
+		{
+			ArchLog.LogInfo("GameStart");
+		}
+	}
 }

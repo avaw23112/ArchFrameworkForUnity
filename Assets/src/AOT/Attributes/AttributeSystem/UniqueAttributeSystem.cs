@@ -21,7 +21,7 @@ namespace Arch
 				throw new Exception($"{directType} is not component");
 			}
 			// 通过反射调用泛型方法
-			MethodInfo setSingleMethod = typeof(SingletonComponent)
+			MethodInfo setSingleMethod = typeof(Unique)
 				.GetMethod("Set", BindingFlags.Static | BindingFlags.Public);
 
 			MethodInfo genericMethod = setSingleMethod.MakeGenericMethod(directType);

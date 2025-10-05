@@ -1,189 +1,219 @@
-using System;
 using Arch.Tools;
+using System;
+using System.Collections.Generic;
 
 namespace Arch.Net
 {
-    public sealed class Session : ISession
-    {
-        public string SessionId { get; }
-        public ITransport Transport { get; private set; }
+	public sealed class Session : ISession
+	{
+		public string SessionId { get; }
+		public ITransport Transport { get; private set; }
 
-        public event Action OnConnect;
-        public event Action<string> OnDisconnect;
-        public event Action OnReconnect;
-        public event Action<string> OnNetworkUnstable;
-        public event Action OnUpdate;
+		public event Action OnConnect;
 
-        // m_ + p(object) / v(value)
-        private volatile bool m_vWasConnected;
-        private System.Collections.Generic.Dictionary<byte, Action<byte[], int, int>> m_pRpcHandlers = new System.Collections.Generic.Dictionary<byte, Action<byte[], int, int>>();
+		public event Action<string> OnDisconnect;
 
-        public Session(string sessionId)
-        {
-            SessionId = sessionId;
-        }
+		public event Action OnReconnect;
 
-        public void AttachTransport(ITransport transport)
-        {
-            if (Transport == transport) return;
-            if (Transport != null)
-            {
-                Unsubscribe(Transport);
-                Transport.Dispose();
-            }
-            Transport = transport;
-            Subscribe(Transport);
-        }
+		public event Action<string> OnNetworkUnstable;
 
-        public void Connect(string endpoint)
-        {
-            if (Transport == null) throw new InvalidOperationException("Transport not attached");
-            Transport.Configure(endpoint);
-            Transport.Connect();
-        }
+		public event Action OnUpdate;
 
-        public void Disconnect(string reason = null)
-        {
-            Transport?.Disconnect(reason);
-        }
+		private volatile bool m_vWasConnected;
 
-        public bool Send(byte[] data, int length)
-        {
-            if (Transport == null) return false;
-            return Transport.Send(data, length);
-        }
+		private Dictionary<byte, Action<byte[], int, int>> m_pRpcHandlers
+			= new Dictionary<byte, Action<byte[], int, int>>();
 
-        public void Update()
-        {
-            Transport?.Poll();
-            OnUpdate?.Invoke();
-        }
+		public Session(string sessionId)
+		{
+			SessionId = sessionId;
+		}
 
-        /// <summary>
-        /// Register RPC handler by message id. Payload slice excludes PacketHeader, includes RpcId as first byte.
-        /// </summary>
-        public void RegisterRpc(byte id, Action<byte[], int, int> handler)
-        {
-            if (handler == null) return;
-            m_pRpcHandlers[id] = handler;
-        }
+		public void AttachTransport(ITransport transport)
+		{
+			if (Transport == transport) return;
+			if (Transport != null)
+			{
+				Unsubscribe(Transport);
+				Transport.Dispose();
+			}
+			Transport = transport;
+			Subscribe(Transport);
+		}
 
-        private void Subscribe(ITransport t)
-        {
-            t.Connected += HandleConnected;
-            t.Disconnected += HandleDisconnected;
-            t.NetworkUnstable += HandleUnstable;
-            t.DataReceived += HandleData;
-        }
+		public void Connect(string endpoint)
+		{
+			if (Transport == null) throw new InvalidOperationException("Transport not attached");
+			Transport.Configure(endpoint);
+			Transport.Connect();
+		}
 
-        private void Unsubscribe(ITransport t)
-        {
-            t.Connected -= HandleConnected;
-            t.Disconnected -= HandleDisconnected;
-            t.NetworkUnstable -= HandleUnstable;
-            t.DataReceived -= HandleData;
-        }
+		public void Disconnect(string reason = null)
+		{
+			Transport?.Disconnect(reason);
+		}
 
-        private void HandleConnected()
-        {
-            if (m_vWasConnected)
-            {
-                OnReconnect?.Invoke();
-            }
-            else
-            {
-                OnConnect?.Invoke();
-                m_vWasConnected = true;
-            }
-        }
+		public bool Send(byte[] data, int length)
+		{
+			if (Transport == null) return false;
+			return Transport.Send(data, length);
+		}
 
-        private void HandleDisconnected(string reason)
-        {
-            OnDisconnect?.Invoke(reason);
-        }
+		public void Update()
+		{
+			Transport?.Poll();
+			OnUpdate?.Invoke();
+		}
 
-        private void HandleUnstable(string hint)
-        {
-            OnNetworkUnstable?.Invoke(hint);
-        }
+		/// <summary>
+		/// Register RPC handler by message id.
+		/// </summary>
+		public void RegisterRpc(byte id, Action<byte[], int, int> handler)
+		{
+			if (handler == null) return;
+			m_pRpcHandlers[id] = handler;
+		}
 
-        private void HandleData(byte[] packet)
-        {
-            // Avoid capture allocations by queuing raw packet only
-            NetworkCommandQueue.EnqueuePacket(packet);
-        }
+		private void Subscribe(ITransport t)
+		{
+			t.Connected += HandleConnected;
+			t.Disconnected += HandleDisconnected;
+			t.NetworkUnstable += HandleUnstable;
+			t.DataReceived += HandleData;
+		}
 
-        /// <summary>
-        /// Process a raw packet on main thread; parse header and route.
-        /// </summary>
-        public void HandlePacket(byte[] packet)
-        {
-            if (packet == null)
-            {
-                ArchLog.LogWarning("Received null packet");
-                return;
-            }
-            if (packet.Length < 4)
-            {
-                ArchLog.LogWarning($"Packet too small: {packet.Length}");
-                return;
-            }
-            int nHeader;
-            PacketHeader header;
-            try { header = PacketHeader.ReadFrom(packet, out nHeader); }
-            catch (Exception ex)
-            {
-                ArchLog.LogWarning($"Header parse failed: {ex.Message}");
-                return;
-            }
+		private void Unsubscribe(ITransport t)
+		{
+			t.Connected -= HandleConnected;
+			t.Disconnected -= HandleDisconnected;
+			t.NetworkUnstable -= HandleUnstable;
+			t.DataReceived -= HandleData;
+		}
 
-            int vPayloadLen = Math.Max(0, packet.Length - nHeader);
-            Arch.Net.NetworkStats.RecordRecv(packet.Length);
-            // If payload is compressed at packet level, try decompress
-            if ((header.Flags & PacketFlags.Compressed) != 0 && vPayloadLen > 0)
-            {
-                var span = new ReadOnlySpan<byte>(packet, nHeader, vPayloadLen);
-                if (Compressor.TryDecompress(span, out var decomp))
-                {
-                    // Replace packet payload with decompressed buffer, keep original header bytes
-                    var orig = packet;
-                    var newPacket = new byte[nHeader + decomp.Length];
-                    System.Buffer.BlockCopy(orig, 0, newPacket, 0, nHeader);
-                    System.Buffer.BlockCopy(decomp, 0, newPacket, nHeader, decomp.Length);
-                    packet = newPacket;
-                    vPayloadLen = decomp.Length;
-                }
-            }
-            bool hasLoc = (header.Flags & PacketFlags.HasSyncLoc) != 0;
-            bool hasRel = (header.Flags & PacketFlags.HasReliability) != 0;
-            bool hasTs = (header.Flags & PacketFlags.HasTimestamp) != 0;
-            ArchLog.LogDebug(
-                $"Pkt v{header.Version} type={header.Type} codec={header.Codec} flags={header.Flags} " +
-                (hasRel ? $"seq={header.Seq} " : "") +
-                (hasTs ? $"ts={header.Timestamp} " : "") +
-                $"len={vPayloadLen} " +
-                (hasLoc ? $"world={header.WorldId} arch={header.ArchetypeId} chunk={header.ChunkId}" : ""));
+		private void HandleConnected()
+		{
+			if (m_vWasConnected)
+			{
+				OnReconnect?.Invoke();
+			}
+			else
+			{
+				OnConnect?.Invoke();
+				m_vWasConnected = true;
+			}
+		}
 
-            switch (header.Type)
-            {
-                case PacketType.Rpc:
-                    if (vPayloadLen <= 0) return;
-                    byte id = packet[nHeader];
-                    if (m_pRpcHandlers.TryGetValue(id, out var h))
-                    {
-                        h(packet, nHeader, vPayloadLen);
-                    }
-                    break;
-                case PacketType.Sync:
-                    SyncIncomingQueue.Enqueue(in header, packet, nHeader, vPayloadLen);
-                    break;
-            }
-        }
+		private void HandleDisconnected(string reason)
+		{
+			OnDisconnect?.Invoke(reason);
+		}
 
-        public void Dispose()
-        {
-            try { Transport?.Dispose(); }
-            catch { /* ignore */ }
-        }
-    }
+		private void HandleUnstable(string hint)
+		{
+			OnNetworkUnstable?.Invoke(hint);
+		}
+
+		private void HandleData(byte[] packet)
+		{
+			// 改造：入队前把 byte[] 包裹进 MemoryCache
+			var mem = MemoryCache.CopyFrom(packet, out var owner);
+			try
+			{
+				// 暂时还在用 byte[] 接口，就转一下
+				NetworkCommandQueue.EnqueuePacket(mem.ToArray());
+			}
+			finally
+			{
+				MemoryCache.Release(owner);
+			}
+		}
+
+		/// <summary>
+		/// Process a raw packet on main thread; parse header and route.
+		/// </summary>
+		public void HandlePacket(byte[] packet)
+		{
+			if (packet == null)
+			{
+				ArchLog.LogWarning("Received null packet");
+				return;
+			}
+			if (packet.Length < 4)
+			{
+				ArchLog.LogWarning($"Packet too small: {packet.Length}");
+				return;
+			}
+
+			int nHeader;
+			PacketHeader header;
+			try
+			{
+				header = PacketHeader.ReadFrom(packet, out nHeader);
+			}
+			catch (Exception ex)
+			{
+				ArchLog.LogWarning($"Header parse failed: {ex.Message}");
+				return;
+			}
+
+			int vPayloadLen = Math.Max(0, packet.Length - nHeader);
+			Arch.Net.NetworkStats.RecordRecv(packet.Length);
+
+			// 如果压缩则解压
+			if ((header.Flags & PacketFlags.Compressed) != 0 && vPayloadLen > 0)
+			{
+				var span = new ReadOnlySpan<byte>(packet, nHeader, vPayloadLen);
+				if (Compressor.TryDecompress(span, out var decomp))
+				{
+					var orig = packet;
+					var memory = MemoryCache.GetMemory(nHeader + decomp.Length, out var owner);
+					try
+					{
+						orig.AsMemory(0, nHeader).CopyTo(memory);
+						decomp.AsMemory().CopyTo(memory.Slice(nHeader));
+
+						packet = memory.ToArray(); // 保持接口兼容
+						vPayloadLen = decomp.Length;
+					}
+					finally
+					{
+						MemoryCache.Release(owner);
+					}
+				}
+			}
+
+			bool hasLoc = (header.Flags & PacketFlags.HasSyncLoc) != 0;
+			bool hasRel = (header.Flags & PacketFlags.HasReliability) != 0;
+			bool hasTs = (header.Flags & PacketFlags.HasTimestamp) != 0;
+
+			ArchLog.LogDebug(
+				$"Pkt v{header.Version} type={header.Type} codec={header.Codec} flags={header.Flags} " +
+				(hasRel ? $"seq={header.Seq} " : "") +
+				(hasTs ? $"ts={header.Timestamp} " : "") +
+				$"len={vPayloadLen} " +
+				(hasLoc ? $"world={header.WorldId} arch={header.ArchetypeId} chunk={header.ChunkId}" : ""));
+
+			switch (header.Type)
+			{
+				case PacketType.Rpc:
+					if (vPayloadLen <= 0) return;
+					byte id = packet[nHeader];
+					if (m_pRpcHandlers.TryGetValue(id, out var h))
+					{
+						h(packet, nHeader, vPayloadLen);
+					}
+					break;
+
+				case PacketType.Sync:
+					SyncIncomingQueue.Enqueue(in header, packet, nHeader, vPayloadLen);
+					break;
+			}
+		}
+
+		public void Dispose()
+		{
+			try { Transport?.Dispose(); }
+			catch { /* ignore */ }
+		}
+	}
 }

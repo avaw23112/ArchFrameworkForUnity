@@ -1,5 +1,6 @@
 ﻿using Arch.Buffer;
 using Arch.Core;
+using Arch.Core.Extensions;
 using Arch.Tools;
 
 namespace Arch
@@ -33,7 +34,7 @@ namespace Arch
 
 		public static CommandBuffer GetCommendBuffer(this World world)
 		{
-			CommendBuffersComponent commandBuffers = SingletonComponent.GetOrAdd<CommendBuffersComponent>();
+			CommendBuffersComponent commandBuffers = Unique.Component<CommendBuffersComponent>.GetOrAdd();
 			if (commandBuffers.commandBuffers == null)
 			{
 				ArchLog.LogError("CommendBuffersComponent 未初始化！");

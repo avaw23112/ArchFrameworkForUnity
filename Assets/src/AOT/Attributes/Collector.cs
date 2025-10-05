@@ -7,18 +7,12 @@ using System.Threading.Tasks;
 
 namespace Attributes
 {
-	///
-	///
-	///
 	public static class Collector
 	{
 		private static readonly object _attributeLock = new object();
 
 		#region Attributes
 
-		///
-		///
-		///
 		public static bool isForget(Type derectType)
 		{
 			if (derectType == null)
@@ -30,9 +24,6 @@ namespace Attributes
 			return attributeTypes.Length > 0;
 		}
 
-		///
-		///
-		///
 		public static bool isCollectable<T>(Type derectType)
 			where T : Attribute
 		{
@@ -62,9 +53,6 @@ namespace Attributes
 			return false;
 		}
 
-		///
-		///
-		///
 		private static bool isCollectable<T1, T2>(Type derectType)
 			where T1 : Attribute
 			where T2 : Attribute
@@ -98,9 +86,6 @@ namespace Attributes
 			return false;
 		}
 
-		///
-		///
-		///
 		private static bool isCollectable<T1, T2, T3>(Type derectType)
 			where T1 : Attribute
 			where T2 : Attribute
@@ -139,7 +124,6 @@ namespace Attributes
 			return false;
 		}
 
-
 		#endregion Attributes
 
 		public static void CollectTypes<T>(List<Type> listTypes) where T : class
@@ -170,7 +154,6 @@ namespace Attributes
 
 		public static void CollectBaseAttributes()
 		{
-
 			//
 			if (Attributes.HasBaseMapping()) return;
 
@@ -203,7 +186,6 @@ namespace Attributes
 
 		public static void CollectBaseAttributesParallel()
 		{
-
 			if (Attributes.HasBaseMapping()) return;
 
 			Parallel.ForEach(Assemblys.AllAssemblies, assembly =>
@@ -271,8 +253,6 @@ namespace Attributes
 			{
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
-
-
 
 			//
 			Dictionary<Type, List<object>> dictAttributes;
@@ -590,5 +570,3 @@ namespace Attributes
 		}
 	}
 }
-
-

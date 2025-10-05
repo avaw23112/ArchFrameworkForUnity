@@ -1,3 +1,4 @@
+using Arch.Tools;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System;
@@ -5,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
 namespace Arch.Compilation
 {
@@ -14,13 +14,16 @@ namespace Arch.Compilation
 		private readonly List<IIncrementalGenerator> _incrementalGenerators = new List<IIncrementalGenerator>();
 		private readonly List<ISourceGenerator> _sourceGenerators = new List<ISourceGenerator>();
 		private readonly List<Assembly> _referencedAssemblies = new List<Assembly>();
+
 		private readonly List<string> _searchDirectories = new List<string>
 		{
 			Path.GetDirectoryName(typeof(object).Assembly.Location)
 		};
+
 		private readonly Dictionary<string, string> _codePaths = new Dictionary<string, string>();
 		private readonly List<Action<string>> _postCompileActions = new List<Action<string>>();
 		private readonly HashSet<string> _processedAssemblies = new HashSet<string>();
+
 		private readonly HashSet<string> _excludePatterns = new HashSet<string>
 		{
 			"*.meta",
@@ -102,7 +105,7 @@ namespace Arch.Compilation
 		{
 			if (string.IsNullOrEmpty(_outputRootPath))
 			{
-				Debug.LogError("编译输出路径未设置");
+				ArchLog.LogError("编译输出路径未设置");
 				return false;
 			}
 
@@ -118,7 +121,7 @@ namespace Arch.Compilation
 				if (!success)
 				{
 					allSuccess = false;
-					Debug.LogError($"代码路径 {codeDir} 编译失败");
+					ArchLog.LogError($"代码路径 {codeDir} 编译失败");
 				}
 			}
 
@@ -132,7 +135,7 @@ namespace Arch.Compilation
 				List<string> sourceFiles = CollectSourceFiles(codeDir);
 				if (sourceFiles.Count == 0)
 				{
-					Debug.LogWarning($"代码目录 {codeDir} 中未找到任何C#源文件");
+					ArchLog.LogWarning($"代码目录 {codeDir} 中未找到任何C#源文件");
 					return false;
 				}
 
@@ -149,7 +152,7 @@ namespace Arch.Compilation
 			}
 			catch (Exception ex)
 			{
-				Debug.LogError($"编译失败: {ex.Message}\n{ex.StackTrace}");
+				ArchLog.LogError($"编译失败: {ex.Message}\n{ex.StackTrace}");
 				return false;
 			}
 		}
@@ -160,7 +163,7 @@ namespace Arch.Compilation
 
 			if (!Directory.Exists(codeDir))
 			{
-				Debug.LogError($"代码目录不存在: {codeDir}");
+				ArchLog.LogError($"代码目录不存在: {codeDir}");
 				return sourceFiles;
 			}
 
@@ -216,7 +219,7 @@ namespace Arch.Compilation
 				}
 				catch (Exception ex)
 				{
-					Debug.LogWarning($"处理程序集 [{assembly.FullName}] 时出错: {ex.Message}");
+					ArchLog.LogWarning($"处理程序集 [{assembly.FullName}] 时出错: {ex.Message}");
 				}
 			}
 
@@ -245,7 +248,7 @@ namespace Arch.Compilation
 						}
 						catch (Exception ex)
 						{
-							Debug.LogWarning($"加载DLL [{dllPath}] 失败，可能影响编译: {ex.Message}");
+							ArchLog.LogWarning($"加载DLL [{dllPath}] 失败，可能影响编译: {ex.Message}");
 						}
 					}
 				}
@@ -439,11 +442,11 @@ namespace Arch.Compilation
 
 			if (diagnostic.Severity == DiagnosticSeverity.Error)
 			{
-				Debug.LogError(errorDetails);
+				ArchLog.LogError(errorDetails);
 			}
 			else
 			{
-				Debug.LogWarning(errorDetails);
+				ArchLog.LogWarning(errorDetails);
 			}
 		}
 
@@ -457,7 +460,7 @@ namespace Arch.Compilation
 				}
 				catch (Exception ex)
 				{
-					Debug.LogError($"执行编译后操作时发生错误: {ex.Message}\n{ex.StackTrace}");
+					ArchLog.LogError($"执行编译后操作时发生错误: {ex.Message}\n{ex.StackTrace}");
 				}
 			}
 		}
