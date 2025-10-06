@@ -14,7 +14,7 @@ namespace Arch.Compilation.Editor
 	{
 		public static ArchBuildConfig Config => ArchBuildConfig.LoadOrCreate();
 
-		[MenuItem("Tools/独立编译 (Isolated) _F6")]
+		[MenuItem("Tools/独立编译 (Isolated) _F3")]
 		public static bool CompileIsolated()
 		{
 			var ok = AssemblyBuilderPipeline.BuildIsolated(Config);
@@ -22,7 +22,7 @@ namespace Arch.Compilation.Editor
 			return ok;
 		}
 
-		[MenuItem("Tools/全联编 (FullLink) _F7")]
+		[MenuItem("Tools/全联编 (FullLink) _F4")]
 		public static bool CompileFullLink()
 		{
 			var ok = AssemblyBuilderPipeline.BuildFullLink(Config);
@@ -33,7 +33,7 @@ namespace Arch.Compilation.Editor
 		/// <summary>
 		/// 一键热重载：编译首个 Isolated -> 加载 -> 调用 HotReloader。
 		/// </summary>
-		[MenuItem("Tools/热重载（编译+装载） _F4")]
+		[MenuItem("Tools/热重载 _F5")]
 		public static async void HotReload()
 		{
 			var cfg = ArchBuildConfig.LoadOrCreate();
@@ -65,7 +65,7 @@ namespace Arch.Compilation.Editor
 				HotReloader.LoadHotReloadAssembly(iso);
 			}
 			await HotReloader.HotReload();
-			EditorUtility.DisplayDialog("热重载完成", "所有选中程序集已重新编译并加载。", "OK");
+			ArchLog.LogDebug("热重载完成");
 		}
 	}
 }

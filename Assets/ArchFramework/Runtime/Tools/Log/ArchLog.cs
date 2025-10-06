@@ -21,24 +21,24 @@ namespace Arch.Tools
 			set { if (_logger != null) _logger.Level = value; }
 		}
 
-		private static void Write(LogLevel level, string msg, Exception ex, string file, int line)
+		private static void Write(LogLevel level, string msg, Exception ex, string file, int line, bool includeStackTrace)
 		{
-			_logger?.Log(level, msg, file, line, ex);
+			_logger?.Log(level, msg, file, line, ex, includeStackTrace);
 		}
 
 		public static void LogDebug(string msg, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
-			=> Write(LogLevel.Debug, msg, null, file, line);
+			=> Write(LogLevel.Debug, msg, null, file, line, false);
 
 		public static void LogInfo(string msg, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
-			=> Write(LogLevel.Info, msg, null, file, line);
+			=> Write(LogLevel.Info, msg, null, file, line, false);
 
 		public static void LogWarning(string msg, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
-			=> Write(LogLevel.Warning, msg, null, file, line);
+			=> Write(LogLevel.Warning, msg, null, file, line, false);
 
 		public static void LogError(string msg, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
-			=> Write(LogLevel.Error, msg, null, file, line);
+			=> Write(LogLevel.Error, msg, null, file, line, true);
 
 		public static void LogError(Exception ex, [CallerFilePath] string file = "", [CallerLineNumber] int line = 0)
-			=> Write(LogLevel.Exception, ex?.Message, ex, file, line);
+			=> Write(LogLevel.Exception, ex?.Message, ex, file, line, true);
 	}
 }

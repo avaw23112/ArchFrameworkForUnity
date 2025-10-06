@@ -17,7 +17,7 @@ namespace Arch.Tools
 
 		void Initialize();
 
-		void Log(LogLevel level, string message, string filePath = "", int lineNumber = 0, Exception ex = null);
+		void Log(LogLevel level, string message, string filePath = "", int lineNumber = 0, Exception ex = null, bool includeStackTrace = false);
 
 		void Shutdown();
 	}

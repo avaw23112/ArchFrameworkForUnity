@@ -19,7 +19,7 @@ namespace Arch.Tools
 			Console.WriteLine($"[ArchLog] Initialized at {_logPath}");
 		}
 
-		public void Log(LogLevel level, string message, string filePath = "", int lineNumber = 0, Exception ex = null)
+		public void Log(LogLevel level, string message, string filePath = "", int lineNumber = 0, Exception ex = null, bool includeStackTrace = false)
 		{
 			if (level < Level) return;
 
