@@ -22,9 +22,30 @@ namespace Arch.Tools
 			_hotfixLabel = hotfixLabel;
 		}
 
+		private bool LoadAssembliesOnEditor(List<Assembly> result)
+		{
+#if UNITY_EDITOR
+			var assemblies = new string[] { GameRoot.Setting.AOT, GameRoot.Setting.Model, GameRoot.Setting.Logic, GameRoot.Setting.Protocol };
+			foreach (var dll in assemblies)
+			{
+				var asm = Assembly.Load(dll);
+				result.Add(asm);
+				ArchLog.LogInfo($"Loaded Hotfix: {asm.GetName()}");
+			}
+			return true;
+#else
+			return false;
+#endif
+		}
+
 		public IEnumerable<Assembly> LoadAssemblies()
 		{
 			var result = new List<Assembly>();
+			if (LoadAssembliesOnEditor(result))
+			{
+				return result;
+			}
+
 			try
 			{
 				var aotDlls = ArchRes.LoadAllByLabel<TextAsset>(_aotLabel);
@@ -57,6 +78,10 @@ namespace Arch.Tools
 		public async Task<IEnumerable<Assembly>> LoadAssembliesAsync()
 		{
 			var result = new List<Assembly>();
+			if (LoadAssembliesOnEditor(result))
+			{
+				return result;
+			}
 
 			try
 			{

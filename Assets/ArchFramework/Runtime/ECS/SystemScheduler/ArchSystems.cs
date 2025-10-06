@@ -25,8 +25,7 @@ namespace Arch
 		private ISystemScheduler scheduler;
 
 		// -------------------- 初始化 --------------------
-
-		public static void RegisterArchSystems(ISystemScheduler externalScheduler = null)
+		public static void RegisterSystemInternal()
 		{
 			var inst = Instance;
 			inst.ResetAll();
@@ -57,7 +56,10 @@ namespace Arch
 			{
 				if (sysType.IsAbstract || sysType.IsInterface) continue;
 				var sys = Activator.CreateInstance(sysType);
-				if (sys is ISystem ps) pureList.Add(ps);
+				if (sys is ISystem ps)
+				{
+					pureList.Add(ps);
+				}
 				if (sys is IReactiveSystem rs)
 				{
 					var worldAttr = sysType.GetCustomAttributes(typeof(WorldAttribute), true);
@@ -72,13 +74,31 @@ namespace Arch
 			Sorter.SortSystems(pureList);
 			Sorter.SortSystems(reactiveList);
 
-			foreach (var s in pureList) AddSystem(s);
-			foreach (var s in reactiveList) AddSystem(s);
+			foreach (var s in pureList)
+				AddSystem(s);
+			foreach (var s in reactiveList)
+				AddSystem(s);
 
-			// 启动调度器
-			inst.scheduler = externalScheduler ?? new DefaultSystemScheduler();
-			inst.scheduler.Start(inst.Update, inst.LateUpdate);
+			pureList.Clear();
+			reactiveList.Clear();
+		}
 
+		public static void RegisterArchSystems(ISystemScheduler externalScheduler = null)
+		{
+			RegisterSystemInternal();
+			Instance.scheduler = externalScheduler ?? new DefaultSystemScheduler();
+			Instance.scheduler.Start(Instance.Update, Instance.LateUpdate);
+			ArchLog.LogInfo("ArchSystems 初始化完成。");
+		}
+
+		public static void ReloadArchSystem()
+		{
+			if (Instance.scheduler == null)
+			{
+				ArchLog.LogError("ArchSystems 未存在任务调度器！");
+				return;
+			}
+			RegisterSystemInternal();
 			ArchLog.LogInfo("ArchSystems 初始化完成。");
 		}
 
@@ -113,7 +133,6 @@ namespace Arch
 		public void Start()
 		{
 			foreach (var s in m_awakes) s.Awake();
-			foreach (var s in m_rAwakes) s.SubcribeEntityAwake();
 		}
 
 		public void Update()
@@ -131,10 +150,19 @@ namespace Arch
 		public void Destroy()
 		{
 			foreach (var s in m_destroys) s.Destroy();
-			foreach (var s in m_rDestroys) s.SubcribeEntityDestroy();
 			Unique.World.TearDown();
 			jobScheduler?.Dispose();
 			scheduler?.Stop();
+		}
+
+		public void SubcribeEntityAwake()
+		{
+			foreach (var s in m_rAwakes) s.SubcribeEntityAwake();
+		}
+
+		public void SubcribeEntityDestroy()
+		{
+			foreach (var s in m_rDestroys) s.SubcribeEntityDestroy();
 		}
 	}
 }

@@ -18,6 +18,9 @@ namespace Arch.Runtime
 			public static string ArchSettingPath = $"{SettingPath}/ArchBuildConfig.asset";
 
 			public static string AOT = "ArchFramework.Runtime";
+			public static string Logic = "Code.Logic";
+			public static string Protocol = "Code.Protocol";
+			public static string Model = "Code.Model";
 		}
 
 		// Entry point: initialize after the first scene is loaded
@@ -70,12 +73,15 @@ namespace Arch.Runtime
 			// Net init (set local ClientId and start session)
 
 			// Register [System] systems
-			ArchSystems.RegisterArchSystems();
 			onProgress?.Invoke(0.8f);
 			onProgressTip?.Invoke("Register systems");
 
+			ArchSystems.RegisterArchSystems(new UnityPlayerLoopScheduler());
+
 			// Start systems
 			ArchSystems.Instance.Start();
+			ArchSystems.Instance.SubcribeEntityAwake();
+			ArchSystems.Instance.SubcribeEntityDestroy();
 
 #if UNITY_EDITOR
 			EditorApplication.playModeStateChanged += state =>

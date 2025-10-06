@@ -4,7 +4,6 @@ using Arch.Compilation.Editor;
 using Arch.Tools;
 using Cysharp.Threading.Tasks;
 using Events;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -63,10 +62,11 @@ namespace Arch.Editor
 			Attributes.Attributes.RegisterHotReloadableAttributeSystems();
 
 			//注册所有被标注[System]的系统
-			ArchSystems.RegisterArchSystems();
+			ArchSystems.ReloadArchSystem();
 
 			//重新订阅ReactiveSystem的事件
-			ArchSystems.Instance.Start();
+			ArchSystems.Instance.SubcribeEntityAwake();
+			ArchSystems.Instance.SubcribeEntityDestroy();
 
 			ArchLog.LogInfo("热重载执行完成！");
 		}

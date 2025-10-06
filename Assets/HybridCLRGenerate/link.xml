@@ -1,41 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <linker>
-  <assembly fullname="ArchFramework.Runtime">
-    <type fullname="Arch.IComponent" preserve="all" />
-    <type fullname="Arch.ITag" preserve="all" />
-    <type fullname="Arch.Tools.ArchLog" preserve="all" />
-    <type fullname="Arch.UniqueAttribute" preserve="all" />
-    <type fullname="Events.Event`1" preserve="all" />
-    <type fullname="Events.GameStartEvent" preserve="all" />
-  </assembly>
-  <assembly fullname="MemoryPack.Core">
-    <type fullname="MemoryPack.Formatters.ArrayFormatter`1" preserve="all" />
-    <type fullname="MemoryPack.GenerateType" preserve="all" />
-    <type fullname="MemoryPack.IMemoryPackFormatterRegister" preserve="all" />
-    <type fullname="MemoryPack.IMemoryPackable`1" preserve="all" />
-    <type fullname="MemoryPack.Internal.PreserveAttribute" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackFormatterProvider" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackFormatter`1" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackReader" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackWriter`1" preserve="all" />
-    <type fullname="MemoryPack.MemoryPackableAttribute" preserve="all" />
-  </assembly>
   <assembly fullname="System">
     <type fullname="System.CodeDom.Compiler.GeneratedCodeAttribute" preserve="all" />
-    <type fullname="System.Collections.Generic.Queue`1" preserve="all" />
     <type fullname="System.ComponentModel.EditorBrowsableAttribute" preserve="all" />
     <type fullname="System.ComponentModel.EditorBrowsableState" preserve="all" />
   </assembly>
   <assembly fullname="mscorlib">
     <type fullname="System.Array" preserve="all" />
-    <type fullname="System.Attribute" preserve="all" />
-    <type fullname="System.AttributeTargets" preserve="all" />
-    <type fullname="System.AttributeUsageAttribute" preserve="all" />
-    <type fullname="System.Buffers.IBufferWriter`1" preserve="all" />
     <type fullname="System.Byte" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute" preserve="all" />
     <type fullname="System.Diagnostics.DebuggableAttribute/DebuggingModes" preserve="all" />
-    <type fullname="System.NotImplementedException" preserve="all" />
     <type fullname="System.Object" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.CompilationRelaxationsAttribute" preserve="all" />
     <type fullname="System.Runtime.CompilerServices.CompilerGeneratedAttribute" preserve="all" />
