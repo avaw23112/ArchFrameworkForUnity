@@ -152,23 +152,14 @@ namespace Attributes
 
 		public static void CollectBaseAttributes()
 		{
-			//
-			if (Attributes.HasBaseMapping()) return;
-
-			//
+			Attributes.RemoveMapping();
 			foreach (var assembly in Assemblys.All)
 			{
 				Type[] types = assembly.GetTypes();
 				foreach (var type in types)
 				{
-					if (!type.IsClass || type.IsEnum)
-					{
+					if (type.IsAbstract || type.IsInterface || type.IsEnum || isForget(type))
 						continue;
-					}
-					if (isForget(type))
-					{
-						continue;
-					}
 					object[] attributeTypes = type.GetCustomAttributes(typeof(BaseAttribute), false);
 					if (attributeTypes.Length <= 0)
 					{
@@ -184,8 +175,7 @@ namespace Attributes
 
 		public static void CollectBaseAttributesParallel()
 		{
-			if (Attributes.HasBaseMapping()) return;
-
+			Attributes.RemoveMapping();
 			Parallel.ForEach(Assemblys.All, assembly =>
 			{
 				Type[] types = assembly.GetTypes();
@@ -197,7 +187,7 @@ namespace Attributes
 					if (type.IsAbstract || type.IsInterface || type.IsEnum || isForget(type)) return;
 					var attrs = type.GetCustomAttributes(typeof(BaseAttribute), false);
 					if (attrs.Length == 0) return;
-
+					//
 					foreach (BaseAttribute attr in attrs)
 					{
 						localAttributes.Add((attr.GetType(), attr, type));
@@ -251,8 +241,6 @@ namespace Attributes
 			{
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
-
-			//
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T), out dictAttributes))
 			{
@@ -297,9 +285,6 @@ namespace Attributes
 			{
 				throw new ArgumentNullException(nameof(listAttributes));
 			}
-
-			CollectBaseAttributesParallel();
-			//
 			Dictionary<Type, List<object>> dictAttributes;
 			if (Attributes.TryGetDecrectType(typeof(T1), out dictAttributes))
 			{

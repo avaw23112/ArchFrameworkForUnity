@@ -79,6 +79,28 @@ namespace Arch.Compilation.Editor
 		public string postExportSuffix = "hotfix";
 	}
 
+	[Serializable]
+	public class SystemBuildSetting
+	{
+		[Header("PureAwake 系统列表")]
+		public List<string> pureAwakeSystems = new();
+
+		[Header("ReactiveAwake 系统列表")]
+		public List<string> reactiveAwakeSystems = new();
+
+		[Header("Update 系统列表")]
+		public List<string> updateSystems = new();
+
+		[Header("LateUpdate 系统列表")]
+		public List<string> lateUpdateSystems = new();
+
+		[Header("PureDestroy 系统列表")]
+		public List<string> pureDestroySystems = new();
+
+		[Header("ReactiveDestroy 系统列表")]
+		public List<string> reactiveDestroySystems = new();
+	}
+
 	/// <summary>
 	/// 统一配置（仅保留 AssemblyBuilder 所需字段）。
 	/// 放置位置：Assets/Resources/Config/ArchBuildConfig.asset
@@ -91,6 +113,9 @@ namespace Arch.Compilation.Editor
 
 		[Header("构建设置")]
 		public BuildSetting buildSetting = new BuildSetting();
+
+		[Header("System 构建设置")]
+		public SystemBuildSetting systemBuildSetting = new SystemBuildSetting();
 
 		public static ArchBuildConfig LoadOrCreate()
 		{

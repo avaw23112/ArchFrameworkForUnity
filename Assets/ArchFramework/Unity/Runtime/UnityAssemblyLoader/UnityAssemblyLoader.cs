@@ -25,42 +25,22 @@ namespace Arch.Tools
 			_hotfixLabel = hotfixLabel;
 		}
 
-		private bool LoadAssembliesOnEditor(List<Assembly> result, ArchBuildConfig archBuildConfig)
+		public bool LoadAssembliesOnEditor(List<Assembly> result)
 		{
 #if UNITY_EDITOR
-			string[] assemblies;
-			if (archBuildConfig.buildSetting.buildMode == BuildSetting.AssemblyBuildMode.Isolated)
+			string[] assembliesToLoad = { GameRoot.Setting.AOT, GameRoot.Setting.Logic, GameRoot.Setting.Model, GameRoot.Setting.Protocol };
+			foreach (var assemblyName in assembliesToLoad)
 			{
-				assemblies = new string[]
+				try
 				{
-					GameRoot.Setting.Logic,
-					GameRoot.Setting.Model,
-					GameRoot.Setting.AOT,
-					GameRoot.Setting.Protocol,
-				};
-			}
-			else
-			{
-				assemblies = new string[]
+					var assembly = Assembly.Load(assemblyName);
+					result.Add(assembly);
+				}
+				catch (Exception ex)
 				{
-					GameRoot.Setting.FullLink
-				};
-			}
-			try
-			{
-				foreach (var dll in assemblies)
-				{
-					var asm = Assembly.Load(dll);
-					result.Add(asm);
-					ArchLog.LogInfo($"Loaded Hotfix: {asm.GetName()}");
+					ArchLog.LogError($"Editor :加载程序集 {assemblyName} 时出错: {ex.Message}");
 				}
 			}
-			catch
-			{
-				ArchLog.LogError("Load assembly faild");
-				throw;
-			}
-
 			return true;
 #else
 			return false;
@@ -71,11 +51,6 @@ namespace Arch.Tools
 		{
 			var result = new List<Assembly>();
 			ArchBuildConfig archBuildConfig = ArchBuildConfig.LoadOrCreate();
-			if (LoadAssembliesOnEditor(result, archBuildConfig))
-			{
-				return result;
-			}
-
 			try
 			{
 				var aotDlls = ArchRes.LoadAllByLabel<TextAsset>(_aotLabel);
@@ -115,10 +90,6 @@ namespace Arch.Tools
 		{
 			var result = new List<Assembly>();
 			ArchBuildConfig archBuildConfig = ArchBuildConfig.LoadOrCreate();
-			if (LoadAssembliesOnEditor(result, archBuildConfig))
-			{
-				return result;
-			}
 			await UniTask.SwitchToMainThread();
 			try
 			{

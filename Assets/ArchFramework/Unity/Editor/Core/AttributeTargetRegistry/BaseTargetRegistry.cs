@@ -20,12 +20,17 @@ namespace Arch.Compilation.Editor
 			return ok;
 		}
 
-		public virtual void RegisterAll()
+		public virtual IEnumerable<Type> RegisterTypes()
 		{
-			var types = GetType().Assembly.GetTypes()
+			return GetType().Assembly.GetTypes()
 				.Where(t => t.IsClass && !t.IsAbstract && typeof(TInterface).IsAssignableFrom(t))
 				.Where(t => Attribute.IsDefined(t, typeof(TAttr)));
+		}
 
+		public virtual void RegisterAll()
+		{
+			_map.Clear();
+			var types = RegisterTypes();
 			foreach (var t in types)
 			{
 				try

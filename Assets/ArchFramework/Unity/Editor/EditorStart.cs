@@ -1,7 +1,9 @@
 #if UNITY_EDITOR
 
 using Arch.Compilation.Editor;
+using Arch.Resource;
 using Arch.Tools;
+using Attributes;
 using UnityEditor;
 
 /// <summary>
@@ -12,10 +14,12 @@ public class EditorStart
 {
 	static EditorStart()
 	{
-		ArchLog.SetLogger(new UnityLogger());
-		// 1) 初始化统一配置（首次自动创建 ScriptableObject 资产）
-		ArchBuildConfig.LoadOrCreate();
+		BuildEditorEnvironment();
+		BuildEditorConfigPage();
+	}
 
+	public static void BuildEditorConfigPage()
+	{
 		// 2) 注册可扩展配置页（这里注册默认节，可自由扩展）
 		var hotReloadPage = new ConfigPage("热重载设置");
 		hotReloadPage.RegisterSection(new HotReloadSection());
@@ -34,6 +38,16 @@ public class EditorStart
 		postPage.RegisterSection(new GlobalPostProcessorSection());
 		ConfigSettingsProvider.RegisterPage(postPage);
 
+		// Page3: System可视化
+		var systemsPage = new ConfigPage("系统可视化");
+		systemsPage.RegisterSection(new PureAwakeSection());
+		systemsPage.RegisterSection(new ReactiveAwakeSection());
+		systemsPage.RegisterSection(new UpdateSection());
+		systemsPage.RegisterSection(new LateUpdateSection());
+		systemsPage.RegisterSection(new PureDestroySection());
+		systemsPage.RegisterSection(new ReactiveDestroySection());
+		ConfigSettingsProvider.RegisterPage(systemsPage);
+
 		CsprojPatcher
 			.Begin()
 			.Target("Code.Protocol")
@@ -49,6 +63,22 @@ public class EditorStart
 			.Target("Code.Logic")
 			.AddSourceFolder(@"Codes\Logic")
 			.Apply();
+	}
+
+	public static void BuildEditorEnvironment()
+	{
+		//设置日志
+		ArchLog.SetLogger(new UnityLogger());
+		// 1) 初始化统一配置（首次自动创建 ScriptableObject 资产）
+		ArchBuildConfig.LoadOrCreate();
+		ArchRes.SetProvider(new UnityResProvider());
+		ArchRes.InitializeAsync();
+		//配置程序集，会用到运行时检查
+		Assemblys.SetLoader(new UnityAssemblyLoader());
+		Assemblys.LoadAssemblys();
+		Collector.CollectBaseAttributes();
+
+		AttributeTargetRegistry.RegisterAllRegistries();
 	}
 }
 

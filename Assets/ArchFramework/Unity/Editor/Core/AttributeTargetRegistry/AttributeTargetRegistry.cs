@@ -14,13 +14,9 @@ namespace Arch.Compilation.Editor
 	{
 		private static readonly Dictionary<Type, ITargetRegistry> _registries = new();
 
-		static AttributeTargetRegistry()
+		public static void RegisterAllRegistries()
 		{
-			RegisterAllRegistries();
-		}
-
-		private static void RegisterAllRegistries()
-		{
+			_registries.Clear();
 			var types = typeof(AttributeTargetRegistry).Assembly.GetTypes()
 				.Where(t => t.IsClass && !t.IsAbstract && typeof(ITargetRegistry).IsAssignableFrom(t))
 				.Where(t => Attribute.IsDefined(t, typeof(TargetRegistryAttribute)));

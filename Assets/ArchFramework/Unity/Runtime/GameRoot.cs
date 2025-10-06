@@ -68,7 +68,8 @@ namespace Arch.Runtime
 			ComponentSerializer.RegisterAllSerializers();
 
 			// Collect and register attribute systems
-			Attributes.Collector.CollectBaseAttributesParallel();
+			Attributes.Attributes.RemoveMapping();
+			Attributes.Collector.CollectBaseAttributes();
 			Attributes.Attributes.RegisterAttributeSystems();
 
 			// Net init (set local ClientId and start session)
@@ -76,7 +77,7 @@ namespace Arch.Runtime
 			// Register [System] systems
 			onProgress?.Invoke(0.8f);
 			onProgressTip?.Invoke("Register systems");
-
+			SystemSorter.SetSorter(new UnitySystemSorter());
 			ArchSystems.RegisterArchSystems(new UnityPlayerLoopScheduler());
 
 			// Start systems

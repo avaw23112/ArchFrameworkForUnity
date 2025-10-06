@@ -18,13 +18,13 @@ namespace Arch.Compilation.Editor
 			EditorGUILayout.PropertyField(fullLink.FindPropertyRelative("useEngineModules"), new GUIContent("使用引擎模块"));
 			EditorGUILayout.PropertyField(fullLink.FindPropertyRelative("editorAssembly"), new GUIContent("Editor Assembly"));
 
-			DrawList(fullLink.FindPropertyRelative("sourceDirs"), "源码目录");
-			DrawList(fullLink.FindPropertyRelative("additionalDefines"), "宏定义");
-			DrawList(fullLink.FindPropertyRelative("additionalReferences"), "额外引用 DLL");
+			DrawList(fullLink.FindPropertyRelative("sourceDirs"), so, "源码目录");
+			DrawList(fullLink.FindPropertyRelative("additionalDefines"), so, "宏定义");
+			DrawList(fullLink.FindPropertyRelative("additionalReferences"), so, "额外引用 DLL");
 			EditorGUILayout.EndVertical();
 		}
 
-		private void DrawList(SerializedProperty list, string label)
+		private void DrawList(SerializedProperty list, SerializedObject so, string label)
 		{
 			EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
 			EditorGUI.indentLevel++;
@@ -38,19 +38,29 @@ namespace Arch.Compilation.Editor
 				{
 					var path = EditorUtility.OpenFolderPanel(label, "Assets", "");
 					if (!string.IsNullOrEmpty(path))
+					{
 						list.GetArrayElementAtIndex(i).stringValue = path;
+						so.ApplyModifiedProperties();
+						EditorUtility.SetDirty(so.targetObject);
+					}
 				}
 
 				if (GUILayout.Button("-", GUILayout.Width(25)))
 				{
 					list.DeleteArrayElementAtIndex(i);
+					so.ApplyModifiedProperties();
+					EditorUtility.SetDirty(so.targetObject);
 					break;
 				}
 				EditorGUILayout.EndHorizontal();
 			}
 
 			if (GUILayout.Button("+ 添加", GUILayout.Width(100)))
+			{
 				list.InsertArrayElementAtIndex(list.arraySize);
+				so.ApplyModifiedProperties();
+				EditorUtility.SetDirty(so.targetObject);
+			}
 			EditorGUI.indentLevel--;
 		}
 	}

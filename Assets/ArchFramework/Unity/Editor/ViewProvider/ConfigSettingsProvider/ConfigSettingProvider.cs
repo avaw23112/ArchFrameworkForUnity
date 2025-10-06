@@ -59,6 +59,12 @@ namespace Arch.Compilation.Editor
 				_legacySections.Add(section);
 		}
 
+		public static void ClearAllPages()
+		{
+			_pages.Clear();
+			_legacySections.Clear();
+		}
+
 		#endregion 注册接口
 
 		private void LoadConfig()

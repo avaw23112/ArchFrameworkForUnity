@@ -20,7 +20,7 @@ MonoBehaviour:
     - "DLL \u5BFC\u51FA\u5668"
     globalPostProcessors:
     - "\u8865\u5145\u5143\u6570\u636Edll\u5BFC\u51FA\u5668"
-    - "Addressables\u81EA\u52A8\u6784\u5EFA\u6D41\u7A0B"
+    - "\u81EA\u52A8\u91CD\u5EFA\u7F16\u8F91\u5668\u73AF\u5883"
     postExportDir: Assets/HybridCLRGenerate/HotFixDll
     postExportSuffix: .bytes
   buildSetting:
@@ -62,3 +62,17 @@ MonoBehaviour:
       additionalReferences: []
       useEngineModules: 1
       editorAssembly: 0
+  systemBuildSetting:
+    pureAwakeSystems:
+    - Arch.CommendBufferComponentAwakeSystem
+    - Arch.EntityBindingSystem
+    - Codes.Logic.Test2System
+    reactiveAwakeSystems: []
+    updateSystems: []
+    lateUpdateSystems:
+    - Arch.CommendBufferComponentLateUpdateSystem
+    pureDestroySystems: []
+    reactiveDestroySystems:
+    - Arch.CommendBufferComponentAwakeSystem
+    - Arch.EntityBindingSystem
+    - Arch.ViewModleSyncSystem

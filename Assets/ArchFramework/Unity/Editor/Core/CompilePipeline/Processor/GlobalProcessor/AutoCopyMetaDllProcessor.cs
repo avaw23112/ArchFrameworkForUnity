@@ -20,6 +20,7 @@ namespace Arch.Compilation.Editor
 		public void Process(ArchBuildConfig cfg)
 		{
 			string metaDir = cfg.buildSetting.MetaDllPath;
+
 			string basePath = Path.Combine(Application.dataPath, "..",
 				SettingsUtil.AssembliesPostIl2CppStripDir,
 				EditorUserBuildSettings.activeBuildTarget.ToString());
@@ -30,6 +31,7 @@ namespace Arch.Compilation.Editor
 				if (File.Exists(path))
 					Builder.CopyCompiledDll(path, metaDir, ".bytes");
 			}
+			AssetDatabase.Refresh();
 		}
 	}
 }

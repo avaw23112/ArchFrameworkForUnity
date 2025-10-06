@@ -12,17 +12,12 @@ namespace Arch
 		// -------------------- 系统集合 --------------------
 
 		private readonly List<IPureAwake> m_pAwakes = new();
-		private readonly List<IPureUpdate> m_pUpdates = new();
-		private readonly List<IPureLateUpdate> m_pLateUpdates = new();
+		private readonly List<IUpdate> m_updates = new();
 		private readonly List<IPureDestroy> m_pDestroys = new();
 
 		private readonly List<IReactiveAwake> m_rAwakes = new();
-		private readonly List<IReactiveUpdate> m_rUpdates = new();
-		private readonly List<IReactiveLateUpdate> m_rLateUpdates = new();
-		private readonly List<IReactiveDestroy> m_rDestroys = new();
-
 		private readonly List<ILateUpdate> m_lateUpdates = new();
-		private readonly List<IUpdate> m_updates = new();
+		private readonly List<IReactiveDestroy> m_rDestroys = new();
 
 		private JobScheduler jobScheduler;
 		private ISystemScheduler scheduler;
@@ -74,14 +69,20 @@ namespace Arch
 				}
 			}
 
-			Sorter.SortSystems(pureList);
-			Sorter.SortSystems(reactiveList);
-
 			foreach (var s in pureList)
 				AddSystem(s);
 			foreach (var s in reactiveList)
 				AddSystem(s);
 
+			// 改为门面接口调用：
+			SystemSorter.SortSystems(Instance.m_pAwakes);
+			SystemSorter.SortSystems(Instance.m_rAwakes);
+			SystemSorter.SortSystems(Instance.m_updates);
+			SystemSorter.SortSystems(Instance.m_lateUpdates);
+			SystemSorter.SortSystems(Instance.m_rDestroys);
+			SystemSorter.SortSystems(Instance.m_pDestroys);
+
+			//在这里根据可视化提供的数据进行排序
 			pureList.Clear();
 			reactiveList.Clear();
 		}
@@ -107,8 +108,9 @@ namespace Arch
 
 		private void ResetAll()
 		{
-			m_pAwakes.Clear(); m_pUpdates.Clear(); m_pLateUpdates.Clear(); m_pDestroys.Clear();
-			m_rAwakes.Clear(); m_rUpdates.Clear(); m_rLateUpdates.Clear(); m_rDestroys.Clear();
+			m_pAwakes.Clear(); m_lateUpdates.Clear();
+			m_updates.Clear(); m_pDestroys.Clear();
+			m_rAwakes.Clear(); m_rDestroys.Clear();
 		}
 
 		// -------------------- 添加系统 --------------------
@@ -116,8 +118,8 @@ namespace Arch
 		{
 			var i = Instance;
 			if (sys is IPureAwake a) i.m_pAwakes.Add(a);
-			if (sys is IPureUpdate u) i.m_pUpdates.Add(u);
-			if (sys is IPureLateUpdate l) i.m_pLateUpdates.Add(l);
+			if (sys is IUpdate u) i.m_updates.Add(u);
+			if (sys is IPureLateUpdate l) i.m_lateUpdates.Add(l);
 			if (sys is IPureDestroy d) i.m_pDestroys.Add(d);
 		}
 
@@ -125,8 +127,8 @@ namespace Arch
 		{
 			var i = Instance;
 			if (sys is IReactiveAwake a) i.m_rAwakes.Add(a);
-			if (sys is IReactiveUpdate u) i.m_rUpdates.Add(u);
-			if (sys is IReactiveLateUpdate l) i.m_rLateUpdates.Add(l);
+			if (sys is IUpdate u) i.m_updates.Add(u);
+			if (sys is IPureLateUpdate l) i.m_lateUpdates.Add(l);
 			if (sys is IReactiveDestroy d) i.m_rDestroys.Add(d);
 		}
 
@@ -139,20 +141,19 @@ namespace Arch
 
 		public void Update()
 		{
-			foreach (var s in m_pUpdates) s.Update();
-			foreach (var s in m_rUpdates) s.Update();
+			foreach (var s in m_updates) s.Update();
 		}
 
 		public void LateUpdate()
 		{
-			foreach (var s in m_rLateUpdates) s.LateUpdate();
-			foreach (var s in m_pLateUpdates) s.LateUpdate();
+			foreach (var s in m_lateUpdates) s.LateUpdate();
 		}
 
 		public void Destroy()
 		{
-			foreach (var s in m_pDestroys) s.Destroy();
 			Unique.World.TearDown();
+			foreach (var s in m_pDestroys)
+				s.Destroy();
 			jobScheduler?.Dispose();
 			scheduler?.Stop();
 		}

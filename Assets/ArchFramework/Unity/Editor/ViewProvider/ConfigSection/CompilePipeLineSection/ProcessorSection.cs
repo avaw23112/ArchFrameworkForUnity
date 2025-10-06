@@ -10,7 +10,7 @@ namespace Arch.Compilation.Editor
 	{
 		public abstract string SectionName { get; }
 		protected ReorderableList reorderableList;
-		protected int selectedProcessorIndex = 0;
+		protected int selectedProcessorIndex = -1;
 		protected bool isPostProcessorListExpanded = false;
 
 		protected void InitList(ArchBuildConfig cfg, string processorOrder, List<string> postProcessors)

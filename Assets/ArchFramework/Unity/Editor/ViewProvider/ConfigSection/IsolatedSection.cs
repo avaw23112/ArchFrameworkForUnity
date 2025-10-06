@@ -36,8 +36,8 @@ namespace Arch.Compilation.Editor
 						// 尝试转换为相对路径（例如 Assets/HotfixOutput）
 						if (path.StartsWith(Application.dataPath))
 							path = "Assets" + path.Substring(Application.dataPath.Length);
-
 						outputProp.stringValue = path;
+						so.ApplyModifiedProperties();
 					}
 				}
 				EditorGUILayout.EndHorizontal();
@@ -45,13 +45,15 @@ namespace Arch.Compilation.Editor
 				EditorGUILayout.PropertyField(element.FindPropertyRelative("useEngineModules"), new GUIContent("使用引擎模块"));
 				EditorGUILayout.PropertyField(element.FindPropertyRelative("editorAssembly"), new GUIContent("Editor Assembly"));
 
-				DrawList(element.FindPropertyRelative("sourceDirs"), "源码目录");
-				DrawList(element.FindPropertyRelative("additionalDefines"), "宏定义");
-				DrawList(element.FindPropertyRelative("additionalReferences"), "额外引用 DLL");
+				DrawList(element.FindPropertyRelative("sourceDirs"), so, "源码目录");
+				DrawList(element.FindPropertyRelative("additionalDefines"), so, "宏定义");
+				DrawList(element.FindPropertyRelative("additionalReferences"), so, "额外引用 DLL");
 
 				if (GUILayout.Button("删除该条目", GUILayout.Width(120)))
 				{
 					list.DeleteArrayElementAtIndex(i);
+					so.ApplyModifiedProperties();
+					EditorUtility.SetDirty(so.targetObject);
 					break;
 				}
 				EditorGUILayout.EndVertical();
@@ -64,10 +66,12 @@ namespace Arch.Compilation.Editor
 				var newElem = list.GetArrayElementAtIndex(list.arraySize - 1);
 				newElem.FindPropertyRelative("assemblyName").stringValue = "NewAssembly";
 				newElem.FindPropertyRelative("outputDir").stringValue = "HotfixOutput";
+				so.ApplyModifiedProperties();
+				EditorUtility.SetDirty(so.targetObject);
 			}
 		}
 
-		private void DrawList(SerializedProperty list, string label)
+		private void DrawList(SerializedProperty list, SerializedObject so, string label)
 		{
 			EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
 			EditorGUI.indentLevel++;
@@ -85,19 +89,27 @@ namespace Arch.Compilation.Editor
 						if (path.StartsWith(Application.dataPath))
 							path = "Assets" + path.Substring(Application.dataPath.Length);
 						list.GetArrayElementAtIndex(i).stringValue = path;
+						so.ApplyModifiedProperties();
+						EditorUtility.SetDirty(so.targetObject);
 					}
 				}
 
 				if (GUILayout.Button("-", GUILayout.Width(25)))
 				{
 					list.DeleteArrayElementAtIndex(i);
+					so.ApplyModifiedProperties();
+					EditorUtility.SetDirty(so.targetObject);
 					break;
 				}
 				EditorGUILayout.EndHorizontal();
 			}
 
 			if (GUILayout.Button("+ 添加", GUILayout.Width(100)))
+			{
+				so.ApplyModifiedProperties();
 				list.InsertArrayElementAtIndex(list.arraySize);
+				EditorUtility.SetDirty(so.targetObject);
+			}
 
 			EditorGUI.indentLevel--;
 		}
