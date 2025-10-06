@@ -4,7 +4,7 @@ using Arch.Tools;
 namespace Codes.Logic
 {
 	[System]
-	internal class TestSystem : IUpdate
+	internal class TestSystem : IPureUpdate
 	{
 		public void Update()
 		{

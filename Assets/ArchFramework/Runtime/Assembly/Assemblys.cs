@@ -25,6 +25,11 @@ namespace Arch.Tools
 				_assemblies[asm.GetName().Name] = asm;
 		}
 
+		/// <summary>
+		/// Unity下不要使用异步加载
+		/// </summary>
+		/// <returns></returns>
+		/// <exception cref="InvalidOperationException"></exception>
 		public static async Task LoadAssemblysAsync()
 		{
 			if (_loader == null)

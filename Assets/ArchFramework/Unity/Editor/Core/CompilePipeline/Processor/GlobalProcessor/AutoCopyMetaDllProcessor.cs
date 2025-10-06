@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Arch.Compilation.Editor
 {
 	[GlobalPostBuildProcessor]
-	internal class AutoCopyMetaDllProcessor : IGlobalPostProcessor
+	internal class AutoCopyMetaDllProcessor : IGlobalPostProcessor, IPostBuildProcessorGUI
 	{
 		public string Name => "补充元数据dll导出器";
 		public string Description => "用于自动拷贝补充元数据";

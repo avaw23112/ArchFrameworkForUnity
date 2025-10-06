@@ -7,9 +7,9 @@ namespace Arch
 	public interface IComponent
 	{
 	}
+
 	public interface ITag : IComponent
 	{
-
 	}
 
 	#endregion Component
@@ -33,19 +33,27 @@ namespace Arch
 		public bool GetTrigger(Entity entity);
 	}
 
+	public interface IUpdate
+	{
+		public void Update();
+	}
+
+	public interface ILateUpdate
+	{
+		public void LateUpdate();
+	}
+
 	public interface IReactiveAwake : IReactiveSystem
 	{
 		public void SubcribeEntityAwake();
 	}
 
-	public interface IReactiveUpdate : IReactiveSystem
+	public interface IReactiveUpdate : IReactiveSystem, IUpdate
 	{
-		public void Update();
 	}
 
-	public interface IReactiveLateUpdate : IReactiveSystem
+	public interface IReactiveLateUpdate : IReactiveSystem, ILateUpdate
 	{
-		public void LateUpdate();
 	}
 
 	public interface IReactiveDestroy : IReactiveSystem
@@ -53,22 +61,20 @@ namespace Arch
 		public void SubcribeEntityDestroy();
 	}
 
-	public interface IAwake : ISystem
+	public interface IPureAwake : ISystem
 	{
 		public void Awake();
 	}
 
-	public interface IUpdate : ISystem
+	public interface IPureUpdate : ISystem, IUpdate
 	{
-		public void Update();
 	}
 
-	public interface ILateUpdate : ISystem
+	public interface IPureLateUpdate : ISystem, ILateUpdate
 	{
-		public void LateUpdate();
 	}
 
-	public interface IDestroy : ISystem
+	public interface IPureDestroy : ISystem
 	{
 		public void Destroy();
 	}

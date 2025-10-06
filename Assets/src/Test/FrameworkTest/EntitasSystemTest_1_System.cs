@@ -6,7 +6,7 @@ namespace Assets.Scripts.Test
 {
     [Forget]
     [System]
-    public class EntitasSystemTest_1_System : IAwake
+    public class EntitasSystemTest_1_System : IPureAwake
     {
         public void Awake()
         {
@@ -16,7 +16,7 @@ namespace Assets.Scripts.Test
 
     [Forget]
     [System]
-    public class EntitasSystemTest_2_System : IUpdate
+    public class EntitasSystemTest_2_System : IPureUpdate
     {
         public void Update()
         {
@@ -26,7 +26,7 @@ namespace Assets.Scripts.Test
 
     [Forget]
     [System]
-    public class EntitasSystemTest_3_System : ILateUpdate
+    public class EntitasSystemTest_3_System : IPureLateUpdate
     {
         public void LateUpdate()
         {
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Test
 
     [Forget]
     [System]
-    public class EntitasSystemTest_4_System : IDestroy
+    public class EntitasSystemTest_4_System : IPureDestroy
     {
         public void Destroy()
         {

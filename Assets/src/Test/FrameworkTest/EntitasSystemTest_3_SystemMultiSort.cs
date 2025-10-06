@@ -13,7 +13,7 @@ namespace Assets.Scripts.Test.FrameworkTest
     [Before(typeof(EntitasSystemTest_3_SystemSort_2))]
     [After(typeof(EntitasSystemTest_3_SystemSort_3))]
     [Forget]
-    public class EntitasSystemTest_3_SystemSort_1 : IAwake
+    public class EntitasSystemTest_3_SystemSort_1 : IPureAwake
     {
         public void Awake()
         {
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 
     [Forget]
     [System]
-    public class EntitasSystemTest_3_SystemSort_2 : IAwake
+    public class EntitasSystemTest_3_SystemSort_2 : IPureAwake
     {
         public void Awake()
         {
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Test.FrameworkTest
 
     [Forget]
     [System]
-    public class EntitasSystemTest_3_SystemSort_3 : IAwake
+    public class EntitasSystemTest_3_SystemSort_3 : IPureAwake
     {
         public void Awake()
         {

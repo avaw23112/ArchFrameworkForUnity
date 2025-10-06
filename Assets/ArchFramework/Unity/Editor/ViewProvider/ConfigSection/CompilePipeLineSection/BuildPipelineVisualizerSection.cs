@@ -23,7 +23,6 @@ namespace Arch.Compilation.Editor
 		private const float kBlockHeight = 42f;
 		private const float kStageGap = 12f;
 		private const float kStagePadding = 6f;
-		private const float kCorner = 4f;
 
 		public void OnGUI(SerializedObject so)
 		{
@@ -158,17 +157,17 @@ namespace Arch.Compilation.Editor
 			switch (sectionTitle)
 			{
 				case "编译前处理器":
-					if (PreBuildProcessorRegistry.TryGet(processorName, out var pre))
+					if (AttributeTargetRegistry.TryGet<PreBuildProcessorRegistry, IPreBuildProcessor>(processorName, out var pre))
 						return $"{pre.Name}\n{pre.Description}";
 					break;
 
 				case "编译中后处理器":
-					if (UnitPostBuildProcessorRegistry.TryGet(processorName, out var post))
+					if (AttributeTargetRegistry.TryGet<UnitPostBuildProcessorRegistry, IUnitPostBuildProcessor>(processorName, out var post))
 						return $"{post.Name}\n{post.Description}";
 					break;
 
 				case "总后处理器":
-					if (GlobalPostBuildProcessorRegistry.TryGet(processorName, out var global))
+					if (AttributeTargetRegistry.TryGet<GlobalPostBuildProcessorRegistry, IGlobalPostProcessor>(processorName, out var global))
 						return $"{global.Name}\n{global.Description}";
 					break;
 			}

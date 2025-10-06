@@ -2,7 +2,6 @@
 
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace Arch.Compilation.Editor
 {
@@ -26,7 +25,7 @@ namespace Arch.Compilation.Editor
 
 		private void DrawAddProcessorPopup(ArchBuildConfig cfg)
 		{
-			var all = UnitPostBuildProcessorRegistry.All.ToList();
+			var all = AttributeTargetRegistry.All<UnitPostBuildProcessorRegistry, IUnitPostBuildProcessor>();
 			var allNames = all.Select(p => p.Name).ToArray();
 			selectedProcessorIndex = EditorGUILayout.Popup("添加处理器", selectedProcessorIndex, allNames);
 			if (selectedProcessorIndex >= 0)
@@ -47,7 +46,7 @@ namespace Arch.Compilation.Editor
 				return;
 
 			string selectedName = cfg.compilePipeLineSetting.postProcessors[selectedProcessorIndex];
-			if (!UnitPostBuildProcessorRegistry.TryGet(selectedName, out var processor))
+			if (!AttributeTargetRegistry.TryGet<UnitPostBuildProcessorRegistry, IUnitPostBuildProcessor>(selectedName, out var processor))
 				return;
 
 			ProcessorOnGUI(so, processor);

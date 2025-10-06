@@ -29,7 +29,7 @@ namespace Arch
 
 	[System]
 	[Last]
-	public class CommendBufferComponentLateUpdateSystem : ILateUpdate
+	public class CommendBufferComponentLateUpdateSystem : IPureLateUpdate
 	{
 		public void LateUpdate()
 		{

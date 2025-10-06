@@ -1,10 +1,13 @@
 ﻿#if UNITY_2020_1_OR_NEWER
 
+using Arch.Compilation.Editor;
 using Arch.Resource;
 using Arch.Runtime;
+using Cysharp.Threading.Tasks;
 using HybridCLR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -22,16 +25,42 @@ namespace Arch.Tools
 			_hotfixLabel = hotfixLabel;
 		}
 
-		private bool LoadAssembliesOnEditor(List<Assembly> result)
+		private bool LoadAssembliesOnEditor(List<Assembly> result, ArchBuildConfig archBuildConfig)
 		{
 #if UNITY_EDITOR
-			var assemblies = new string[] { GameRoot.Setting.AOT, GameRoot.Setting.Model, GameRoot.Setting.Logic, GameRoot.Setting.Protocol };
-			foreach (var dll in assemblies)
+			string[] assemblies;
+			if (archBuildConfig.buildSetting.buildMode == BuildSetting.AssemblyBuildMode.Isolated)
 			{
-				var asm = Assembly.Load(dll);
-				result.Add(asm);
-				ArchLog.LogInfo($"Loaded Hotfix: {asm.GetName()}");
+				assemblies = new string[]
+				{
+					GameRoot.Setting.Logic,
+					GameRoot.Setting.Model,
+					GameRoot.Setting.AOT,
+					GameRoot.Setting.Protocol,
+				};
 			}
+			else
+			{
+				assemblies = new string[]
+				{
+					GameRoot.Setting.FullLink
+				};
+			}
+			try
+			{
+				foreach (var dll in assemblies)
+				{
+					var asm = Assembly.Load(dll);
+					result.Add(asm);
+					ArchLog.LogInfo($"Loaded Hotfix: {asm.GetName()}");
+				}
+			}
+			catch
+			{
+				ArchLog.LogError("Load assembly faild");
+				throw;
+			}
+
 			return true;
 #else
 			return false;
@@ -41,7 +70,8 @@ namespace Arch.Tools
 		public IEnumerable<Assembly> LoadAssemblies()
 		{
 			var result = new List<Assembly>();
-			if (LoadAssembliesOnEditor(result))
+			ArchBuildConfig archBuildConfig = ArchBuildConfig.LoadOrCreate();
+			if (LoadAssembliesOnEditor(result, archBuildConfig))
 			{
 				return result;
 			}
@@ -59,6 +89,12 @@ namespace Arch.Tools
 				if (assembly != null)
 				{
 					result.Add(assembly);
+				}
+				if (archBuildConfig.buildSetting.buildMode == BuildSetting.AssemblyBuildMode.FullLink
+					&& hotfixDlls.Count() > 1)
+				{
+					ArchLog.LogError("Befor loading fullLink assembly,please delete all isolates");
+					throw new Exception("Befor loading fullLink assembly,please delete all isolates");
 				}
 				foreach (var dll in hotfixDlls)
 				{
@@ -78,11 +114,12 @@ namespace Arch.Tools
 		public async Task<IEnumerable<Assembly>> LoadAssembliesAsync()
 		{
 			var result = new List<Assembly>();
-			if (LoadAssembliesOnEditor(result))
+			ArchBuildConfig archBuildConfig = ArchBuildConfig.LoadOrCreate();
+			if (LoadAssembliesOnEditor(result, archBuildConfig))
 			{
 				return result;
 			}
-
+			await UniTask.SwitchToMainThread();
 			try
 			{
 				var aotDlls = await ArchRes.LoadAllByLabelAsync<TextAsset>(_aotLabel);
@@ -93,7 +130,12 @@ namespace Arch.Tools
 					var err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(aot.bytes, HomologousImageMode.SuperSet);
 					ArchLog.LogInfo($"Loaded AOT metadata: {aot.name}, result: {err}");
 				}
-
+				if (archBuildConfig.buildSetting.buildMode == BuildSetting.AssemblyBuildMode.FullLink
+		&& hotfixDlls.Count() > 1)
+				{
+					ArchLog.LogError("Befor loading fullLink assembly,please delete all isolates");
+					throw new Exception("Befor loading fullLink assembly,please delete all isolates");
+				}
 				Assembly assembly = Assembly.Load(GameRoot.Setting.AOT);
 				if (assembly != null)
 				{

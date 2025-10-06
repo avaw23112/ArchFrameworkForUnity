@@ -27,7 +27,7 @@ namespace Arch.Compilation.Editor
 
 		private void DrawAddProcessorPopup(ArchBuildConfig cfg)
 		{
-			var all = PreBuildProcessorRegistry.All.ToList();
+			var all = AttributeTargetRegistry.All<PreBuildProcessorRegistry, IPreBuildProcessor>();
 			var allNames = all.Select(p => p.Name).ToArray();
 			selectedProcessorIndex = EditorGUILayout.Popup("添加处理器", selectedProcessorIndex, allNames);
 			if (selectedProcessorIndex >= 0)
@@ -48,7 +48,7 @@ namespace Arch.Compilation.Editor
 				return;
 
 			string selectedName = cfg.compilePipeLineSetting.preBuildProcessors[selectedProcessorIndex];
-			if (!PreBuildProcessorRegistry.TryGet(selectedName, out var processor))
+			if (!AttributeTargetRegistry.TryGet<PreBuildProcessorRegistry, IPreBuildProcessor>(selectedName, out var processor))
 				return;
 
 			ProcessorOnGUI(so, processor);

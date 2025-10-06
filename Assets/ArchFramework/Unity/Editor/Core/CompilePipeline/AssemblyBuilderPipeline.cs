@@ -146,7 +146,7 @@ namespace Arch.Compilation.Editor
 
 			foreach (var name in cfg.compilePipeLineSetting.globalPostProcessors)
 			{
-				if (GlobalPostBuildProcessorRegistry.TryGet(name, out var processor))
+				if (AttributeTargetRegistry.TryGet<GlobalPostBuildProcessorRegistry, IGlobalPostProcessor>(name, out var processor))
 				{
 					try
 					{
@@ -177,7 +177,7 @@ namespace Arch.Compilation.Editor
 
 			foreach (var name in cfg.compilePipeLineSetting.postProcessors)
 			{
-				if (UnitPostBuildProcessorRegistry.TryGet(name, out var processor))
+				if (AttributeTargetRegistry.TryGet<UnitPostBuildProcessorRegistry, IUnitPostBuildProcessor>(name, out var processor))
 				{
 					try
 					{
@@ -205,7 +205,7 @@ namespace Arch.Compilation.Editor
 
 			foreach (var name in cfg.compilePipeLineSetting.preBuildProcessors)
 			{
-				if (PreBuildProcessorRegistry.TryGet(name, out var processor))
+				if (AttributeTargetRegistry.TryGet<PreBuildProcessorRegistry, IPreBuildProcessor>(name, out var processor))
 				{
 					try
 					{

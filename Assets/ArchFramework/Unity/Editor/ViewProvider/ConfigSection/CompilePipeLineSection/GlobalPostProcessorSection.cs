@@ -30,7 +30,7 @@ namespace Arch.Compilation.Editor
 
 		private void DrawAddProcessorPopup(ArchBuildConfig cfg)
 		{
-			var all = GlobalPostBuildProcessorRegistry.All.ToList();
+			var all = AttributeTargetRegistry.All<GlobalPostBuildProcessorRegistry, IGlobalPostProcessor>();
 			var allNames = all.Select(p => p.Name).ToArray();
 			selectedProcessorIndex = EditorGUILayout.Popup("添加处理器", selectedProcessorIndex, allNames);
 			if (selectedProcessorIndex >= 0)
@@ -59,7 +59,7 @@ namespace Arch.Compilation.Editor
 				return;
 
 			string selectedName = cfg.compilePipeLineSetting.globalPostProcessors[selectedProcessorIndex];
-			if (!GlobalPostBuildProcessorRegistry.TryGet(selectedName, out var processor))
+			if (!AttributeTargetRegistry.TryGet<GlobalPostBuildProcessorRegistry, IGlobalPostProcessor>(selectedName, out var processor))
 				return;
 
 			ProcessorOnGUI(so, processor);

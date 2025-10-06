@@ -2,7 +2,7 @@
 
 namespace Arch
 {
-	public abstract class UniqueComponentSystem<T> : DestroySystem<T>, IAwake
+	public abstract class UniqueComponentSystem<T> : DestroySystem<T>, IPureAwake
 		where T : IComponent
 	{
 		public void Awake()
