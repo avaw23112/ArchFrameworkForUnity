@@ -65,8 +65,8 @@ namespace Arch.Editor
 			ArchSystems.ReloadArchSystem();
 
 			//重新订阅ReactiveSystem的事件
-			ArchSystems.Instance.SubcribeEntityAwake();
-			ArchSystems.Instance.SubcribeEntityDestroy();
+			ArchSystems.SubcribeEntityAwake();
+			ArchSystems.SubcribeEntityDestroy();
 
 			ArchLog.LogInfo("热重载执行完成！");
 		}

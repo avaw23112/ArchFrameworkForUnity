@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Arch.Net/ISession.cs
+using System;
 
-namespace Assets.ArchFramework.Runtime.Net.Infrastructure.Session
+namespace Arch.Net
 {
-	internal class ISession
+	public interface ISession : IDisposable
 	{
+		SessionId Id { get; }
+		string Name { get; }
+		bool IsLocal { get; }
+		DateTime LastSeenUtc { get; }
+
+		event Action<PooledBuffer> OnData;
+
+		bool Send(in PooledBuffer buf, Delivery delivery, byte channel = 0);
+
+		bool Send(ReadOnlySpan<byte> payload, Delivery delivery, byte channel = 0);
+
+		bool Send(ReadOnlyMemory<byte> payload, Delivery delivery, byte channel = 0);
+
+		void Touch();
 	}
 }

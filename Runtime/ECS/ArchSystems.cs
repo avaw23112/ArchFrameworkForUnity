@@ -1,0 +1,171 @@
+﻿using Arch.Core;
+using Arch.Tools;
+using Assets.src.AOT.ECS.SystemScheduler;
+using Schedulers;
+using System;
+using System.Collections.Generic;
+
+namespace Arch
+{
+	public class ArchSystems : Singleton<ArchSystems>
+	{
+		// -------------------- 系统集合 --------------------
+
+		private readonly List<IPureAwake> m_pAwakes = new();
+		private readonly List<IUpdate> m_updates = new();
+		private readonly List<IPureDestroy> m_pDestroys = new();
+
+		private readonly List<IReactiveAwake> m_rAwakes = new();
+		private readonly List<ILateUpdate> m_lateUpdates = new();
+		private readonly List<IReactiveDestroy> m_rDestroys = new();
+
+		private JobScheduler jobScheduler;
+		private ISystemScheduler scheduler;
+
+		// -------------------- 初始化 --------------------
+		public static void RegisterSystemInternal()
+		{
+			var inst = Instance;
+			inst.ResetAll();
+			NamedWorld.ClearEvents();
+
+			// 加载并行任务配置
+			inst.jobScheduler = new JobScheduler(new JobScheduler.Config
+			{
+				ThreadPrefixName = "Arch.Scheduler",
+				ThreadCount = 0,
+				MaxExpectedConcurrentJobs = 64,
+				StrictAllocationMode = false,
+			});
+			World.SharedJobScheduler = inst.jobScheduler;
+
+			// 扫描系统
+			if (!Attributes.Attributes.TryGetDecrectType(typeof(SystemAttribute), out var dicSystems)
+				|| dicSystems.Count == 0)
+			{
+				ArchLog.LogInfo("系统中暂无可注册的 System。");
+				return;
+			}
+
+			var pureList = new List<ISystem>();
+			var reactiveList = new List<IReactiveSystem>();
+
+			foreach (var sysType in dicSystems.Keys)
+			{
+				if (sysType.IsAbstract || sysType.IsInterface) continue;
+				var sys = Activator.CreateInstance(sysType);
+				if (sys is ISystem ps)
+				{
+					pureList.Add(ps);
+				}
+				if (sys is IReactiveSystem rs)
+				{
+					var worldAttr = sysType.GetCustomAttributes(typeof(WorldAttribute), true);
+					string worldName = worldAttr.Length > 0 ? ((WorldAttribute)worldAttr[0]).worldName : "Default";
+					if (string.IsNullOrEmpty(worldName))
+						throw new Exception($"ReactiveSystem 未指定 World: {sysType}");
+					rs.BuildIn(NamedWorld.GetNamed(worldName));
+					reactiveList.Add(rs);
+				}
+			}
+
+			foreach (var s in pureList)
+				AddSystem(s);
+			foreach (var s in reactiveList)
+				AddSystem(s);
+
+			// 改为门面接口调用：
+			SystemSorter.SortSystems(Instance.m_pAwakes);
+			SystemSorter.SortSystems(Instance.m_rAwakes);
+			SystemSorter.SortSystems(Instance.m_updates);
+			SystemSorter.SortSystems(Instance.m_lateUpdates);
+			SystemSorter.SortSystems(Instance.m_rDestroys);
+			SystemSorter.SortSystems(Instance.m_pDestroys);
+
+			//在这里根据可视化提供的数据进行排序
+			pureList.Clear();
+			reactiveList.Clear();
+		}
+
+		public static void RegisterArchSystems(ISystemScheduler externalScheduler = null)
+		{
+			RegisterSystemInternal();
+			Instance.scheduler = externalScheduler ?? new DefaultSystemScheduler();
+			Instance.scheduler.Start(Instance.Update, Instance.LateUpdate);
+			ArchLog.LogInfo("ArchSystems 初始化完成。");
+		}
+
+		public static void ReloadArchSystem()
+		{
+			if (Instance.scheduler == null)
+			{
+				ArchLog.LogError("ArchSystems 未存在任务调度器！");
+				return;
+			}
+			RegisterSystemInternal();
+			ArchLog.LogInfo("ArchSystems 初始化完成。");
+		}
+
+		private void ResetAll()
+		{
+			m_pAwakes.Clear(); m_lateUpdates.Clear();
+			m_updates.Clear(); m_pDestroys.Clear();
+			m_rAwakes.Clear(); m_rDestroys.Clear();
+		}
+
+		// -------------------- 添加系统 --------------------
+		private static void AddSystem(ISystem sys)
+		{
+			var i = Instance;
+			if (sys is IPureAwake a) i.m_pAwakes.Add(a);
+			if (sys is IUpdate u) i.m_updates.Add(u);
+			if (sys is IPureLateUpdate l) i.m_lateUpdates.Add(l);
+			if (sys is IPureDestroy d) i.m_pDestroys.Add(d);
+		}
+
+		private static void AddSystem(IReactiveSystem sys)
+		{
+			var i = Instance;
+			if (sys is IReactiveAwake a) i.m_rAwakes.Add(a);
+			if (sys is IUpdate u) i.m_updates.Add(u);
+			if (sys is IPureLateUpdate l) i.m_lateUpdates.Add(l);
+			if (sys is IReactiveDestroy d) i.m_rDestroys.Add(d);
+		}
+
+		// -------------------- 生命周期 --------------------
+
+		public void Start()
+		{
+			foreach (var s in m_pAwakes) s.Awake();
+		}
+
+		public void Update()
+		{
+			foreach (var s in m_updates) s.Update();
+		}
+
+		public void LateUpdate()
+		{
+			foreach (var s in m_lateUpdates) s.LateUpdate();
+		}
+
+		public void Destroy()
+		{
+			Unique.World.TearDown();
+			foreach (var s in m_pDestroys)
+				s.Destroy();
+			jobScheduler?.Dispose();
+			scheduler?.Stop();
+		}
+
+		public void SubcribeEntityAwake()
+		{
+			foreach (var s in m_rAwakes) s.SubcribeEntityAwake();
+		}
+
+		public void SubcribeEntityDestroy()
+		{
+			foreach (var s in m_rDestroys) s.SubcribeEntityDestroy();
+		}
+	}
+}

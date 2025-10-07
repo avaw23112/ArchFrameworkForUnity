@@ -5,7 +5,7 @@ using Unity.Collections;
 namespace Arch
 {
 	[System]
-	public class EntityBindingSystem : UniqueComponentSystem<EntityBindingComponent>
+	public class EntityBindingSystem : Unique.LifecycleSystem<EntityBindingComponent>
 	{
 		protected override void OnAwake(ref EntityBindingComponent component)
 		{

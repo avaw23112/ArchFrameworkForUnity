@@ -1,0 +1,59 @@
+﻿using Arch.Buffer;
+using Arch.Core;
+using Arch.Tools.Pool;
+
+namespace Arch
+{
+	[System]
+	public class CommendBufferComponentAwakeSystem : UniqueComponentSystem<CommendBuffersComponent>
+	{
+		protected override void OnAwake(ref CommendBuffersComponent component)
+		{
+			component.commandBuffers = DictionaryPool<int, CommandBufferHandler>.Get();
+
+			//因为CommendBuffer不会重复生成，因此就不考虑池化了
+			foreach (var worldNamed in NamedWorld.Instance.NamedWorlds)
+			{
+				component.commandBuffers.Add(worldNamed.Id, new CommandBufferHandler()
+				{
+					commendBuffer = new CommandBuffer(),
+				});
+			}
+		}
+
+		protected override void OnDestroy(ref CommendBuffersComponent component)
+		{
+			DictionaryPool<int, CommandBufferHandler>.Release(component.commandBuffers);
+		}
+	}
+
+	[System]
+	[Last]
+	public class CommendBufferComponentLateUpdateSystem : IPureLateUpdate
+	{
+		public void LateUpdate()
+		{
+			Unique.Component<CommendBuffersComponent>.Getter((in CommendBuffersComponent component_T1) =>
+			{
+				foreach (var kv in component_T1.commandBuffers)
+				{
+					CommandBufferHandler pBufferHandler = kv.Value;
+
+					if (!pBufferHandler.isHasCommand)
+					{
+						continue;
+					}
+
+					int nWorldId = kv.Key;
+					World pWorld = World.Worlds[nWorldId];
+					if (pWorld == null)
+					{
+						continue;
+					}
+					pBufferHandler.commendBuffer.Playback(pWorld);
+					pBufferHandler.isHasCommand = false;
+				}
+			});
+		}
+	}
+}

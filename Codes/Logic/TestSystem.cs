@@ -14,6 +14,7 @@ namespace Codes.Logic
 		}
 	}
 
+	[Forget]
 	[System]
 	internal class Test3System : IPureUpdate
 	{
@@ -23,6 +24,7 @@ namespace Codes.Logic
 		}
 	}
 
+	[Forget]
 	[System]
 	internal class Test1System : IPureAwake
 	{
@@ -32,6 +34,7 @@ namespace Codes.Logic
 		}
 	}
 
+	[Forget]
 	[System]
 	internal class Test2System : IPureAwake
 	{

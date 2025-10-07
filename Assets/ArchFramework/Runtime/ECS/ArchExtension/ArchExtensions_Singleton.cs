@@ -50,6 +50,39 @@ namespace Arch
 			}
 		}
 
+		public abstract class LifecycleSystem<T> : DestroySystem<T>, IPureAwake where T : IComponent
+
+		{
+			public void Awake()
+			{
+				Unique.Component<T>.Setter((ref T component) => OnAwake(ref component));
+			}
+
+			protected override void Run(Core.Entity entity, ref T component)
+			{
+				OnDestroy(ref component);
+			}
+
+			protected abstract void OnAwake(ref T component);
+
+			protected abstract void OnDestroy(ref T component);
+		}
+
+		public abstract class UpdateSystem<T> : IPureUpdate where T : IComponent
+		{
+			public void Update() => Component<T>.Setter((ref T component) => OnUpdate(ref component));
+
+			protected abstract void OnUpdate(ref T component);
+		}
+
+		public abstract class LateUpdateSystem<T> : IPureLateUpdate where T : IComponent
+		{
+			public void LateUpdate()
+				=> Unique.Component<T>.Setter((ref T component) => OnLateUpdate(ref component));
+
+			protected abstract void OnLateUpdate(ref T component);
+		}
+
 		public class Component
 		{
 			public static void Set(ComponentType componentType, object component)

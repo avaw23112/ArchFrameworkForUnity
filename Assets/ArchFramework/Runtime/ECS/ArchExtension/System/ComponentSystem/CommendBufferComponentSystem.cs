@@ -5,7 +5,7 @@ using Arch.Tools.Pool;
 namespace Arch
 {
 	[System]
-	public class CommendBufferComponentAwakeSystem : UniqueComponentSystem<CommendBuffersComponent>
+	public class CommendBufferComponentAwakeSystem : Unique.LifecycleSystem<CommendBuffersComponent>
 	{
 		protected override void OnAwake(ref CommendBuffersComponent component)
 		{
@@ -28,7 +28,6 @@ namespace Arch
 	}
 
 	[System]
-	[Last]
 	public class CommendBufferComponentLateUpdateSystem : IPureLateUpdate
 	{
 		public void LateUpdate()

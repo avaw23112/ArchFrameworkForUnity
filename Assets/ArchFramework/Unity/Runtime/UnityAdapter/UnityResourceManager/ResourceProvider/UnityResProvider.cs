@@ -4,9 +4,9 @@ using Arch.Tools;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
@@ -43,60 +43,111 @@ namespace Arch.Resource
 
 		public async UniTask InitializeAsync()
 		{
-			if (_initialized) return;
+			if (_initialized)
+				return;
 
 			await Addressables.InitializeAsync().Task;
+
+			// 🚀 预分配容量
+			var visitedAddrs = new HashSet<string>(1024, StringComparer.OrdinalIgnoreCase);
+			_name2Addr.Clear();
+			_duplicates.Clear();
+
+			// 🚀 并行处理每个 locator
+			var tasks = new List<UniTask>();
 
 			foreach (var locator in Addressables.ResourceLocators)
 			{
 				if (locator == null)
-					continue; // 🔒 防御空对象
+					continue;
+
+#if UNITY_EDITOR
+				if (locator.GetType().Name == "AddressableAssetSettingsLocator")
+					continue; // 跳过编辑器定位器
+#endif
+
+				if (locator.GetType().Name != "ResourceLocationMap")
+					continue; // 🚀 仅扫描主映射表（性能最佳）
 
 				if (locator.Keys == null)
-					continue; // 🔒 防御部分 DynamicResourceLocator 未初始化的情况
+					continue;
 
-				foreach (var keyObj in locator.Keys)
+				tasks.Add(ProcessLocatorAsync(locator, visitedAddrs));
+			}
+
+			await UniTask.WhenAll(tasks);
+
+			_initialized = true;
+			ArchLog.LogInfo($"[Res] Initialized. Entries={_name2Addr.Count}, Duplicates={_duplicates.Count}");
+		}
+
+		private async UniTask ProcessLocatorAsync(IResourceLocator locator, HashSet<string> visited)
+		{
+			// 🚀 非阻塞批量处理 Keys
+			await UniTask.SwitchToThreadPool();
+
+			// 局部缓存以减少锁争用
+			var localMap = new Dictionary<string, string>(256, StringComparer.OrdinalIgnoreCase);
+			var localDup = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+
+			foreach (var keyObj in locator.Keys)
+			{
+				if (keyObj is not string addr || string.IsNullOrWhiteSpace(addr))
+					continue;
+
+				if (!visited.Add(addr))
+					continue;
+
+				// 🔒 TryLocate 代替直接 Locate（更安全）
+				if (!locator.Locate(addr, typeof(UnityEngine.Object), out var locations) || locations == null)
+					continue;
+
+				for (int i = 0; i < locations.Count; i++)
 				{
-					if (keyObj is not string addr || string.IsNullOrWhiteSpace(addr))
+					var loc = locations[i];
+					if (loc == null)
 						continue;
 
-					// 🔒 某些 locator 的 Locate() 内部未初始化
-					try
+					string shortName = ShortNameFast(loc);
+					if (string.IsNullOrEmpty(shortName))
+						continue;
+
+					if (localMap.ContainsKey(shortName))
 					{
-						if (!locator.Locate(addr, typeof(UnityEngine.Object), out var locations) || locations == null)
-							continue;
-
-						foreach (var loc in locations)
-						{
-							if (loc == null)
-								continue;
-
-							string shortName = ShortName(loc);
-							if (string.IsNullOrEmpty(shortName))
-								continue;
-
-							if (_name2Addr.TryGetValue(shortName, out var exist))
-							{
-								if (!_duplicates.TryGetValue(shortName, out var list))
-									_duplicates[shortName] = list = new List<string> { exist };
-								list.Add(addr);
-								ArchLog.LogWarning($"[Res] Duplicate name '{shortName}':\n - {exist}\n - {addr}");
-								continue;
-							}
-
-							_name2Addr[shortName] = addr;
-						}
+						if (!localDup.TryGetValue(shortName, out var list))
+							localDup[shortName] = list = new List<string> { localMap[shortName] };
+						list.Add(addr);
+						continue;
 					}
-					catch (Exception ex)
-					{
-						ArchLog.LogWarning($"[Res] Locate failed for key '{addr}' in locator {locator.GetType().Name}: {ex.Message}");
-					}
+
+					localMap[shortName] = addr;
 				}
 			}
 
-			_initialized = true;
+			// 🚀 主线程合并（避免线程冲突）
+			await UniTask.SwitchToMainThread();
 
-			ArchLog.LogInfo($"[Res] Initialized. Entries={_name2Addr.Count}, Duplicates={_duplicates.Count}");
+			foreach (var kv in localMap)
+			{
+				if (_name2Addr.ContainsKey(kv.Key))
+				{
+					if (!_duplicates.TryGetValue(kv.Key, out var list))
+						_duplicates[kv.Key] = list = new List<string> { _name2Addr[kv.Key] };
+					list.Add(kv.Value);
+				}
+				else
+				{
+					_name2Addr[kv.Key] = kv.Value;
+				}
+			}
+
+			foreach (var kv in localDup)
+			{
+				if (!_duplicates.TryGetValue(kv.Key, out var list))
+					_duplicates[kv.Key] = kv.Value;
+				else
+					list.AddRange(kv.Value);
+			}
 		}
 
 		#endregion 初始化
@@ -314,7 +365,7 @@ namespace Arch.Resource
 			map ??= new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 			foreach (var loc in locs)
 			{
-				string shortName = ShortName(loc);
+				string shortName = ShortNameFast(loc);
 				string addr = loc.PrimaryKey;
 				if (!map.ContainsKey(shortName)) map[shortName] = addr;
 				else ArchLog.LogWarning($"[Res] Duplicate '{shortName}' under label '{label}'.");
@@ -326,23 +377,49 @@ namespace Arch.Resource
 			return result;
 		}
 
-		private static string ShortName(IResourceLocation loc)
+		private static string ShortNameFast(IResourceLocation loc)
 		{
-			// 1) 首选 PrimaryKey（通常就是 Address）
-			var key = loc.PrimaryKey;
+			// 优先 PrimaryKey（一般是 Address 或 Asset GUID）
+			var key = loc?.PrimaryKey;
 			if (!string.IsNullOrEmpty(key))
 			{
-				var n = Path.GetFileNameWithoutExtension(key);
-				if (!string.IsNullOrEmpty(n)) return n;
+				var span = key.AsSpan();
+
+				// 判断是否有扩展名（快速判断）
+				int dot = span.LastIndexOf('.');
+				if (dot > 0 && dot < span.Length - 1)
+				{
+					// 获取最后的 '/' 或 '\'
+					int slash = Math.Max(span.LastIndexOf('/'), span.LastIndexOf('\\'));
+					ReadOnlySpan<char> nameSpan = (slash >= 0)
+						? span[(slash + 1)..dot]
+						: span[..dot];
+
+					if (!nameSpan.IsEmpty)
+						return new string(nameSpan);
+				}
 			}
-			// 2) 退回 InternalId（常是 Assets/... 路径或 URL）
-			var id = loc.InternalId;
+
+			// 次选 InternalId（例如 Assets/... 或 file:///）
+			var id = loc?.InternalId;
 			if (!string.IsNullOrEmpty(id))
 			{
-				var n = Path.GetFileNameWithoutExtension(id);
-				if (!string.IsNullOrEmpty(n)) return n;
+				var span = id.AsSpan();
+				int dot = span.LastIndexOf('.');
+				if (dot > 0 && dot < span.Length - 1)
+				{
+					int slash = Math.Max(span.LastIndexOf('/'), span.LastIndexOf('\\'));
+					ReadOnlySpan<char> nameSpan = (slash >= 0)
+						? span[(slash + 1)..dot]
+						: span[..dot];
+
+					if (!nameSpan.IsEmpty)
+						return new string(nameSpan);
+				}
 			}
-			return key ?? id ?? string.Empty;
+
+			// 没有扩展名，说明是文件夹或非法项
+			return string.Empty;
 		}
 
 		private void AddRef(string addr)

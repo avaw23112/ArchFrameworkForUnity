@@ -145,7 +145,7 @@ namespace Arch.Compilation.Editor
 				cfg = handle.Result;
 				return cfg;
 			}
-			catch (Exception e)
+			catch
 			{
 				ArchLog.LogError("Load archBuildConfig failed!");
 				throw;

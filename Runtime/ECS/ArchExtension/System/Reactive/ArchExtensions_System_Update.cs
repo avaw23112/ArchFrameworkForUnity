@@ -1,0 +1,133 @@
+﻿using Arch.Core;
+
+
+namespace Arch
+{
+	/// <summary>
+	/// 初始版本，外界可完全掌控查询条件和过滤条件
+	/// </summary>
+	public abstract class UpdateSystem : ReactiveSystem, IReactiveUpdate
+	{
+		public void Update()
+		{
+			QueryDescription vQueryDescription = Filter();
+			world.Query(in vQueryDescription,
+				(Entity entity) =>
+				{
+					if (GetTrigger(entity))
+						Run(entity);
+				});
+		}
+	}
+
+	public abstract class UpdateSystem<T> : ReactiveSystem<T>, IReactiveUpdate
+		where T : IComponent
+	{
+		public void Update()
+		{
+			QueryDescription vQueryDescription = Filter();
+			world.Query(in vQueryDescription,
+				(Entity entity, ref T component) =>
+				{
+					if (GetTrigger(entity))
+						Run(entity, ref component);
+				});
+		}
+	}
+
+	// 2 参数版本
+	public abstract class UpdateSystem<T1, T2> : ReactiveSystem<T1, T2>, IReactiveUpdate
+		where T1 : IComponent
+		where T2 : IComponent
+	{
+		public void Update()
+		{
+			QueryDescription query = Filter();
+			world.Query(in query,
+				(Entity entity, ref T1 c1, ref T2 c2) =>
+				{
+					if (GetTrigger(entity))
+						Run(entity, ref c1, ref c2);
+				});
+		}
+	}
+
+	// 3 参数版本
+	public abstract class UpdateSystem<T1, T2, T3> : ReactiveSystem<T1, T2, T3>, IReactiveUpdate
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+	{
+		public void Update()
+		{
+			QueryDescription query = Filter();
+			world.Query(in query,
+				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3) =>
+				{
+					if (GetTrigger(entity))
+						Run(entity, ref c1, ref c2, ref c3);
+				});
+		}
+	}
+
+	// 4 参数版本
+	public abstract class UpdateSystem<T1, T2, T3, T4> : ReactiveSystem<T1, T2, T3, T4>, IReactiveUpdate
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+	{
+		public void Update()
+		{
+			QueryDescription query = Filter();
+			world.Query(in query,
+				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3, ref T4 c4) =>
+				{
+					if (GetTrigger(entity))
+						Run(entity, ref c1, ref c2, ref c3, ref c4);
+				});
+		}
+	}
+
+	// 5 参数版本
+	public abstract class UpdateSystem<T1, T2, T3, T4, T5> : ReactiveSystem<T1, T2, T3, T4, T5>, IReactiveUpdate
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
+	{
+		public void Update()
+		{
+			QueryDescription query = Filter();
+			world.Query(in query,
+				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3, ref T4 c4, ref T5 c5) =>
+				{
+					if (GetTrigger(entity))
+						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5);
+				});
+		}
+	}
+
+	// 6 参数版本
+	public abstract class UpdateSystem<T1, T2, T3, T4, T5, T6> : ReactiveSystem<T1, T2, T3, T4, T5, T6>, IReactiveUpdate
+		where T1 : IComponent
+		where T2 : IComponent
+		where T3 : IComponent
+		where T4 : IComponent
+		where T5 : IComponent
+		where T6 : IComponent
+	{
+		public void Update()
+		{
+			QueryDescription query = Filter();
+			world.Query(in query,
+				(Entity entity, ref T1 c1, ref T2 c2, ref T3 c3, ref T4 c4, ref T5 c5, ref T6 c6) =>
+				{
+					if (GetTrigger(entity))
+						Run(entity, ref c1, ref c2, ref c3, ref c4, ref c5, ref c6);
+				});
+		}
+	}
+
+}

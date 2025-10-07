@@ -22,7 +22,9 @@ namespace Arch.Tools
 
 			var loadedAssemblies = _loader.LoadAssemblies();
 			foreach (var asm in loadedAssemblies)
+			{
 				_assemblies[asm.GetName().Name] = asm;
+			}
 		}
 
 		/// <summary>
@@ -37,7 +39,9 @@ namespace Arch.Tools
 
 			var loadedAssemblies = await _loader.LoadAssembliesAsync();
 			foreach (var asm in loadedAssemblies)
+			{
 				_assemblies[asm.GetName().Name] = asm;
+			}
 		}
 
 		public static Assembly Get(string name)

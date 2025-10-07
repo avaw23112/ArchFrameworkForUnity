@@ -65,14 +65,19 @@ MonoBehaviour:
   systemBuildSetting:
     pureAwakeSystems:
     - Arch.CommendBufferComponentAwakeSystem
+    - Arch.Net.NetRuntimeSystem
     - Arch.EntityBindingSystem
     - Codes.Logic.Test2System
+    - Codes.Logic.Test1System
     reactiveAwakeSystems: []
-    updateSystems: []
+    updateSystems:
+    - Codes.Logic.Test3System
     lateUpdateSystems:
     - Arch.CommendBufferComponentLateUpdateSystem
+    - Arch.Net.NetTransportSystem
     pureDestroySystems: []
     reactiveDestroySystems:
+    - Arch.Net.NetRuntimeSystem
     - Arch.CommendBufferComponentAwakeSystem
     - Arch.EntityBindingSystem
     - Arch.ViewModleSyncSystem
