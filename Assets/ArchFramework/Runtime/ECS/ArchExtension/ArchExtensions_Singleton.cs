@@ -43,7 +43,7 @@ namespace Arch
 
 			public static void TearDown()
 			{
-				if (Instance.IsAlive(Entity.Instance) && Entity.Instance.isVaild())
+				if (Entity.Instance.isVaild())
 				{
 					Instance.Destroy(Entity.Instance);
 				}

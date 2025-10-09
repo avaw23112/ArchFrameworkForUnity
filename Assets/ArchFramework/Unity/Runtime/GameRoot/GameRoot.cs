@@ -66,6 +66,9 @@ namespace Arch.Runtime
 			Attributes.Collector.CollectBaseAttributes();
 			Attributes.Attributes.RegisterAttributeSystems();
 
+			//有了基础属性后，注册用属性标记的服务
+			ArchKernel.InitServiceMarked();
+
 			// Net init (set local ClientId and start session)
 
 			// Register [System] systems

@@ -18,6 +18,12 @@ namespace Arch.DI
 			Root = new ServiceProvider(services.ToDescriptors());
 		}
 
+		public static void InitServiceMarked()
+		{
+			var services = new ServiceCollection();
+			services.AddAllFromAssembly();
+		}
+
 		public static T Resolve<T>() => Root.Get<T>();
 
 		public static WorldScope CreateWorldScope(IEnumerable<ServiceDescriptor> overrides = null)

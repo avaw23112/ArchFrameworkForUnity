@@ -16,10 +16,8 @@ namespace Arch.DI
 		/// </summary>
 		public static IServiceCollection AddAllFromAssembly(
 			this IServiceCollection services,
-			Assembly assembly,
 			Func<Type, bool> filter = null)
 		{
-			var types = assembly.GetTypes();
 			List<(ServiceAttribute, Type)> serviceTypes = new List<(ServiceAttribute, Type)>();
 			Collector.CollectAttributes(serviceTypes);
 

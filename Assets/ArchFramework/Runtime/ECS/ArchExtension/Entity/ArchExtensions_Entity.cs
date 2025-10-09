@@ -196,7 +196,7 @@ namespace Arch
 
 		public static bool isVaild(this Entity entity)
 		{
-			return entity != default(Entity);
+			return entity != Entity.Null && entity.IsAlive() && entity != default(Entity);
 		}
 
 		public static T GetOrAdd<T>(this Entity entity) where T : struct, IComponent
