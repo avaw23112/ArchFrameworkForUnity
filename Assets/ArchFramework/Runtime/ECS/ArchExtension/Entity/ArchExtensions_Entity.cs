@@ -11,7 +11,7 @@ namespace Arch
 	{
 		#region Setter And Getter
 
-		public static void Setter<T>(this Entity entity, RefAction<T> action) where T : struct, IComponent
+		public static void Setter<T>(this Entity entity, RefAction<T> action) where T : IComponent
 		{
 			if (!entity.Has<T>())
 			{
@@ -23,8 +23,8 @@ namespace Arch
 			entity.Set<T>(in sComponent);
 		}
 
-		public static void Setter<T1, T2>(this Entity entity, RefAction<T1, T2> action) where T1 : struct, IComponent
-			where T2 : struct, IComponent
+		public static void Setter<T1, T2>(this Entity entity, RefAction<T1, T2> action) where T1 : IComponent
+			where T2 : IComponent
 		{
 			if (!entity.Has<T1, T2>())
 			{
@@ -36,8 +36,8 @@ namespace Arch
 			entity.Set(in sComponent.t0.Value, in sComponent.t1.Value);
 		}
 
-		public static void Setter<T1, T2, T3>(this Entity entity, RefAction<T1, T2, T3> action) where T1 : struct, IComponent
-	where T2 : struct, IComponent where T3 : struct, IComponent
+		public static void Setter<T1, T2, T3>(this Entity entity, RefAction<T1, T2, T3> action) where T1 : IComponent
+	where T2 : IComponent where T3 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3>())
 			{
@@ -49,8 +49,8 @@ namespace Arch
 			entity.Set(in sComponent.t0.Value, in sComponent.t1.Value, in sComponent.t2.Value);
 		}
 
-		public static void Setter<T1, T2, T3, T4>(this Entity entity, RefAction<T1, T2, T3, T4> action) where T1 : struct, IComponent
-	where T2 : struct, IComponent where T3 : struct, IComponent where T4 : struct, IComponent
+		public static void Setter<T1, T2, T3, T4>(this Entity entity, RefAction<T1, T2, T3, T4> action) where T1 : IComponent
+	where T2 : IComponent where T3 : IComponent where T4 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3, T4>())
 			{
@@ -64,11 +64,11 @@ namespace Arch
 
 		// 5参数版本
 		public static void Setter<T1, T2, T3, T4, T5>(this Entity entity, RefAction<T1, T2, T3, T4, T5> action)
-			where T1 : struct, IComponent
-			where T2 : struct, IComponent
-			where T3 : struct, IComponent
-			where T4 : struct, IComponent
-			where T5 : struct, IComponent
+			where T1 : IComponent
+			where T2 : IComponent
+			where T3 : IComponent
+			where T4 : IComponent
+			where T5 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3, T4, T5>())
 			{
@@ -85,12 +85,12 @@ namespace Arch
 
 		// 6参数版本
 		public static void Setter<T1, T2, T3, T4, T5, T6>(this Entity entity, RefAction<T1, T2, T3, T4, T5, T6> action)
-			where T1 : struct, IComponent
-			where T2 : struct, IComponent
-			where T3 : struct, IComponent
-			where T4 : struct, IComponent
-			where T5 : struct, IComponent
-			where T6 : struct, IComponent
+			where T1 : IComponent
+			where T2 : IComponent
+			where T3 : IComponent
+			where T4 : IComponent
+			where T5 : IComponent
+			where T6 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3, T4, T5, T6>())
 			{
@@ -105,7 +105,7 @@ namespace Arch
 					  in sComponent.t3.Value, in sComponent.t4.Value, in sComponent.t5.Value);
 		}
 
-		public static void Getter<T>(this Entity entity, InAction<T> action) where T : struct, IComponent
+		public static void Getter<T>(this Entity entity, InAction<T> action) where T : IComponent
 		{
 			if (!entity.Has<T>())
 			{
@@ -116,7 +116,7 @@ namespace Arch
 			action(in sComponent);
 		}
 
-		public static void Getter<T1, T2>(this Entity entity, InAction<T1, T2> action) where T1 : struct, IComponent where T2 : struct, IComponent
+		public static void Getter<T1, T2>(this Entity entity, InAction<T1, T2> action) where T1 : IComponent where T2 : IComponent
 		{
 			if (!entity.Has<T1, T2>())
 			{
@@ -129,9 +129,9 @@ namespace Arch
 
 		// 3参数版本
 		public static void Getter<T1, T2, T3>(this Entity entity, InAction<T1, T2, T3> action)
-			where T1 : struct, IComponent
-			where T2 : struct, IComponent
-			where T3 : struct, IComponent
+			where T1 : IComponent
+			where T2 : IComponent
+			where T3 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3>())
 			{
@@ -144,10 +144,10 @@ namespace Arch
 
 		// 4参数版本
 		public static void Getter<T1, T2, T3, T4>(this Entity entity, InAction<T1, T2, T3, T4> action)
-			where T1 : struct, IComponent
-			where T2 : struct, IComponent
-			where T3 : struct, IComponent
-			where T4 : struct, IComponent
+			where T1 : IComponent
+			where T2 : IComponent
+			where T3 : IComponent
+			where T4 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3, T4>())
 			{
@@ -160,11 +160,11 @@ namespace Arch
 
 		// 5参数版本
 		public static void Getter<T1, T2, T3, T4, T5>(this Entity entity, InAction<T1, T2, T3, T4, T5> action)
-			where T1 : struct, IComponent
-			where T2 : struct, IComponent
-			where T3 : struct, IComponent
-			where T4 : struct, IComponent
-			where T5 : struct, IComponent
+			where T1 : IComponent
+			where T2 : IComponent
+			where T3 : IComponent
+			where T4 : IComponent
+			where T5 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3, T4, T5>())
 			{
@@ -176,12 +176,12 @@ namespace Arch
 		}
 
 		public static void Getter<T1, T2, T3, T4, T5, T6>(this Entity entity, InAction<T1, T2, T3, T4, T5, T6> action)
-			where T1 : struct, IComponent
-			where T2 : struct, IComponent
-			where T3 : struct, IComponent
-			where T4 : struct, IComponent
-			where T5 : struct, IComponent
-			where T6 : struct, IComponent
+			where T1 : IComponent
+			where T2 : IComponent
+			where T3 : IComponent
+			where T4 : IComponent
+			where T5 : IComponent
+			where T6 : IComponent
 		{
 			if (!entity.Has<T1, T2, T3, T4, T5, T6>())
 			{
@@ -199,7 +199,7 @@ namespace Arch
 			return entity != Entity.Null && entity.IsAlive() && entity != default(Entity);
 		}
 
-		public static T GetOrAdd<T>(this Entity entity) where T : struct, IComponent
+		public static T GetOrAdd<T>(this Entity entity) where T : IComponent
 		{
 			T component;
 			if (!entity.TryGet<T>(out component))

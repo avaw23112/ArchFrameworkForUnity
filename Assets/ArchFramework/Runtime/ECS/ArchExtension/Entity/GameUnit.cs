@@ -1,4 +1,5 @@
 ﻿using Arch.Core.Extensions;
+using inEvent;
 using System;
 using UnityEngine;
 
@@ -30,6 +31,11 @@ namespace Arch.Core
 
 		public virtual void OnUpdate()
 		{
+		}
+
+		public void AddComponent<T>() where T : IComponent
+		{
+			entity.TryAdd<T>();
 		}
 
 		public bool isValid()
