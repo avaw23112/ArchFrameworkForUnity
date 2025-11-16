@@ -80,9 +80,6 @@ public class EditorStart
 		Assemblys.LoadAssemblys();
 		Collector.CollectBaseAttributes();
 
-		//配置构建管线
-		ArchConfigPostPlayerBuild.ConfigBuildLine();
-
 		//注册所有编译管线构建器
 		AttributeTargetRegistry.RegisterAllRegistries();
 	}
