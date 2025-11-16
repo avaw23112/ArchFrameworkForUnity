@@ -69,15 +69,21 @@ public class EditorStart
 	{
 		//设置日志
 		ArchLog.SetLogger(new UnityLogger());
-		// 1) 初始化统一配置（首次自动创建 ScriptableObject 资产）
+
+		//初始化统一配置（首次自动创建 ScriptableObject 资产）
 		ArchBuildConfig.LoadOrCreate();
 		ArchRes.SetProvider(new UnityResProvider());
 		ArchRes.InitializeAsync();
+
 		//配置程序集，会用到运行时检查
 		Assemblys.SetLoader(new UnityAssemblyLoader());
 		Assemblys.LoadAssemblys();
 		Collector.CollectBaseAttributes();
 
+		//配置构建管线
+		ArchConfigPostPlayerBuild.ConfigBuildLine();
+
+		//注册所有编译管线构建器
 		AttributeTargetRegistry.RegisterAllRegistries();
 	}
 }

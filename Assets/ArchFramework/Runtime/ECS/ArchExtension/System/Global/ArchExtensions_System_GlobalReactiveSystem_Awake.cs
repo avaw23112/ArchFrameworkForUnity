@@ -3,14 +3,13 @@ using Arch.Core.Extensions;
 
 namespace Arch
 {
-	//产生的闭包在可接受范围内，而且不会引起频繁GC	
+	//产生的闭包在可接受范围内，而且不会引起频繁GC
 
 	/// <summary>
 	/// 初始版本，外界可完全掌控查询条件和过滤条件
 	/// </summary>
 	public abstract class GlobalAwakeSystem : GlobalReactiveSystem, IReactiveAwake
 	{
-
 		public void SubcribeEntityAwake()
 		{
 			foreach (World worldNamed in NamedWorld.Instance.NamedWorlds)
@@ -40,16 +39,15 @@ namespace Arch
 					world = WorldNamed;
 					if (GetTrigger(entity))
 						Run(entity, ref component);
-
 				});
 			}
 		}
 	}
+
 	public abstract class GlobalAwakeSystem<T1, T2> : GlobalReactiveSystem<T1, T2>, IReactiveAwake
 	where T1 : struct, IComponent
 	where T2 : struct, IComponent
 	{
-
 		public void SubcribeEntityAwake()
 		{
 			foreach (World WorldNamed in NamedWorld.Instance.NamedWorlds)
@@ -61,7 +59,6 @@ namespace Arch
 					world = WorldNamed;
 					if (GetTrigger(entity))
 						Run(entity, ref component1, ref component2);
-
 				}
 			});
 			}
@@ -73,8 +70,6 @@ namespace Arch
 		where T2 : struct, IComponent
 		where T3 : struct, IComponent
 	{
-
-
 		public void SubcribeEntityAwake()
 		{
 			foreach (World WorldNamed in NamedWorld.Instance.NamedWorlds)
@@ -88,7 +83,6 @@ namespace Arch
 						world = WorldNamed;
 						if (GetTrigger(entity))
 							Run(entity, ref component1, ref component2, ref component3);
-
 					}
 				});
 			}
@@ -101,7 +95,6 @@ namespace Arch
 		where T3 : struct, IComponent
 		where T4 : struct, IComponent
 	{
-
 		public void SubcribeEntityAwake()
 		{
 			foreach (World WorldNamed in NamedWorld.Instance.NamedWorlds)
@@ -116,7 +109,6 @@ namespace Arch
 						world = WorldNamed;
 						if (GetTrigger(entity))
 							Run(entity, ref component1, ref component2, ref component3, ref component4);
-
 					}
 				});
 			}
@@ -130,8 +122,6 @@ namespace Arch
 		where T4 : struct, IComponent
 		where T5 : struct, IComponent
 	{
-
-
 		public void SubcribeEntityAwake()
 		{
 			foreach (World WorldNamed in NamedWorld.Instance.NamedWorlds)
@@ -147,7 +137,6 @@ namespace Arch
 					world = WorldNamed;
 					if (GetTrigger(entity))
 						Run(entity, ref component1, ref component2, ref component3, ref component4, ref component5);
-
 				}
 			});
 			}
@@ -183,5 +172,4 @@ namespace Arch
 			}
 		}
 	}
-
 }

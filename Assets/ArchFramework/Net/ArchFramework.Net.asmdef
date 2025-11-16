@@ -1,0 +1,16 @@
+{
+    "name": "ArchFramework.Net",
+    "rootNamespace": "",
+    "references": [
+        "GUID:7dbe63cb0c2603148a0db969c4725055"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
