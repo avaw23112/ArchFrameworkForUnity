@@ -17,12 +17,16 @@ MonoBehaviour:
     - "\u70ED\u66F4\u65B0\u73AF\u5883\u9A8C\u8BC1\u5668"
     - "\u6E05\u7406\u65E7\u70ED\u66F4\u65B0DLL"
     postProcessors:
+    - "\u4EE3\u7801\u9759\u6001\u7F16\u7EC7\u5904\u7406\u5668"
     - "DLL \u5BFC\u51FA\u5668"
     globalPostProcessors:
     - "\u8865\u5145\u5143\u6570\u636Edll\u5BFC\u51FA\u5668"
+    - "Addressables\u81EA\u52A8\u6784\u5EFA\u6D41\u7A0B"
     - "\u81EA\u52A8\u91CD\u5EFA\u7F16\u8F91\u5668\u73AF\u5883"
     postExportDir: Assets/HybridCLRGenerate/HotFixDll
     postExportSuffix: .bytes
+    weaverPaths:
+    - D:/unity project/ArchFrameworkForUnity/ArchFramework/Assets/Packages/PropertyChanged.Fody/PropertyChanged.Fody.dll
   buildSetting:
     MetaDllPath: Assets/HybridCLRGenerate/MetaDataDll
     HotFixDllPath: Assets/HybridCLRGenerate/HotFixDll
@@ -38,18 +42,18 @@ MonoBehaviour:
       additionalReferences: []
       useEngineModules: 1
       editorAssembly: 0
-    - assemblyName: Code.Logic
-      outputDir: D:/unity project/ArchFrameworkForUnity/ArchFramework/Library/ScriptAssemblies
-      sourceDirs:
-      - D:/unity project/ArchFrameworkForUnity/ArchFramework/Codes/Logic
-      additionalDefines: []
-      additionalReferences: []
-      useEngineModules: 1
-      editorAssembly: 0
     - assemblyName: Code.Protocol
       outputDir: D:/unity project/ArchFrameworkForUnity/ArchFramework/Library/ScriptAssemblies
       sourceDirs:
       - D:/unity project/ArchFrameworkForUnity/Common/Protocol
+      additionalDefines: []
+      additionalReferences: []
+      useEngineModules: 1
+      editorAssembly: 0
+    - assemblyName: Code.Logic
+      outputDir: D:/unity project/ArchFrameworkForUnity/ArchFramework/Library/ScriptAssemblies
+      sourceDirs:
+      - D:/unity project/ArchFrameworkForUnity/ArchFramework/Codes/Logic
       additionalDefines: []
       additionalReferences: []
       useEngineModules: 1
@@ -65,19 +69,12 @@ MonoBehaviour:
   systemBuildSetting:
     pureAwakeSystems:
     - Arch.CommendBufferComponentAwakeSystem
-    - Arch.Net.NetRuntimeSystem
     - Arch.EntityBindingSystem
-    - Codes.Logic.Test2System
-    - Codes.Logic.Test1System
     reactiveAwakeSystems: []
-    updateSystems:
-    - Codes.Logic.Test3System
+    updateSystems: []
     lateUpdateSystems:
     - Arch.CommendBufferComponentLateUpdateSystem
-    - Arch.Net.NetTransportSystem
     pureDestroySystems: []
     reactiveDestroySystems:
-    - Arch.Net.NetRuntimeSystem
     - Arch.CommendBufferComponentAwakeSystem
     - Arch.EntityBindingSystem
-    - Arch.ViewModleSyncSystem

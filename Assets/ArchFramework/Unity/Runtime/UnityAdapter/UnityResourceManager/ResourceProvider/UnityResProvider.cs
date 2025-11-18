@@ -46,8 +46,6 @@ namespace Arch.Resource
 			if (_initialized)
 				return;
 
-			await Addressables.InitializeAsync().Task;
-
 			// 🚀 预分配容量
 			var visitedAddrs = new HashSet<string>(1024, StringComparer.OrdinalIgnoreCase);
 			_name2Addr.Clear();
@@ -55,6 +53,8 @@ namespace Arch.Resource
 
 			// 🚀 并行处理每个 locator
 			var tasks = new List<UniTask>();
+
+			await Addressables.InitializeAsync().Task;
 
 			foreach (var locator in Addressables.ResourceLocators)
 			{

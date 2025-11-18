@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEditor.MemoryProfiler;
-
-namespace Arch.Net
+﻿namespace Arch.Net
 {
 	/// <summary>一次出站发送所选择的“当前最佳直达路径”。</summary>
 	public readonly struct Route

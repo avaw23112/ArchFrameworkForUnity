@@ -137,7 +137,7 @@ namespace Attributes
 				Type[] types = assembly.GetTypes();
 				foreach (var type in types)
 				{
-					if (isForget(type)) return;
+					if (isForget(type)) continue;
 					if (typeof(T).IsAssignableFrom(type))
 					{
 						listTypes.Add(type);

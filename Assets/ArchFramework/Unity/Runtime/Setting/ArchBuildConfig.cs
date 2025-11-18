@@ -76,7 +76,11 @@ namespace Arch.Compilation.Editor
 		[Header("后处理导出设置")]
 		public string postExportDir = "Assets/BuildOutput";
 
+		[Header("后处理导出后缀")]
 		public string postExportSuffix = "hotfix";
+
+		[Header("代码编织器的路径")]
+		public List<string> weaverPaths = new();
 	}
 
 	[Serializable]

@@ -1,8 +1,4 @@
-﻿using Arch.Tools;
-
-using System.IO;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEditor;
 
 namespace Arch.Compilation.Editor
 {
