@@ -5,6 +5,7 @@ using Arch.Tools;
 using Assets.src.AOT.ECS.SystemScheduler;
 using Cysharp.Threading.Tasks;
 using Events;
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -32,9 +33,16 @@ namespace Arch.Runtime
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
 		private static async void OnGameStart()
 		{
-			await Initialize();
-			ArchLog.LogInfo("[Arch] GameStart");
-			EventBus.Publish(new GameStartEvent());
+			try
+			{
+				await Initialize();
+				ArchLog.LogInfo("[Arch] GameStart");
+				EventBus.Publish(new GameStartEvent());
+			}
+			catch (Exception e)
+			{
+				ArchLog.LogError(e);
+			}
 		}
 
 		private static async UniTask Initialize()

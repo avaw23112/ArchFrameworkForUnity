@@ -10,13 +10,13 @@ namespace Arch
 		protected override void OnAwake(ref EntityBindingComponent component)
 		{
 			component.dicEntitiesBindings = new NativeMultiHashMap<Entity, Entity>(256, Allocator.Persistent);
-			ArchLog.LogDebug("create entityBindingComponent success");
+			ArchLog.LogInfo("create entityBindingComponent success");
 		}
 
 		protected override void OnDestroy(ref EntityBindingComponent component)
 		{
 			component.dicEntitiesBindings.Dispose();
-			ArchLog.LogDebug("Release entityBindingComponent success");
+			ArchLog.LogInfo("Release entityBindingComponent success");
 		}
 	}
 
@@ -29,7 +29,7 @@ namespace Arch
 			if (!entityTransform.entities.IsCreated)
 			{
 				entityTransform.entities = new NativeList<Entity>(Allocator.Persistent);
-				ArchLog.LogDebug("create EntityTransform success");
+				ArchLog.LogInfo("create EntityTransform success");
 			}
 			else
 			{
@@ -76,7 +76,7 @@ namespace Arch
 			if (entityTransform.entities.IsCreated)
 			{
 				entityTransform.entities.Dispose();
-				ArchLog.LogDebug("Release entityTransform success");
+				ArchLog.LogInfo("Release entityTransform success");
 			}
 			else
 			{

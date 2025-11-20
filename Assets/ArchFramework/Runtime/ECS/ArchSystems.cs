@@ -140,12 +140,28 @@ namespace Arch
 
 		public static void Update()
 		{
-			foreach (var s in m_updates) s.Update();
+			try
+			{
+				foreach (var s in m_updates)
+					s.Update();
+			}
+			catch (Exception e)
+			{
+				ArchLog.LogError(e);
+			}
 		}
 
 		public static void LateUpdate()
 		{
-			foreach (var s in m_lateUpdates) s.LateUpdate();
+			try
+			{
+				foreach (var s in m_lateUpdates)
+					s.LateUpdate();
+			}
+			catch (Exception e)
+			{
+				ArchLog.LogError(e);
+			}
 		}
 
 		public static void Destroy()

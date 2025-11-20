@@ -40,6 +40,10 @@ namespace Events
 			{
 				throw new InvalidOperationException($"递归触发事件 {typeof(T).Name} 被禁止");
 			}
+			if (Handlers<T>.actions.Count == 0)
+			{
+				throw new NullReferenceException($"没有关于 {typeof(T).Name} 的事件处理器");
+			}
 			try
 			{
 				var actions = Handlers<T>.actions;

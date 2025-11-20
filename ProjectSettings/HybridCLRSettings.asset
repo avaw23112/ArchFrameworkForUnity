@@ -16,17 +16,17 @@ MonoBehaviour:
   useGlobalIl2cpp: 0
   hybridclrRepoURL: https://gitee.com/focus-creative-games/hybridclr
   il2cppPlusRepoURL: https://gitee.com/focus-creative-games/il2cpp_plus
-  hotUpdateAssemblyDefinitions:
-  - {fileID: 5897886265953266890, guid: 885364e796eb18344adfffebe6cecb99, type: 3}
-  - {fileID: 5897886265953266890, guid: e52742b80f7cf8d4ca686eb79734824b, type: 3}
-  - {fileID: 5897886265953266890, guid: c4d75c95cb1307c4786f4def99b6d339, type: 3}
-  hotUpdateAssemblies: []
+  hotUpdateAssemblyDefinitions: []
+  hotUpdateAssemblies:
+  - Code.Logic
+  - Code.Model
+  - Code.Protocol
   preserveHotUpdateAssemblies: []
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls
   externalHotUpdateAssembliyDirs: []
   strippedAOTDllOutputRootDir: HybridCLRData/AssembliesPostIl2CppStrip
   patchAOTAssemblies:
-  - AOT
+  - ArchFramework.Runtime
   - Arch.LowLevel
   - Arch
   - CommunityToolkit.HighPerformance
@@ -34,6 +34,7 @@ MonoBehaviour:
   - System.Core
   - System.Runtime.CompilerServices.Unsafe
   - mscorlib
+  - ArchFramework.Net
   outputLinkFile: HybridCLRGenerate/link.xml
   outputAOTGenericReferenceFile: HybridCLRGenerate/AOTGenericReferences.cs
   maxGenericReferenceIteration: 10
