@@ -3,11 +3,9 @@ using Codes.Model.WeaverTest;
 using Events;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.Scripting;
 
 namespace Codes.Logic
 {
-	[Preserve]
 	internal class WearverTest : Event<GameStartEvent>
 	{
 		public override void Run(GameStartEvent value)
@@ -34,18 +32,6 @@ namespace Codes.Logic
 				if (footprintParent == null)
 				{
 					CreateFootprintSystem();
-				}
-
-				if (Time.time - lastSpawnTime > 0.2f)
-				{
-					var mark = GameObject.CreatePrimitive(PrimitiveType.Quad);
-					mark.transform.SetParent(footprintParent);
-					mark.transform.position = new Vector3(Random.Range(-2f, 2f), 0.01f, Random.Range(-2f, 2f));
-					mark.transform.rotation = Quaternion.Euler(90, 0, 0);
-					mark.GetComponent<Renderer>().material.color = new Color(1, 1f, 1, 1f);
-
-					Object.Destroy(mark, 2f);
-					lastSpawnTime = Time.time;
 				}
 			}
 		}

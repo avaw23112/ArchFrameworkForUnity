@@ -19,37 +19,38 @@ namespace Arch.Tools
 		{
 			try
 			{
-#if !UNITY_EDITOR
-				// 在编辑器中不初始化文件日志
-				// 创建日志目录
-				if (!Directory.Exists(LogDirectory))
+				if (!Application.isEditor)
 				{
-					Directory.CreateDirectory(LogDirectory);
-				}
-
-				// 创建日志文件
-				string logFilePath = Path.Combine(LogDirectory, $"log-{DateTime.Now:yyyyMMdd-HHmmss}.txt");
-				_writer = new StreamWriter(logFilePath, true)
-				{
-					AutoFlush = true
-				};
-
-				// 写入日志文件头
-				_writer.WriteLine($"Log started at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-				_writer.WriteLine("==========================================");
-
-				Application.quitting += () =>
-				{
-					if (_writer != null)
+					// 在编辑器中不初始化文件日志
+					// 创建日志目录
+					if (!Directory.Exists(LogDirectory))
 					{
-						_writer.WriteLine("==========================================");
-						_writer.WriteLine($"Log ended at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-						_writer.Close();
-						_writer = null;
+						Directory.CreateDirectory(LogDirectory);
 					}
-				};
-#endif
-				UnityEngine.Debug.Log("Logger initialized successfully");
+
+					// 创建日志文件
+					string logFilePath = Path.Combine(LogDirectory, $"log-{DateTime.Now:yyyyMMdd-HHmmss}.txt");
+					_writer = new StreamWriter(logFilePath, true)
+					{
+						AutoFlush = true
+					};
+
+					// 写入日志文件头
+					_writer.WriteLine($"Log started at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+					_writer.WriteLine("==========================================");
+
+					Application.quitting += () =>
+					{
+						if (_writer != null)
+						{
+							_writer.WriteLine("==========================================");
+							_writer.WriteLine($"Log ended at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+							_writer.Close();
+							_writer = null;
+						}
+					};
+					UnityEngine.Debug.Log("Logger initialized successfully");
+				}
 			}
 			catch (Exception ex)
 			{
@@ -73,10 +74,7 @@ namespace Arch.Tools
 				return;
 			}
 
-#if !UNITY_EDITOR
-			// 获取简化文件名
-			string fileName = filePath.Substring(filePath.IndexOf("Assets"));
-			if (_writer != null)
+			if (!Application.isEditor && _writer != null)
 			{
 				_writer.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} [{level}]");
 				_writer.WriteLine("Message:");
@@ -93,17 +91,20 @@ namespace Arch.Tools
 						_writer.WriteLine(); // 空行分隔
 					}
 				}
-				_writer.WriteLine("File Trace:");
-				_writer.WriteLine($"  at {fileName}:{lineNumber}");
-				_writer.WriteLine(); // 空行分隔
-				_writer.WriteLine(); // 空行分隔
+				if (!String.IsNullOrEmpty(filePath))
+				{
+					string fileName = Path.GetFileName(filePath);
+					_writer.WriteLine("File Trace:");
+					_writer.WriteLine($"  at {fileName}:{lineNumber}");
+					_writer.WriteLine(); // 空行分隔
+					_writer.WriteLine(); // 空行分隔
+				}
 				if (ex != null)
 				{
 					_writer.WriteLine($"Exception: ");
 					_writer.WriteLine($"  {ex}");
 				}
 			}
-#endif
 		}
 
 		private static string GetFilteredStackTrace()

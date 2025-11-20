@@ -18,6 +18,7 @@ MonoBehaviour:
     - "\u70ED\u66F4\u65B0\u73AF\u5883\u9A8C\u8BC1\u5668"
     postProcessors:
     - "\u4EE3\u7801\u9759\u6001\u7F16\u7EC7\u5904\u7406\u5668"
+    - "\u534E\u4F57\u70ED\u66F4\u65B0\u7A0B\u5E8F\u96C6\u5BFC\u51FA\u5668"
     - "DLL \u5BFC\u51FA\u5668"
     globalPostProcessors:
     - "\u8865\u5145\u5143\u6570\u636Edll\u5BFC\u51FA\u5668"
@@ -70,8 +71,7 @@ MonoBehaviour:
     - Arch.CommendBufferComponentAwakeSystem
     - Arch.EntityBindingSystem
     reactiveAwakeSystems: []
-    updateSystems:
-    - Codes.Logic.Test3System
+    updateSystems: []
     lateUpdateSystems:
     - Arch.CommendBufferComponentLateUpdateSystem
     pureDestroySystems: []
