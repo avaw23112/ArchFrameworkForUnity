@@ -119,6 +119,7 @@ namespace Arch
 			if (sys is IUpdate u) m_updates.Add(u);
 			if (sys is IPureLateUpdate l) m_lateUpdates.Add(l);
 			if (sys is IPureDestroy d) m_pDestroys.Add(d);
+			ArchLog.LogInfo($"[System] {sys.GetType().Name} has been regist");
 		}
 
 		private static void AddSystem(IReactiveSystem sys)
@@ -127,6 +128,7 @@ namespace Arch
 			if (sys is IUpdate u) m_updates.Add(u);
 			if (sys is IPureLateUpdate l) m_lateUpdates.Add(l);
 			if (sys is IReactiveDestroy d) m_rDestroys.Add(d);
+			ArchLog.LogInfo($"[System] {sys.GetType().Name} has been regist");
 		}
 
 		// -------------------- 生命周期 --------------------

@@ -1,6 +1,8 @@
 ﻿#if UNITY_EDITOR
 
+using Arch.Runtime;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -69,7 +71,18 @@ namespace Arch.Compilation.Editor
 
 		private void LoadConfig()
 		{
-			_config = ArchBuildConfig.LoadOrCreate();
+			if (!File.Exists(GameRoot.Setting.ArchSettingPath))
+			{
+				System.IO.Directory.CreateDirectory(GameRoot.Setting.SettingPath);
+				_config = ScriptableObject.CreateInstance<ArchBuildConfig>();
+				UnityEditor.AssetDatabase.CreateAsset(_config, GameRoot.Setting.ArchSettingPath);
+				UnityEditor.AssetDatabase.SaveAssets();
+				UnityEditor.AssetDatabase.Refresh();
+			}
+			else
+			{
+				_config = AssetDatabase.LoadAssetAtPath<ArchBuildConfig>(GameRoot.Setting.ArchSettingPath);
+			}
 			if (_config != null)
 				_serializedConfig = new SerializedObject(_config);
 		}

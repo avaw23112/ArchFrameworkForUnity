@@ -1,6 +1,5 @@
 ﻿#if UNITY_2020_1_OR_NEWER
 
-using Arch.Compilation.Editor;
 using Arch.Resource;
 using Arch.Runtime;
 using Cysharp.Threading.Tasks;

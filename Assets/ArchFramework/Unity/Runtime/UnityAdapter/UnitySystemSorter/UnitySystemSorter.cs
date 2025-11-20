@@ -1,5 +1,4 @@
-﻿using Arch.Compilation.Editor;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Arch

@@ -75,7 +75,7 @@ namespace Arch
 
 					// 注册到ComponentRegistry，自动分配TypeId（Id = 当前注册数量 + 1）
 					ComponentRegistry.Add(type, new ComponentType(ComponentRegistry.Size + 1, byteSize));
-					ArchLog.LogDebug($"已注册组件类型：{type.FullName}，TypeId：{ComponentRegistry.Size}");
+					ArchLog.LogInfo($"已注册组件类型：{type.FullName}，TypeId：{ComponentRegistry.Size}");
 				}
 			}
 			catch (Exception e)

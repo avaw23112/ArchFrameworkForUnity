@@ -51,9 +51,6 @@ namespace Arch.Resource
 			_name2Addr.Clear();
 			_duplicates.Clear();
 
-			// 🚀 并行处理每个 locator
-			var tasks = new List<UniTask>();
-
 			await Addressables.InitializeAsync().Task;
 
 			foreach (var locator in Addressables.ResourceLocators)
@@ -72,20 +69,15 @@ namespace Arch.Resource
 				if (locator.Keys == null)
 					continue;
 
-				tasks.Add(ProcessLocatorAsync(locator, visitedAddrs));
+				ProcessLocatorAsync(locator, visitedAddrs);
 			}
-
-			await UniTask.WhenAll(tasks);
 
 			_initialized = true;
 			ArchLog.LogInfo($"[Res] Initialized. Entries={_name2Addr.Count}, Duplicates={_duplicates.Count}");
 		}
 
-		private async UniTask ProcessLocatorAsync(IResourceLocator locator, HashSet<string> visited)
+		private void ProcessLocatorAsync(IResourceLocator locator, HashSet<string> visited)
 		{
-			// 🚀 非阻塞批量处理 Keys
-			await UniTask.SwitchToThreadPool();
-
 			// 局部缓存以减少锁争用
 			var localMap = new Dictionary<string, string>(256, StringComparer.OrdinalIgnoreCase);
 			var localDup = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
@@ -123,9 +115,6 @@ namespace Arch.Resource
 					localMap[shortName] = addr;
 				}
 			}
-
-			// 🚀 主线程合并（避免线程冲突）
-			await UniTask.SwitchToMainThread();
 
 			foreach (var kv in localMap)
 			{

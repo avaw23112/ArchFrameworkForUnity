@@ -3,11 +3,12 @@ using Arch.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace Arch.Compilation.Editor
+namespace Arch
 {
 	[Serializable]
 	public class IsolatedAssembly
@@ -107,7 +108,6 @@ namespace Arch.Compilation.Editor
 
 	/// <summary>
 	/// 统一配置（仅保留 AssemblyBuilder 所需字段）。
-	/// 放置位置：Assets/Resources/Config/ArchBuildConfig.asset
 	/// </summary>
 	[CreateAssetMenu(fileName = "ArchBuildConfig", menuName = "Arch/ArchBuildConfig")]
 	public class ArchBuildConfig : ScriptableObject
@@ -125,18 +125,22 @@ namespace Arch.Compilation.Editor
 		{
 			AsyncOperationHandle<ArchBuildConfig> handle = default;
 			ArchBuildConfig cfg = null;
+
 #if UNITY_EDITOR
 			if (!File.Exists(GameRoot.Setting.ArchSettingPath))
 			{
 				System.IO.Directory.CreateDirectory(GameRoot.Setting.SettingPath);
-				cfg = CreateInstance<ArchBuildConfig>();
+				cfg = ScriptableObject.CreateInstance<ArchBuildConfig>();
 				UnityEditor.AssetDatabase.CreateAsset(cfg, GameRoot.Setting.ArchSettingPath);
 				UnityEditor.AssetDatabase.SaveAssets();
 				UnityEditor.AssetDatabase.Refresh();
-				return cfg;
 			}
+			else
+			{
+				cfg = AssetDatabase.LoadAssetAtPath<ArchBuildConfig>(GameRoot.Setting.ArchSettingPath);
+			}
+			return cfg;
 #endif
-
 			try
 			{
 				handle = Addressables.LoadAssetAsync<ArchBuildConfig>(GameRoot.Setting.ArchSettingPath);
@@ -147,6 +151,12 @@ namespace Arch.Compilation.Editor
 					return null;
 				}
 				cfg = handle.Result;
+				//避免查找到address但类型转换失效的情况
+				if (cfg == null)
+				{
+					ArchLog.LogError("Load archBuildConfig failed!");
+					return null;
+				}
 				return cfg;
 			}
 			catch

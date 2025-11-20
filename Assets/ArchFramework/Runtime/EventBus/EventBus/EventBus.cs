@@ -93,6 +93,7 @@ namespace Events
 					}
 					aEventInstance.Handle();
 					Instance.Events.Add(aEventInstance);
+					ArchLog.LogInfo($"[Events] : build {aEvent.Name}");
 				}
 			}
 			catch (Exception e)
