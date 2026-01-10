@@ -24,7 +24,7 @@ namespace Arch.Compilation.Editor
 			readerParameters.AssemblyResolver = assemblyResolver;
 			var writerParameters = new WriterParameters();
 
-			var weavers = InitializeWeavers(cfg, assemblyResolver);
+			var weavers = InitializeWeavers(cfg, assemblyResolver, assemblyPath);
 			InitParameter(assemblyPath, readerParameters, writerParameters);
 
 			var module = ModuleDefinition.ReadModule(assemblyPath, readerParameters);
@@ -46,32 +46,13 @@ namespace Arch.Compilation.Editor
 
 		private static void InitParameter(string assemblyPath, ReaderParameters readerParameters, WriterParameters writerParameters)
 		{
-			string originPath = RemoveDllSuffix(assemblyPath);
-			string mdbPath = originPath + ".mdb";
-			String pdbPath = originPath + ".pdb";
-			if (File.Exists(pdbPath))
-			{
-				readerParameters.ReadSymbols = true;
-				readerParameters.SymbolReaderProvider = new Mono.Cecil.Pdb.PdbReaderProvider();
-				writerParameters.WriteSymbols = true;
-				writerParameters.SymbolWriterProvider = new Mono.Cecil.Mdb.MdbWriterProvider();
-			}
-			else if (File.Exists(mdbPath))
-			{
-				readerParameters.ReadSymbols = true;
-				readerParameters.SymbolReaderProvider = new Mono.Cecil.Mdb.MdbReaderProvider();
-				writerParameters.WriteSymbols = true;
-				writerParameters.SymbolWriterProvider = new Mono.Cecil.Mdb.MdbWriterProvider();
-			}
-			{
-				readerParameters.ReadSymbols = false;
-				readerParameters.SymbolReaderProvider = null;
-				writerParameters.WriteSymbols = false;
-				writerParameters.SymbolWriterProvider = null;
-			}
+			readerParameters.ReadSymbols = false;
+			readerParameters.SymbolReaderProvider = null;
+			writerParameters.WriteSymbols = false;
+			writerParameters.SymbolWriterProvider = null;
 		}
 
-		public static List<WeaverEntry> InitializeWeavers(ArchBuildConfig cfg, IAssemblyResolver resolver)
+		public static List<WeaverEntry> InitializeWeavers(ArchBuildConfig cfg, IAssemblyResolver resolver, string assemblyPath)
 		{
 			foreach (var weaverConfig in cfg.compilePipeLineSetting.weaverPaths)
 			{
@@ -94,7 +75,7 @@ namespace Arch.Compilation.Editor
 				}
 
 				weaverEntry.Activate(weaverType);
-				SetProperties(weaverEntry, resolver);
+				SetProperties(weaverEntry, resolver, assemblyPath);
 				weavers.Add(weaverEntry);
 			}
 			return weavers;
@@ -127,10 +108,9 @@ namespace Arch.Compilation.Editor
 			return true;
 		}
 
-		public static void SetProperties(WeaverEntry weaverEntry, IAssemblyResolver resolver)
+		public static void SetProperties(WeaverEntry weaverEntry, IAssemblyResolver resolver, string targetAssemblyPath)
 		{
 			if (weaverEntry.WeaverInstance == null) return;
-			weaverEntry.TrySetProperty("AssemblyResolver", resolver);
 			weaverEntry.TryAddEvent("LogDebug", new Action<string>((str) => ArchLog.LogDebug(str)));
 			weaverEntry.TryAddEvent("LogInfo", new Action<string>((str) => ArchLog.LogInfo(str)));
 			weaverEntry.TryAddEvent("LogWarning", new Action<string>((str) => ArchLog.LogWarning(str)));
@@ -198,7 +178,61 @@ namespace Arch.Compilation.Editor
 			foreach (var weaver in weavers)
 			{
 				weaver.SetProperty("ModuleDefinition", module);
+				//weaver.SetProperty("TypeSystem", module.TypeSystem);
+				weaver.SetProperty("AssemblyResolver", module.AssemblyResolver);
+				weaver.TrySetProperty("FindType", new Func<string, TypeDefinition>(typeFullName =>
+				{
+					// 输出调试日志，明确正在查找的类型
+					ArchLog.LogDebug($"FindType 正在查找类型: {typeFullName}");
+
+					// 先在当前模块查找
+					var typeDef = module.Types.FirstOrDefault(t => t.FullName == typeFullName);
+					if (typeDef != null)
+					{
+						ArchLog.LogDebug($"在当前模块找到类型: {typeFullName}");
+						return typeDef;
+					}
+					// 2. 若当前模块未找到，尝试从依赖的程序集中查找
+					try
+					{
+						// 遍历当前模块依赖的所有程序集
+						foreach (var assemblyNameReference in module.AssemblyReferences)
+						{
+							// 通过 AssemblyResolver 加载依赖程序集
+							var assembly = module.AssemblyResolver.Resolve(assemblyNameReference);
+							if (assembly == null) continue;
+
+							// 遍历依赖程序集的所有模块，查找类型
+							foreach (var referencedModule in assembly.Modules)
+							{
+								typeDef = referencedModule.Types.FirstOrDefault(t => t.FullName == typeFullName);
+								if (typeDef != null)
+								{
+									ArchLog.LogDebug($"在依赖程序集 {assembly.Name} 中找到类型: {typeFullName}");
+									return typeDef;
+								}
+							}
+						}
+					}
+					catch (Exception ex)
+					{
+						ArchLog.LogError($"查找依赖程序集中的类型失败: {typeFullName}，错误: {ex.Message}");
+					}
+
+					// 3. 仍未找到
+					ArchLog.LogWarning($"未找到类型: {typeFullName}（当前模块及依赖模块均无）");
+					return null;
+				}));
 			}
+		}
+
+		private static string GetGenericDefinitionFullName(string typeFullName)
+		{
+			if (string.IsNullOrEmpty(typeFullName)) return typeFullName;
+			int backtickIndex = typeFullName.IndexOf('`');
+			if (backtickIndex == -1) return typeFullName; // 非泛型类型
+			int bracketIndex = typeFullName.IndexOf('[', backtickIndex);
+			return bracketIndex != -1 ? typeFullName.Substring(0, bracketIndex) : typeFullName;
 		}
 
 		public static void AddProcessedFlag(ModuleDefinition module)

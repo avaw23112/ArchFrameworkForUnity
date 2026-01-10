@@ -115,6 +115,11 @@ namespace Arch.Compilation.Editor
 					foreach (var e in errs)
 						ArchLog.LogError($"[AB][{Path.GetFileName(path)}] {e.message}\n{e.file}:{e.line}");
 				}
+
+				if (buildOk && File.Exists(path))
+				{
+					ExecutePostProcessors(path);
+				}
 			};
 
 			if (!ab.Build())
@@ -129,10 +134,6 @@ namespace Arch.Compilation.Editor
 
 			ArchLog.LogInfo($"[AB] Done: {dllPath}");
 			AssetDatabase.Refresh();
-			if (buildOk = buildOk && File.Exists(dllPath))
-			{
-				ExecutePostProcessors(dllPath);
-			}
 			return buildOk;
 		}
 

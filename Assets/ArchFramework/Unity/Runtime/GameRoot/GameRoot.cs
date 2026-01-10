@@ -1,12 +1,10 @@
 using Arch.DI;
-using Arch.Net;
 using Arch.Resource;
 using Arch.Tools;
 using Assets.src.AOT.ECS.SystemScheduler;
 using Cysharp.Threading.Tasks;
 using Events;
 using System;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -66,10 +64,6 @@ namespace Arch.Runtime
 			loadProgress.Report(0.4f);
 			// Register events
 			EventBus.RegisterEvents();
-
-			// Register components and serializers
-			ComponentRegistryExtensions.RegisterAllComponents();
-			ComponentSerializer.RegisterAllSerializers();
 
 			// Collect and register attribute systems
 			Attributes.Attributes.RemoveMapping();

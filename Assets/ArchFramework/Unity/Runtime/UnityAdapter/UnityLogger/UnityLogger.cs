@@ -8,10 +8,11 @@ using UnityEngine;
 
 namespace Arch.Tools
 {
-	public class UnityLogger : IArchLogger
+	public class UnityLogger : IArchLogger, ILogger
 	{
 		private StreamWriter _writer;
 		public LogLevel Level { get; set; } = LogLevel.Debug;
+
 		private static readonly string LogDirectory = Path.Combine(Application.dataPath, "..", "Logs");
 		private static readonly string LoggerNamespace = typeof(ArchLog).Namespace;
 
@@ -177,6 +178,123 @@ namespace Arch.Tools
 			_writer?.Flush();
 			_writer?.Close();
 			_writer = null;
+		}
+
+		public ILogHandler logHandler { get; set; }
+		public bool logEnabled { get; set; } = true;
+		public LogType filterLogType { get; set; } = LogType.Log;
+
+		public bool IsLogTypeAllowed(LogType logType)
+		{
+			if (!logEnabled) return false;
+			if (logType < filterLogType) return false;
+
+			var level = ConvertLogTypeToLogLevel(logType);
+			return level >= Level;
+		}
+
+		public void Log(LogType logType, object message)
+		{
+			if (!IsLogTypeAllowed(logType)) return;
+			var level = ConvertLogTypeToLogLevel(logType);
+			Log(level, message?.ToString() ?? "null", includeStackTrace: level >= LogLevel.Error);
+		}
+
+		public void Log(LogType logType, object message, UnityEngine.Object context)
+		{
+			if (!IsLogTypeAllowed(logType)) return;
+			var level = ConvertLogTypeToLogLevel(logType);
+			string contextInfo = context != null ? $" (Context: {context.name})" : "";
+			Log(level, $"{message}{contextInfo}", includeStackTrace: level >= LogLevel.Error);
+		}
+
+		public void Log(LogType logType, string tag, object message)
+		{
+			if (!IsLogTypeAllowed(logType)) return;
+			var level = ConvertLogTypeToLogLevel(logType);
+			Log(level, $"[{tag}] {message}", includeStackTrace: level >= LogLevel.Error);
+		}
+
+		public void Log(LogType logType, string tag, object message, UnityEngine.Object context)
+		{
+			if (!IsLogTypeAllowed(logType)) return;
+			var level = ConvertLogTypeToLogLevel(logType);
+			string contextInfo = context != null ? $" (Context: {context.name})" : "";
+			Log(level, $"[{tag}] {message}{contextInfo}", includeStackTrace: level >= LogLevel.Error);
+		}
+
+		public void Log(object message)
+		{
+			Log(LogType.Log, message);
+		}
+
+		public void Log(string tag, object message)
+		{
+			Log(LogType.Log, tag, message);
+		}
+
+		public void Log(string tag, object message, UnityEngine.Object context)
+		{
+			Log(LogType.Log, tag, message, context);
+		}
+
+		public void LogWarning(string tag, object message)
+		{
+			Log(LogType.Warning, tag, message);
+		}
+
+		public void LogWarning(string tag, object message, UnityEngine.Object context)
+		{
+			Log(LogType.Warning, tag, message, context);
+		}
+
+		public void LogError(string tag, object message)
+		{
+			Log(LogType.Error, tag, message);
+		}
+
+		public void LogError(string tag, object message, UnityEngine.Object context)
+		{
+			Log(LogType.Error, tag, message, context);
+		}
+
+		public void LogFormat(LogType logType, string format, params object[] args)
+		{
+			if (!IsLogTypeAllowed(logType)) return;
+			Log(logType, string.Format(format, args));
+		}
+
+		public void LogException(Exception exception)
+		{
+			if (exception == null) return;
+			Log(LogLevel.Exception, exception.Message, ex: exception, includeStackTrace: true);
+		}
+
+		public void LogFormat(LogType logType, UnityEngine.Object context, string format, params object[] args)
+		{
+			if (!IsLogTypeAllowed(logType)) return;
+			Log(logType, string.Format(format, args));
+		}
+
+		public void LogException(Exception exception, UnityEngine.Object context)
+		{
+			if (exception == null) return;
+			string contextInfo = context != null ? $" (Context: {context.name})" : "";
+			Log(LogLevel.Exception, $"{exception.Message}{contextInfo}", ex: exception, includeStackTrace: true);
+		}
+
+		// 辅助方法：将LogType转换为LogLevel
+		private LogLevel ConvertLogTypeToLogLevel(LogType logType)
+		{
+			switch (logType)
+			{
+				case LogType.Log: return LogLevel.Info;
+				case LogType.Warning: return LogLevel.Warning;
+				case LogType.Error: return LogLevel.Error;
+				case LogType.Exception: return LogLevel.Exception;
+				case LogType.Assert: return LogLevel.Error;
+				default: return LogLevel.Info;
+			}
 		}
 	}
 }
